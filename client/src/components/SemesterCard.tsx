@@ -14,6 +14,8 @@ interface SemesterCardProps {
   onAddCourse: (course: Omit<Course, 'id'>) => void;
   onUpdateCourse: (courseId: string, updates: Partial<Course>) => void;
   onRemoveCourse: (courseId: string) => void;
+  gpaScale?: number;
+  semesterNames?: string[];
 }
 
 export default function SemesterCard({
@@ -25,13 +27,18 @@ export default function SemesterCard({
   onAddCourse,
   onUpdateCourse,
   onRemoveCourse,
+  gpaScale = 5.0,
+  semesterNames = [],
 }: SemesterCardProps) {
   const [showAddCourse, setShowAddCourse] = useState(false);
 
   const getGPAColor = (gpa: number) => {
-    if (gpa >= 3.7) return 'bg-emerald-100 text-emerald-700 border-emerald-300';
-    if (gpa >= 3.3) return 'bg-cyan-100 text-cyan-700 border-cyan-300';
-    if (gpa >= 3.0) return 'bg-amber-100 text-amber-700 border-amber-300';
+    const threshold = gpaScale * 0.74;
+    const midHigh = gpaScale * 0.66;
+    const mid = gpaScale * 0.6;
+    if (gpa >= threshold) return 'bg-emerald-100 text-emerald-700 border-emerald-300';
+    if (gpa >= midHigh) return 'bg-cyan-100 text-cyan-700 border-cyan-300';
+    if (gpa >= mid) return 'bg-amber-100 text-amber-700 border-amber-300';
     return 'bg-orange-100 text-orange-700 border-orange-300';
   };
 
@@ -50,7 +57,14 @@ export default function SemesterCard({
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <h3 className="text-lg font-bold text-white">{semester.name}</h3>
-              <p className="text-cyan-100 text-sm mt-1">{semester.courses.length} courses</p>
+              <p className="text-cyan-100 text-sm mt-1">
+                {semester.courses.length} courses
+                {semester.courses.some(c => c.isCarryover) && (
+                  <span className="ml-2 inline-flex items-center rounded bg-orange-500/20 px-1.5 py-0.5 text-xs font-medium text-orange-100">
+                    🔄 {semester.courses.filter(c => c.isCarryover).length} carryover
+                  </span>
+                )}
+              </p>
             </div>
             <div className="text-right mr-4">
               <div className={`text-3xl font-bold text-white gpa-value`}>{gpa.toFixed(2)}</div>
@@ -71,16 +85,37 @@ export default function SemesterCard({
                 {semester.courses.map(course => (
                   <div
                     key={course.id}
-                    className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200 hover:border-cyan-300 transition-colors"
+                    className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
+                      course.isCarryover
+                        ? 'bg-orange-50 border-orange-200 hover:border-orange-300'
+                        : 'bg-slate-50 border-slate-200 hover:border-cyan-300'
+                    }`}
                   >
                     <div className="flex-1">
-                      <p className="font-semibold text-slate-900">{course.name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-slate-900">{course.name}</p>
+                        {course.isCarryover && (
+                          <span className="inline-flex items-center rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700 border border-orange-200">
+                            🔄 Carryover
+                          </span>
+                        )}
+                        {course.isCarryover && course.isCarryoverPassed && (
+                          <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 border border-emerald-200">
+                            ✅ Cleared
+                          </span>
+                        )}
+                      </div>
                       <div className="flex gap-4 mt-2 text-sm text-slate-600">
                         <span>Credits: {course.credits}</span>
                         <span className="font-mono font-semibold text-cyan-600">
                           Grade Point: {course.gradePoint.toFixed(1)}
                         </span>
                       </div>
+                      {course.isCarryover && course.originalSemester && (
+                        <p className="text-xs text-orange-600 mt-1">
+                          Originally failed in: {course.originalSemester}
+                        </p>
+                      )}
                     </div>
                     <Button
                       variant="ghost"
@@ -126,6 +161,8 @@ export default function SemesterCard({
           onAddCourse(course);
           setShowAddCourse(false);
         }}
+        gpaScale={gpaScale}
+        semesterNames={semesterNames}
       />
     </>
   );

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, Trash2, BarChart3 } from 'lucide-react';
+import { Plus, Trash2, BarChart3, Target, GraduationCap } from 'lucide-react';
 import { useCGPA } from '@/hooks/useCGPA';
 import SemesterCard from '@/components/SemesterCard';
 import CGPAOverview from '@/components/CGPAOverview';
 import AddSemesterDialog from '@/components/AddSemesterDialog';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { useLocation } from 'wouter';
 
 /**
  * Design Philosophy: Vibrant Data Dashboard
@@ -22,6 +23,8 @@ export default function Home() {
   const cgpa = useCGPA();
   const [showAddSemester, setShowAddSemester] = useState(false);
   const [expandedSemesterId, setExpandedSemesterId] = useState<string | null>(null);
+  const [, setLocation] = useLocation();
+  const scale = cgpa.settings.gpaScale;
 
   // Prepare data for charts
   const chartData = cgpa.semesters.map(semester => ({
@@ -29,6 +32,8 @@ export default function Home() {
     gpa: cgpa.semesterGPAs[semester.id] || 0,
     courses: semester.courses.length,
   }));
+
+  const semesterNames = cgpa.semesters.map(s => s.name);
 
   const handleClearAll = () => {
     if (window.confirm('Are you sure you want to clear all data? This cannot be undone.')) {
@@ -61,6 +66,43 @@ export default function Home() {
         {/* Overview Cards */}
         <CGPAOverview cgpa={cgpa} />
 
+        {/* Feature Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <Card
+            className="p-6 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group"
+            onClick={() => setLocation('/nigerian-universities')}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white text-xl shrink-0">
+                <GraduationCap className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
+                  🇳🇬 Nigerian Universities
+                </h3>
+                <p className="text-sm text-slate-600">Apply preset grading systems</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card
+            className="p-6 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group"
+            onClick={() => setLocation('/grade-predictor')}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white shrink-0">
+                <Target className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
+                  Grade Predictor
+                </h3>
+                <p className="text-sm text-slate-600">Plan your target CGPA</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
         {/* Charts Section */}
         {chartData.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
@@ -74,7 +116,7 @@ export default function Home() {
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="name" stroke="#64748b" />
-                  <YAxis domain={[0, 4]} stroke="#64748b" />
+                  <YAxis domain={[0, scale]} stroke="#64748b" />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#ffffff',
@@ -94,7 +136,7 @@ export default function Home() {
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="name" stroke="#64748b" />
-                  <YAxis domain={[0, 4]} stroke="#64748b" />
+                  <YAxis domain={[0, scale]} stroke="#64748b" />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#ffffff',
@@ -158,10 +200,12 @@ export default function Home() {
                   }
                   onRemove={() => cgpa.removeSemester(semester.id)}
                   onAddCourse={(course) => cgpa.addCourse(semester.id, course)}
-                  onUpdateCourse={(courseId: string, updates: any) =>
+                  onUpdateCourse={(courseId: string, updates: Partial<typeof semester.courses[0]>) =>
                     cgpa.updateCourse(semester.id, courseId, updates)
                   }
                   onRemoveCourse={(courseId: string) => cgpa.removeCourse(semester.id, courseId)}
+                  gpaScale={scale}
+                  semesterNames={semesterNames}
                 />
               ))}
             </div>

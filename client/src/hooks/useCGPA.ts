@@ -1,10 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
+import { GradeRange, getDefaultGradeRanges } from '@/data/nigerianUniversities';
 
 export interface Course {
   id: string;
   name: string;
   credits: number;
   gradePoint: number;
+  isCarryover: boolean;
+  originalSemester: string | null;
+  isCarryoverPassed: boolean;
 }
 
 export interface Semester {
@@ -13,15 +17,44 @@ export interface Semester {
   courses: Course[];
 }
 
+export interface AppSettings {
+  gpaScale: number;
+  gradeRanges: GradeRange[];
+  activeUniversity: string | null;
+}
+
 interface CGPAData {
   semesters: Semester[];
   currentCGPA: number;
   totalCredits: number;
   totalGradePoints: number;
   semesterGPAs: { [key: string]: number };
+  settings: AppSettings;
 }
 
-const GPA_SCALE = 4.0;
+const SETTINGS_KEY = 'cgpa-calculator-settings';
+
+const getDefaultSettings = (): AppSettings => ({
+  gpaScale: 5.0,
+  gradeRanges: getDefaultGradeRanges(),
+  activeUniversity: null,
+});
+
+const loadSettings = (): AppSettings => {
+  if (typeof window === 'undefined') return getDefaultSettings();
+  const saved = localStorage.getItem(SETTINGS_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved) as AppSettings;
+    } catch {
+      return getDefaultSettings();
+    }
+  }
+  // First launch: save defaults
+  const defaults = getDefaultSettings();
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(defaults));
+  return defaults;
+};
 
 const getInitialData = (): CGPAData => ({
   semesters: [],
@@ -29,6 +62,7 @@ const getInitialData = (): CGPAData => ({
   totalCredits: 0,
   totalGradePoints: 0,
   semesterGPAs: {},
+  settings: loadSettings(),
 });
 
 export function useCGPA() {
@@ -37,7 +71,22 @@ export function useCGPA() {
     const saved = localStorage.getItem('cgpa-calculator-data');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved) as CGPAData;
+        // Migrate old data: ensure settings exist
+        if (!parsed.settings) {
+          parsed.settings = loadSettings();
+        }
+        // Migrate old courses: ensure carryover fields exist
+        parsed.semesters = parsed.semesters.map(sem => ({
+          ...sem,
+          courses: sem.courses.map(c => ({
+            ...c,
+            isCarryover: c.isCarryover ?? false,
+            originalSemester: c.originalSemester ?? null,
+            isCarryoverPassed: c.isCarryoverPassed ?? false,
+          })),
+        }));
+        return parsed;
       } catch {
         return getInitialData();
       }
@@ -50,6 +99,11 @@ export function useCGPA() {
     localStorage.setItem('cgpa-calculator-data', JSON.stringify(data));
   }, [data]);
 
+  // Save settings separately for persistence
+  useEffect(() => {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
+  }, [data.settings]);
+
   const calculateSemesterGPA = (courses: Course[]): number => {
     if (courses.length === 0) return 0;
     const totalPoints = courses.reduce((sum, course) => sum + course.gradePoint * course.credits, 0);
@@ -57,15 +111,68 @@ export function useCGPA() {
     return totalCredits === 0 ? 0 : parseFloat((totalPoints / totalCredits).toFixed(2));
   };
 
+  // Carryover-aware CGPA calculation: only counts latest attempt for repeated courses
   const calculateCGPA = useCallback((semesters: Semester[]): { cgpa: number; totalCredits: number; totalGradePoints: number } => {
+    // Collect all courses across semesters, tracking latest attempt per course name
+    const courseMap = new Map<string, { gradePoint: number; credits: number; semesterIndex: number }>();
+    const nonCarryoverCourses: { gradePoint: number; credits: number }[] = [];
+
+    semesters.forEach((semester, semesterIndex) => {
+      semester.courses.forEach(course => {
+        if (course.isCarryover) {
+          // For carryover courses, use the latest attempt (highest semester index)
+          const key = course.name.toLowerCase().trim();
+          const existing = courseMap.get(key);
+          if (!existing || semesterIndex > existing.semesterIndex) {
+            courseMap.set(key, {
+              gradePoint: course.gradePoint,
+              credits: course.credits,
+              semesterIndex,
+            });
+          }
+        } else {
+          // Check if this course has a later carryover attempt
+          const key = course.name.toLowerCase().trim();
+          let hasCarryoverLater = false;
+          for (let i = semesterIndex + 1; i < semesters.length; i++) {
+            if (semesters[i].courses.some(c => c.isCarryover && c.name.toLowerCase().trim() === key)) {
+              hasCarryoverLater = true;
+              break;
+            }
+          }
+          if (hasCarryoverLater) {
+            // This course will be replaced by a carryover; add to map for tracking
+            const existing = courseMap.get(key);
+            if (!existing || semesterIndex > existing.semesterIndex) {
+              courseMap.set(key, {
+                gradePoint: course.gradePoint,
+                credits: course.credits,
+                semesterIndex,
+              });
+            }
+          } else {
+            nonCarryoverCourses.push({
+              gradePoint: course.gradePoint,
+              credits: course.credits,
+            });
+          }
+        }
+      });
+    });
+
     let totalGradePoints = 0;
     let totalCredits = 0;
 
-    semesters.forEach(semester => {
-      semester.courses.forEach(course => {
-        totalGradePoints += course.gradePoint * course.credits;
-        totalCredits += course.credits;
-      });
+    // Add non-carryover courses
+    nonCarryoverCourses.forEach(course => {
+      totalGradePoints += course.gradePoint * course.credits;
+      totalCredits += course.credits;
+    });
+
+    // Add only latest attempt for carryover courses
+    courseMap.forEach(course => {
+      totalGradePoints += course.gradePoint * course.credits;
+      totalCredits += course.credits;
     });
 
     const cgpa = totalCredits === 0 ? 0 : parseFloat((totalGradePoints / totalCredits).toFixed(2));
@@ -205,6 +312,29 @@ export function useCGPA() {
     setData(getInitialData());
   }, []);
 
+  const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
+    setData(prevData => ({
+      ...prevData,
+      settings: { ...prevData.settings, ...newSettings },
+    }));
+  }, []);
+
+  // Carryover statistics
+  const carryoverStats = {
+    total: data.semesters.reduce(
+      (count, sem) => count + sem.courses.filter(c => c.isCarryover).length,
+      0
+    ),
+    cleared: data.semesters.reduce(
+      (count, sem) => count + sem.courses.filter(c => c.isCarryover && c.isCarryoverPassed).length,
+      0
+    ),
+    active: data.semesters.reduce(
+      (count, sem) => count + sem.courses.filter(c => c.isCarryover && !c.isCarryoverPassed).length,
+      0
+    ),
+  };
+
   return {
     ...data,
     addSemester,
@@ -214,5 +344,7 @@ export function useCGPA() {
     removeCourse,
     clearAllData,
     calculateSemesterGPA,
+    updateSettings,
+    carryoverStats,
   };
 }
