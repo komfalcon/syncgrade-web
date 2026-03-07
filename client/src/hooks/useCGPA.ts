@@ -113,15 +113,25 @@ export function useCGPA() {
 
   // Carryover-aware CGPA calculation: only counts latest attempt for repeated courses
   const calculateCGPA = useCallback((semesters: Semester[]): { cgpa: number; totalCredits: number; totalGradePoints: number } => {
-    // Collect all courses across semesters, tracking latest attempt per course name
+    // Build a set of normalized carryover course names for O(1) lookups
+    const carryoverNames = new Set<string>();
+    semesters.forEach(semester => {
+      semester.courses.forEach(course => {
+        if (course.isCarryover) {
+          carryoverNames.add(course.name.toLowerCase().replace(/\s+/g, ''));
+        }
+      });
+    });
+
+    // Collect all courses, tracking latest attempt per course name for carryovers
     const courseMap = new Map<string, { gradePoint: number; credits: number; semesterIndex: number }>();
     const nonCarryoverCourses: { gradePoint: number; credits: number }[] = [];
 
     semesters.forEach((semester, semesterIndex) => {
       semester.courses.forEach(course => {
-        if (course.isCarryover) {
-          // For carryover courses, use the latest attempt (highest semester index)
-          const key = course.name.toLowerCase().trim();
+        const key = course.name.toLowerCase().replace(/\s+/g, '');
+        if (course.isCarryover || carryoverNames.has(key)) {
+          // This course has a carryover relationship — track latest attempt only
           const existing = courseMap.get(key);
           if (!existing || semesterIndex > existing.semesterIndex) {
             courseMap.set(key, {
@@ -131,31 +141,10 @@ export function useCGPA() {
             });
           }
         } else {
-          // Check if this course has a later carryover attempt
-          const key = course.name.toLowerCase().trim();
-          let hasCarryoverLater = false;
-          for (let i = semesterIndex + 1; i < semesters.length; i++) {
-            if (semesters[i].courses.some(c => c.isCarryover && c.name.toLowerCase().trim() === key)) {
-              hasCarryoverLater = true;
-              break;
-            }
-          }
-          if (hasCarryoverLater) {
-            // This course will be replaced by a carryover; add to map for tracking
-            const existing = courseMap.get(key);
-            if (!existing || semesterIndex > existing.semesterIndex) {
-              courseMap.set(key, {
-                gradePoint: course.gradePoint,
-                credits: course.credits,
-                semesterIndex,
-              });
-            }
-          } else {
-            nonCarryoverCourses.push({
-              gradePoint: course.gradePoint,
-              credits: course.credits,
-            });
-          }
+          nonCarryoverCourses.push({
+            gradePoint: course.gradePoint,
+            credits: course.credits,
+          });
         }
       });
     });

@@ -37,7 +37,7 @@ export default function AddCourseDialog({ open, onOpenChange, onAdd, gpaScale = 
         gradePoint: parseFloat(gradePoint),
         isCarryover,
         originalSemester: isCarryover && originalSemester ? originalSemester : null,
-        isCarryoverPassed: isCarryover ? parseFloat(gradePoint) > 0 : false,
+        isCarryoverPassed: isCarryover ? parseFloat(gradePoint) >= 1.0 : false,
       });
       setCourseName('');
       setCredits('3');

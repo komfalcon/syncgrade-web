@@ -9,6 +9,8 @@ import { useLocation } from 'wouter';
 import { useCGPA } from '@/hooks/useCGPA';
 import { toast } from 'sonner';
 
+const MAX_WHAT_IF_COURSES = 20;
+
 interface PredictionResult {
   requiredGPA: number;
   letterGrade: string;
@@ -81,19 +83,18 @@ export default function GradePredictor() {
   const getLetterGrade = useCallback(
     (gpa: number): string => {
       const ranges = cgpa.settings.gradeRanges;
-      // Find the closest grade range
-      for (const range of ranges) {
-        if (Math.abs(gpa - range.gradePoint) < 0.25) {
+      // Find the grade whose gradePoint is closest to (but not less than) the GPA
+      // Ranges are sorted descending by gradePoint
+      const sorted = [...ranges].sort((a, b) => b.gradePoint - a.gradePoint);
+      for (const range of sorted) {
+        if (gpa >= range.gradePoint) {
           return range.grade;
         }
       }
-      if (gpa >= scale * 0.9) return 'A';
-      if (gpa >= scale * 0.7) return 'B';
-      if (gpa >= scale * 0.5) return 'C';
-      if (gpa >= scale * 0.3) return 'D';
-      return 'F';
+      // If GPA is below all grade points, return the lowest grade
+      return sorted.length > 0 ? sorted[sorted.length - 1].grade : 'F';
     },
-    [cgpa.settings.gradeRanges, scale]
+    [cgpa.settings.gradeRanges]
   );
 
   const getVerdict = useCallback(
@@ -220,7 +221,7 @@ export default function GradePredictor() {
   };
 
   const addWhatIfCourse = () => {
-    if (whatIfCourses.length >= 20) return;
+    if (whatIfCourses.length >= MAX_WHAT_IF_COURSES) return;
     setWhatIfCourses(prev => [
       ...prev,
       {
@@ -488,10 +489,10 @@ export default function GradePredictor() {
                     variant="outline"
                     className="w-full gap-2"
                     onClick={addWhatIfCourse}
-                    disabled={whatIfCourses.length >= 20}
+                    disabled={whatIfCourses.length >= MAX_WHAT_IF_COURSES}
                   >
                     <Plus className="w-4 h-4" />
-                    Add Course ({whatIfCourses.length}/20)
+                    Add Course ({whatIfCourses.length}/{MAX_WHAT_IF_COURSES})
                   </Button>
                 </div>
               </TabsContent>
