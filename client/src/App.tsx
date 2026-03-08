@@ -11,6 +11,7 @@ import Analytics from "./pages/Analytics";
 import CarryoverSimulator from "./pages/CarryoverSimulator";
 import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
 import UniversityComparison from "./pages/UniversityComparison";
+import BackupRestore from "./pages/BackupRestore";
 
 
 function Router() {
@@ -23,6 +24,7 @@ function Router() {
       <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
       <Route path={"/study-load-optimizer"} component={StudyLoadOptimizer} />
       <Route path={"/university-comparison"} component={UniversityComparison} />
+      <Route path={"/backup-restore"} component={BackupRestore} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
