@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { GradeRange, getDefaultGradeRanges } from '@/data/nigerianUniversities';
+import type { GradeRange } from '@/universities/types';
+import { DEFAULT_NIGERIAN_GRADES } from '@/universities/types';
 
 export interface Course {
   id: string;
@@ -36,7 +37,7 @@ const SETTINGS_KEY = 'cgpa-calculator-settings';
 
 const getDefaultSettings = (): AppSettings => ({
   gpaScale: 5.0,
-  gradeRanges: getDefaultGradeRanges(),
+  gradeRanges: [...DEFAULT_NIGERIAN_GRADES],
   activeUniversity: null,
 });
 

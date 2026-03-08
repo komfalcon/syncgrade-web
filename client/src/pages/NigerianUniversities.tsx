@@ -24,12 +24,7 @@ export default function NigerianUniversities() {
   const handleApply = (university: UniversityConfig) => {
     cgpa.updateSettings({
       gpaScale: university.gradingSystem.scale,
-      gradeRanges: university.gradingSystem.grades.map(g => ({
-        grade: g.grade,
-        minScore: g.min,
-        maxScore: g.max,
-        gradePoint: g.points,
-      })),
+      gradeRanges: university.gradingSystem.grades,
       activeUniversity: university.shortName,
     });
     setSelectedUni(null);
@@ -145,8 +140,8 @@ export default function NigerianUniversities() {
                 {cgpa.settings.gradeRanges.map(range => (
                   <tr key={range.grade} className="border-b border-slate-100">
                     <td className="py-2 pr-4 font-mono font-semibold text-slate-900">{range.grade}</td>
-                    <td className="py-2 pr-4 text-slate-600">{range.minScore} - {range.maxScore}</td>
-                    <td className="py-2 font-mono font-semibold text-cyan-600">{range.gradePoint.toFixed(1)}</td>
+                    <td className="py-2 pr-4 text-slate-600">{range.min} - {range.max}</td>
+                    <td className="py-2 font-mono font-semibold text-cyan-600">{range.points.toFixed(1)}</td>
                   </tr>
                 ))}
               </tbody>

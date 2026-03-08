@@ -83,11 +83,11 @@ export default function GradePredictor() {
   const getLetterGrade = useCallback(
     (gpa: number): string => {
       const ranges = cgpa.settings.gradeRanges;
-      // Find the grade whose gradePoint is closest to (but not less than) the GPA
-      // Ranges are sorted descending by gradePoint
-      const sorted = [...ranges].sort((a, b) => b.gradePoint - a.gradePoint);
+      // Find the grade whose points is closest to (but not less than) the GPA
+      // Ranges are sorted descending by points
+      const sorted = [...ranges].sort((a, b) => b.points - a.points);
       for (const range of sorted) {
-        if (gpa >= range.gradePoint) {
+        if (gpa >= range.points) {
           return range.grade;
         }
       }
@@ -467,8 +467,8 @@ export default function GradePredictor() {
                           }
                         >
                           {cgpa.settings.gradeRanges.map(range => (
-                            <option key={range.grade} value={range.gradePoint}>
-                              {range.grade} ({range.gradePoint.toFixed(1)})
+                            <option key={range.grade} value={range.points}>
+                              {range.grade} ({range.points.toFixed(1)})
                             </option>
                           ))}
                         </select>

@@ -69,7 +69,7 @@ export default function CarryoverSimulator() {
     [universityConfig],
   );
 
-  const repeatPolicy: 'replace' | 'average' | 'both' = useMemo(
+  const repeatPolicy: 'replace' | 'average' | 'both' | 'highest' = useMemo(
     () => universityConfig?.repeatPolicy?.method ?? 'replace',
     [universityConfig],
   );

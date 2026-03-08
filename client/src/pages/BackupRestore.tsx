@@ -54,7 +54,7 @@ export default function BackupRestore() {
     const csvSemesters = semesters.map((sem) => ({
       name: sem.name,
       courses: sem.courses.map((c) => {
-        const match = gradeRanges.find((r) => r.gradePoint === c.gradePoint);
+        const match = gradeRanges.find((r) => r.points === c.gradePoint);
         return {
           name: c.name,
           credits: c.credits,
