@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ArrowLeft, GraduationCap, MapPin, Check } from 'lucide-react';
+import { ArrowLeft, GraduationCap, MapPin, Check, BookOpen, RefreshCw, FileText } from 'lucide-react';
 import { useLocation } from 'wouter';
-import { NIGERIAN_UNIVERSITIES, NigerianUniversity, GradeRange } from '@/data/nigerianUniversities';
+import { nigerianUniversities } from '@/universities/nigeria';
+import type { UniversityConfig } from '@/universities/types';
 import { useCGPA } from '@/hooks/useCGPA';
 import {
   Dialog,
@@ -18,12 +19,17 @@ import { toast } from 'sonner';
 export default function NigerianUniversities() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
-  const [selectedUni, setSelectedUni] = useState<NigerianUniversity | null>(null);
+  const [selectedUni, setSelectedUni] = useState<UniversityConfig | null>(null);
 
-  const handleApply = (university: NigerianUniversity) => {
+  const handleApply = (university: UniversityConfig) => {
     cgpa.updateSettings({
-      gpaScale: university.gpaScale,
-      gradeRanges: [...university.gradeRanges] as GradeRange[],
+      gpaScale: university.gradingSystem.scale,
+      gradeRanges: university.gradingSystem.grades.map(g => ({
+        grade: g.grade,
+        minScore: g.min,
+        maxScore: g.max,
+        gradePoint: g.points,
+      })),
       activeUniversity: university.shortName,
     });
     setSelectedUni(null);
@@ -59,11 +65,11 @@ export default function NigerianUniversities() {
       {/* University List */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {NIGERIAN_UNIVERSITIES.map(uni => {
+          {nigerianUniversities.map(uni => {
             const isActive = cgpa.settings.activeUniversity === uni.shortName;
             return (
               <Card
-                key={uni.shortName}
+                key={uni.id}
                 className={`p-6 shadow-md border-0 cursor-pointer hover:shadow-xl transition-all ${
                   isActive ? 'ring-2 ring-green-400 bg-green-50/50' : ''
                 }`}
@@ -87,15 +93,26 @@ export default function NigerianUniversities() {
                         {uni.shortName}
                       </span>
                       <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold border ${
-                        uni.gpaScale === 5.0
+                        uni.gradingSystem.scale === 5.0
                           ? 'bg-purple-100 text-purple-700 border-purple-200'
                           : 'bg-blue-100 text-blue-700 border-blue-200'
                       }`}>
-                        {uni.gpaScale.toFixed(1)} Scale
+                        {uni.gradingSystem.scale.toFixed(1)} Scale
                       </span>
                       <span className="inline-flex items-center gap-1 text-xs text-slate-500">
                         <MapPin className="w-3 h-3" />
                         {uni.location}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2 flex-wrap text-xs text-slate-500">
+                      <span className="inline-flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" />
+                        {uni.degreeClasses.length} degree classes
+                      </span>
+                      <span>·</span>
+                      <span className="inline-flex items-center gap-1">
+                        <RefreshCw className="w-3 h-3" />
+                        Repeat: {uni.repeatPolicy.method}
                       </span>
                     </div>
                   </div>
@@ -138,28 +155,129 @@ export default function NigerianUniversities() {
         </Card>
       </div>
 
-      {/* Confirmation Dialog */}
+      {/* Detail Dialog */}
       <Dialog open={selectedUni !== null} onOpenChange={(open) => !open && setSelectedUni(null)}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[550px] max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Apply {selectedUni?.name} Grading System?</DialogTitle>
             <DialogDescription>
-              This will update your GPA scale to {selectedUni?.gpaScale.toFixed(1)} and grade ranges to match {selectedUni?.shortName}'s official system.
+              This will update your GPA scale to {selectedUni?.gradingSystem.scale.toFixed(1)} and grade ranges to match {selectedUni?.shortName}'s official system.
             </DialogDescription>
           </DialogHeader>
           {selectedUni && (
-            <div className="py-4">
+            <div className="py-4 space-y-5">
+              {/* Grading System */}
               <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Grade Ranges:</p>
-                <div className="grid grid-cols-2 gap-1 text-sm">
-                  {selectedUni.gradeRanges.map(range => (
-                    <div key={range.grade} className="flex justify-between">
-                      <span className="font-mono text-slate-600">{range.grade}: {range.minScore}-{range.maxScore}</span>
-                      <span className="font-mono font-semibold text-cyan-600">→ {range.gradePoint.toFixed(1)}</span>
-                    </div>
-                  ))}
+                <p className="text-sm font-semibold text-slate-700 mb-2">Grading System ({selectedUni.gradingSystem.scale.toFixed(1)} Scale)</p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200">
+                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">Grade</th>
+                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">Score Range</th>
+                        <th className="text-left py-1.5 text-slate-500 font-medium text-xs">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedUni.gradingSystem.grades.map(g => (
+                        <tr key={g.grade} className="border-b border-slate-100">
+                          <td className="py-1.5 pr-3 font-mono font-semibold text-slate-900">{g.grade}</td>
+                          <td className="py-1.5 pr-3 text-slate-600">{g.min} – {g.max}</td>
+                          <td className="py-1.5 font-mono font-semibold text-cyan-600">{g.points.toFixed(1)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
+
+              {/* Degree Classifications */}
+              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+                <p className="text-sm font-semibold text-slate-700 mb-2">Degree Classifications</p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200">
+                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">Class</th>
+                        <th className="text-left py-1.5 text-slate-500 font-medium text-xs">CGPA Range</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedUni.degreeClasses.map(dc => (
+                        <tr key={dc.name} className="border-b border-slate-100">
+                          <td className="py-1.5 pr-3 font-semibold text-slate-900">{dc.name}</td>
+                          <td className="py-1.5 font-mono text-slate-600">{dc.minCGPA.toFixed(2)} – {dc.maxCGPA.toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Credit Rules */}
+              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+                <p className="text-sm font-semibold text-slate-700 mb-2">Credit Rules</p>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="text-slate-500 text-xs">Min Credits</span>
+                    <p className="font-semibold text-slate-900">{selectedUni.creditRules.minimumCredits}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-xs">Max / Semester</span>
+                    <p className="font-semibold text-slate-900">{selectedUni.creditRules.maximumPerSemester}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-xs">Min / Semester</span>
+                    <p className="font-semibold text-slate-900">{selectedUni.creditRules.minimumPerSemester}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-xs">Max Program Duration</span>
+                    <p className="font-semibold text-slate-900">{selectedUni.maxProgramDuration}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Repeat Policy */}
+              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+                <div className="flex items-center gap-2 mb-1">
+                  <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+                  <p className="text-sm font-semibold text-slate-700">Repeat Policy</p>
+                </div>
+                <span className="inline-flex items-center rounded-md bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 border border-amber-200 mb-1">
+                  {selectedUni.repeatPolicy.method}
+                </span>
+                <p className="text-sm text-slate-600">{selectedUni.repeatPolicy.description}</p>
+              </div>
+
+              {/* Academic Standing */}
+              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+                <p className="text-sm font-semibold text-slate-700 mb-2">Academic Standing</p>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="text-slate-500 text-xs">Probation (below {selectedUni.probation.minCGPA.toFixed(2)} CGPA)</span>
+                    <p className="text-slate-600">{selectedUni.probation.description}</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-xs">Dismissal</span>
+                    <p className="text-slate-600">{selectedUni.dismissal.description}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Source Documents */}
+              {selectedUni.sourceDocuments.length > 0 && (
+                <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+                  <div className="flex items-center gap-2 mb-1">
+                    <FileText className="w-3.5 h-3.5 text-slate-500" />
+                    <p className="text-sm font-semibold text-slate-700">Source Documents</p>
+                  </div>
+                  <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
+                    {selectedUni.sourceDocuments.map((doc, i) => (
+                      <li key={i}>{doc}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
           <DialogFooter>
