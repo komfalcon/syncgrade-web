@@ -25,7 +25,7 @@ export interface CreditRules {
 }
 
 export interface RepeatPolicy {
-  method: "replace" | "average" | "both";
+  method: "replace" | "average" | "both" | "highest";
   description: string;
 }
 

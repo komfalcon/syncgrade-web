@@ -102,7 +102,7 @@ export function calculateGPA(
 export function calculateCGPA(
   semesters: { name: string; courses: CourseInput[] }[],
   grades: GradeRange[],
-  repeatPolicy: "replace" | "average" | "both" = "replace"
+  repeatPolicy: "replace" | "average" | "both" | "highest" = "replace"
 ): CGPAResult {
   if (semesters.length === 0) {
     return {
@@ -162,6 +162,14 @@ export function calculateCGPA(
           // Both attempts count toward totals.
           existing.credits += course.credits;
           existing.qualityPoints += course.qualityPoints;
+          existing.count += 1;
+          break;
+
+        case "highest":
+          // Keep only the highest quality points; credits stay constant.
+          if (course.qualityPoints > existing.qualityPoints) {
+            existing.qualityPoints = course.qualityPoints;
+          }
           existing.count += 1;
           break;
       }
@@ -273,7 +281,7 @@ export function carryoverImpact(
     newGrade: string;
   }[],
   grades: GradeRange[],
-  repeatPolicy: "replace" | "average" | "both"
+  repeatPolicy: "replace" | "average" | "both" | "highest"
 ): CarryoverImpactResult {
   if (failedCourses.length === 0 || totalCredits <= 0) {
     return {
@@ -304,6 +312,12 @@ export function carryoverImpact(
       case "average": {
         const avgQP = (oldQP + newQP) / 2;
         totalQP = totalQP - oldQP + avgQP;
+        break;
+      }
+      case "highest": {
+        // Only use the higher of the two quality point values.
+        const highestQP = Math.max(oldQP, newQP);
+        totalQP = totalQP - oldQP + highestQP;
         break;
       }
     }
