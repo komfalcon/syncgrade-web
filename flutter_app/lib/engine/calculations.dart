@@ -618,14 +618,6 @@ ConfigValidationResult validateUniversityConfig(UniversityConfig config) {
     warnings.add('Minimum credits should be positive.');
   }
 
-  // Repeat policy — always present due to required field
-
-  // Probation
-  // ignore: unnecessary_null_comparison
-  if (config.probation == null) {
-    warnings.add('Missing probation configuration.');
-  }
-
   return ConfigValidationResult(
     valid: warnings.isEmpty,
     warnings: warnings,
