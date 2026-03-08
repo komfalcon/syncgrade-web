@@ -158,7 +158,7 @@ describe("calculateCGPA", () => {
       grades,
       "average",
     );
-    // Average: avg QP = (0*3 + 5*3) / 2 = 7.5; CGPA = 7.5/3 = 2.5
+    // Average: QP averaged = (0 + 15) / 2 = 7.5; CGPA = 7.5 / 3 = 2.5
     expect(result.cgpa).toBe(2.5);
   });
 });
