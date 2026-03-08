@@ -7,6 +7,11 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import NigerianUniversities from "./pages/NigerianUniversities";
 import GradePredictor from "./pages/GradePredictor";
+import Analytics from "./pages/Analytics";
+import CarryoverSimulator from "./pages/CarryoverSimulator";
+import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
+import UniversityComparison from "./pages/UniversityComparison";
+import BackupRestore from "./pages/BackupRestore";
 
 
 function Router() {
@@ -15,6 +20,11 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/nigerian-universities"} component={NigerianUniversities} />
       <Route path={"/grade-predictor"} component={GradePredictor} />
+      <Route path={"/analytics"} component={Analytics} />
+      <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
+      <Route path={"/study-load-optimizer"} component={StudyLoadOptimizer} />
+      <Route path={"/university-comparison"} component={UniversityComparison} />
+      <Route path={"/backup-restore"} component={BackupRestore} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
