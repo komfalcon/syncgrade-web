@@ -35,8 +35,7 @@ export default function BackupRestore() {
   const lastModified = useMemo(() => {
     const raw = localStorage.getItem('cgpa-calculator-data');
     if (!raw) return null;
-    // No timestamp stored — use current date as fallback
-    return new Date().toLocaleDateString();
+    return 'Today';
   }, []);
 
   const handleExportJSON = () => {
