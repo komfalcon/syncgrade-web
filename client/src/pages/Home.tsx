@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, Trash2, BarChart3, Target, GraduationCap } from 'lucide-react';
+import {
+  Plus, Trash2, BarChart3, Target, GraduationCap,
+  RefreshCw, BookOpen, Scale, Download, TrendingUp,
+  TrendingDown, Minus, Shield, AlertTriangle, BarChart2,
+} from 'lucide-react';
 import { useCGPA } from '@/hooks/useCGPA';
 import SemesterCard from '@/components/SemesterCard';
 import CGPAOverview from '@/components/CGPAOverview';
 import AddSemesterDialog from '@/components/AddSemesterDialog';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useLocation } from 'wouter';
+import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/engine/calculations';
+import { getAllUniversities } from '@/universities/nigeria';
+import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 
 /**
  * Design Philosophy: Vibrant Data Dashboard
@@ -66,42 +73,168 @@ export default function Home() {
         {/* Overview Cards */}
         <CGPAOverview cgpa={cgpa} />
 
+        {/* Degree Risk Warning */}
+        {cgpa.semesters.length > 0 && (() => {
+          const uniConfig = getAllUniversities().find(u => u.shortName === cgpa.settings.activeUniversity);
+          const degreeClasses = uniConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES;
+          const risk = assessDegreeRisk(cgpa.currentCGPA, degreeClasses, cgpa.totalCredits, 150);
+          const currentClass = getDegreeClass(cgpa.currentCGPA, degreeClasses);
+          const riskColors = {
+            safe: 'from-green-500 to-emerald-600',
+            warning: 'from-yellow-500 to-amber-600',
+            danger: 'from-orange-500 to-red-500',
+            critical: 'from-red-600 to-red-800',
+          };
+          const riskIcons = {
+            safe: <Shield className="w-5 h-5" />,
+            warning: <AlertTriangle className="w-5 h-5" />,
+            danger: <AlertTriangle className="w-5 h-5" />,
+            critical: <AlertTriangle className="w-5 h-5" />,
+          };
+          return (
+            <Card className="p-6 shadow-lg border-0 mb-8">
+              <div className="flex items-center gap-4">
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${riskColors[risk.level]} flex items-center justify-center text-white shrink-0`}>
+                  {riskIcons[risk.level]}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-slate-900">Degree Classification: {currentClass}</h3>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      risk.level === 'safe' ? 'bg-green-100 text-green-700' :
+                      risk.level === 'warning' ? 'bg-yellow-100 text-yellow-700' :
+                      risk.level === 'danger' ? 'bg-orange-100 text-orange-700' :
+                      'bg-red-100 text-red-700'
+                    }`}>
+                      {risk.level.toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-600 mt-1">{risk.message}</p>
+                </div>
+              </div>
+            </Card>
+          );
+        })()}
+
         {/* Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <Card
-            className="p-6 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group"
-            onClick={() => setLocation('/nigerian-universities')}
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white text-xl shrink-0">
-                <GraduationCap className="w-6 h-6" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/nigerian-universities')}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shrink-0">
+                <GraduationCap className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
-                  🇳🇬 Nigerian Universities
-                </h3>
-                <p className="text-sm text-slate-600">Apply preset grading systems</p>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">🇳🇬 Universities</h3>
+                <p className="text-xs text-slate-500">Apply grading systems</p>
               </div>
             </div>
           </Card>
 
-          <Card
-            className="p-6 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group"
-            onClick={() => setLocation('/grade-predictor')}
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white shrink-0">
-                <Target className="w-6 h-6" />
+          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/grade-predictor')}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white shrink-0">
+                <Target className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
-                  Grade Predictor
-                </h3>
-                <p className="text-sm text-slate-600">Plan your target CGPA</p>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Grade Predictor</h3>
+                <p className="text-xs text-slate-500">Plan your target CGPA</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/analytics')}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white shrink-0">
+                <BarChart2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Analytics</h3>
+                <p className="text-xs text-slate-500">Performance insights</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/carryover-simulator')}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white shrink-0">
+                <RefreshCw className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Carryover Simulator</h3>
+                <p className="text-xs text-slate-500">Retake impact analysis</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/study-load-optimizer')}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white shrink-0">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Study Load</h3>
+                <p className="text-xs text-slate-500">Optimize your schedule</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/university-comparison')}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shrink-0">
+                <Scale className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Compare Unis</h3>
+                <p className="text-xs text-slate-500">Side-by-side comparison</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/backup-restore')}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-slate-500 to-gray-600 flex items-center justify-center text-white shrink-0">
+                <Download className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Backup & Restore</h3>
+                <p className="text-xs text-slate-500">Export/import data</p>
               </div>
             </div>
           </Card>
         </div>
+
+        {/* Performance Timeline */}
+        {cgpa.semesters.length >= 2 && (() => {
+          const trendData = analyzePerformanceTrends(
+            cgpa.semesters.map(s => ({
+              name: s.name,
+              gpa: cgpa.semesterGPAs[s.id] || 0,
+              credits: s.courses.reduce((sum, c) => sum + c.credits, 0),
+            }))
+          );
+          return (
+            <Card className="p-6 shadow-lg border-0 mb-8">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-cyan-600" />
+                Performance Timeline
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {trendData.map((t, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2">
+                    <div className="text-xs font-medium text-slate-500">{t.semester}</div>
+                    <div className="font-bold text-slate-900">{t.gpa.toFixed(2)}</div>
+                    {t.trend === 'improving' && <TrendingUp className="w-4 h-4 text-green-500" />}
+                    {t.trend === 'declining' && <TrendingDown className="w-4 h-4 text-red-500" />}
+                    {t.trend === 'stable' && <Minus className="w-4 h-4 text-slate-400" />}
+                    {t.improvementMarker && (
+                      <span className="text-xs text-green-600 font-medium">{t.improvementMarker}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+          );
+        })()}
 
         {/* Charts Section */}
         {chartData.length > 0 && (
