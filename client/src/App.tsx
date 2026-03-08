@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import NigerianUniversities from "./pages/NigerianUniversities";
 import GradePredictor from "./pages/GradePredictor";
 import Analytics from "./pages/Analytics";
+import CarryoverSimulator from "./pages/CarryoverSimulator";
 
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
       <Route path={"/nigerian-universities"} component={NigerianUniversities} />
       <Route path={"/grade-predictor"} component={GradePredictor} />
       <Route path={"/analytics"} component={Analytics} />
+      <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
