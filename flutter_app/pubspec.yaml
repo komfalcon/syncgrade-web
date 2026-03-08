@@ -1,0 +1,29 @@
+name: cgpa_app
+description: Offline academic CGPA platform with deterministic engine calculations.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+# Note: Flutter-specific dependencies (path_provider, shared_preferences,
+# file_picker, fl_chart) should be uncommented when running with Flutter SDK.
+# The core engine and models are pure Dart and can be tested without Flutter.
+dependencies:
+  collection: ^1.18.0
+  intl: ^0.19.0
+  # path_provider: ^2.1.1
+  # shared_preferences: ^2.2.2
+  # file_picker: ^6.1.1
+  csv: ^6.0.0
+  # fl_chart: ^0.68.0
+
+dev_dependencies:
+  test: ^1.24.0
+  lints: ^4.0.0
+
+# Uncomment below when using Flutter SDK:
+# flutter:
+#   uses-material-design: true
+#   assets:
+#     - assets/
