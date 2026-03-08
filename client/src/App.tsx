@@ -10,6 +10,7 @@ import GradePredictor from "./pages/GradePredictor";
 import Analytics from "./pages/Analytics";
 import CarryoverSimulator from "./pages/CarryoverSimulator";
 import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
+import UniversityComparison from "./pages/UniversityComparison";
 
 
 function Router() {
@@ -21,6 +22,7 @@ function Router() {
       <Route path={"/analytics"} component={Analytics} />
       <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
       <Route path={"/study-load-optimizer"} component={StudyLoadOptimizer} />
+      <Route path={"/university-comparison"} component={UniversityComparison} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
