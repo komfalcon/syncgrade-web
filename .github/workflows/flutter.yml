@@ -11,6 +11,9 @@ on:
       - 'flutter_app/**'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Dart Engine Tests

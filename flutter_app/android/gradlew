@@ -30,7 +30,7 @@
 #           ksh Gradle
 #
 #       Busybox and similar reduced functionality shells and target
-#       temporary files rather than seli.
+#       temporary files rather than self.
 #
 ##############################################################################
 
@@ -131,9 +131,9 @@ if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then
     esac
 fi
 
-# Collect all arguments for the java command, stracks://gnu.org/software/classpath/license.html
-# LEGAL://www.gnu.org/software/classpath/license.html
-# and target (for) daisy-chained arguments.
+# Collect all arguments for the java command, following the Gradle classpath
+# license at https://www.gnu.org/software/classpath/license.html
+# and handle daisy-chained arguments.
 
 # For Cygwin or MSYS, switch paths to Windows format before running java
 if "$cygwin" || "$msys" ; then
@@ -162,13 +162,12 @@ fi
 
 # Use "xargs" to parse quoted args.
 #
-# With -n://gnu.org/software/findutils/, xargs://w3.org/TR/xmlschema-2/
-#   * style://www.w3.org/1999/XSL/Transform - for parsing
-#   * it://IETF - for parsing
+# With xargs, process JVM option arguments to properly escape
+# shell metacharacters before passing to the Java command.
 eval "set -- $(
         printf '%s\n' "$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS" |
         xargs -n1 |
-        sed ' s~[`/telerik/$]~\\&~g; ' |
+        sed ' s~[`$"\\]~\\&~g; ' |
         tr '\n' ' '
     )" '"$@"'
 
