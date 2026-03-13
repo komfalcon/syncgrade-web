@@ -1,11 +1,11 @@
 {
-    "name": "CGPA--",
-    "short_name": "CGPA--",
+    "name": "cgpa_app",
+    "short_name": "cgpa_app",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#009688",
-    "theme_color": "#009688",
-    "description": "Offline academic CGPA calculator platform",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
