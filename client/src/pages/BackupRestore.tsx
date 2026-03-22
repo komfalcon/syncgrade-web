@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import {
 import { toast } from 'sonner';
 import { useCGPA } from '@/hooks/useCGPA';
 import { exportBackup, parseBackupFile, generateCSV } from '@/engine/backup';
+import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 
 export default function BackupRestore() {
   const { semesters, currentCGPA, totalCredits, settings } = useCGPA();
@@ -32,10 +33,12 @@ export default function BackupRestore() {
     [semesters],
   );
 
-  const lastModified = useMemo(() => {
-    const raw = localStorage.getItem('cgpa-calculator-data');
-    if (!raw) return null;
-    return 'Today';
+  const [lastModified, setLastModified] = useState<string | null>(null);
+  useEffect(() => {
+    void (async () => {
+      const raw = await getStoredValue(STORAGE_KEYS.cgpaData);
+      setLastModified(raw ? 'Today' : null);
+    })();
   }, []);
 
   const handleExportJSON = () => {
@@ -125,16 +128,17 @@ export default function BackupRestore() {
       settings: backup.settings,
     };
 
-    localStorage.setItem('cgpa-calculator-data', JSON.stringify(restoredData));
-    if (backup.settings) {
-      localStorage.setItem(
-        'cgpa-calculator-settings',
-        JSON.stringify(backup.settings),
-      );
-    }
+    try {
+      await setStoredValue(STORAGE_KEYS.cgpaData, JSON.stringify(restoredData));
+      if (backup.settings) {
+        await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(backup.settings));
+      }
 
-    toast.success('Backup restored! Reloading…');
-    setTimeout(() => window.location.reload(), 500);
+      toast.success('Backup restored! Reloading…');
+      setTimeout(() => window.location.reload(), 500);
+    } catch {
+      toast.error('Failed to persist restored backup.');
+    }
   };
 
   return (

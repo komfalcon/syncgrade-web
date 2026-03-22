@@ -30,7 +30,8 @@ const DEFAULT_COURSE_CREDITS = 3;
 /** Round a number to `dp` decimal places. */
 function round(value: number, dp = 2): number {
   const factor = Math.pow(10, dp);
-  return Math.round(value * factor) / factor;
+  const epsilon = value >= 0 ? Number.EPSILON : -Number.EPSILON;
+  return Math.round((value + epsilon) * factor) / factor;
 }
 
 /**

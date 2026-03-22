@@ -1,6 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { GradeRange } from '@/universities/types';
 import { DEFAULT_NIGERIAN_GRADES } from '@/universities/types';
+import { calculateCGPA as calculateEngineCGPA } from '@/engine/calculations';
+import { getAllUniversities } from '@/universities/nigeria';
+import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 
 export interface Course {
   id: string;
@@ -34,6 +37,7 @@ interface CGPAData {
 }
 
 const SETTINGS_KEY = 'cgpa-calculator-settings';
+const DATA_KEY = 'cgpa-calculator-data';
 
 const getDefaultSettings = (): AppSettings => ({
   gpaScale: 5.0,
@@ -42,19 +46,7 @@ const getDefaultSettings = (): AppSettings => ({
 });
 
 const loadSettings = (): AppSettings => {
-  if (typeof window === 'undefined') return getDefaultSettings();
-  const saved = localStorage.getItem(SETTINGS_KEY);
-  if (saved) {
-    try {
-      return JSON.parse(saved) as AppSettings;
-    } catch {
-      return getDefaultSettings();
-    }
-  }
-  // First launch: save defaults
-  const defaults = getDefaultSettings();
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(defaults));
-  return defaults;
+  return getDefaultSettings();
 };
 
 const getInitialData = (): CGPAData => ({
@@ -67,43 +59,59 @@ const getInitialData = (): CGPAData => ({
 });
 
 export function useCGPA() {
-  const [data, setData] = useState<CGPAData>(() => {
-    if (typeof window === 'undefined') return getInitialData();
-    const saved = localStorage.getItem('cgpa-calculator-data');
-    if (saved) {
+  const [data, setData] = useState<CGPAData>(getInitialData());
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      if (typeof window === 'undefined') return;
       try {
-        const parsed = JSON.parse(saved) as CGPAData;
-        // Migrate old data: ensure settings exist
-        if (!parsed.settings) {
-          parsed.settings = loadSettings();
-        }
-        // Migrate old courses: ensure carryover fields exist
-        parsed.semesters = parsed.semesters.map(sem => ({
+        const savedDataRaw = await getStoredValue(DATA_KEY);
+        const savedSettingsRaw = await getStoredValue(SETTINGS_KEY);
+
+        const parsedData = savedDataRaw ? (JSON.parse(savedDataRaw) as CGPAData) : null;
+        const parsedSettings = savedSettingsRaw
+          ? (JSON.parse(savedSettingsRaw) as AppSettings)
+          : null;
+
+        const next = parsedData ?? getInitialData();
+        next.settings = parsedSettings ?? next.settings ?? getDefaultSettings();
+        next.semesters = (next.semesters ?? []).map((sem) => ({
           ...sem,
-          courses: sem.courses.map(c => ({
+          courses: (sem.courses ?? []).map((c) => ({
             ...c,
             isCarryover: c.isCarryover ?? false,
             originalSemester: c.originalSemester ?? null,
             isCarryoverPassed: c.isCarryoverPassed ?? false,
           })),
         }));
-        return parsed;
+
+        if (active) {
+          setData(next);
+        }
       } catch {
-        return getInitialData();
+        if (active) setData(getInitialData());
+      } finally {
+        if (active) setHydrated(true);
       }
-    }
-    return getInitialData();
-  });
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
-  // Save to localStorage whenever data changes
+  // Persist full state snapshot
   useEffect(() => {
-    localStorage.setItem('cgpa-calculator-data', JSON.stringify(data));
-  }, [data]);
+    if (!hydrated) return;
+    void setStoredValue(STORAGE_KEYS.cgpaData, JSON.stringify(data));
+  }, [data, hydrated]);
 
-  // Save settings separately for persistence
+  // Persist settings separately
   useEffect(() => {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
-  }, [data.settings]);
+    if (!hydrated) return;
+    void setStoredValue(STORAGE_KEYS.settings, JSON.stringify(data.settings));
+  }, [data.settings, hydrated]);
 
   const calculateSemesterGPA = (courses: Course[]): number => {
     if (courses.length === 0) return 0;
@@ -112,62 +120,45 @@ export function useCGPA() {
     return totalCredits === 0 ? 0 : parseFloat((totalPoints / totalCredits).toFixed(2));
   };
 
-  // Carryover-aware CGPA calculation: only counts latest attempt for repeated courses
-  const calculateCGPA = useCallback((semesters: Semester[]): { cgpa: number; totalCredits: number; totalGradePoints: number } => {
-    // Build a set of normalized carryover course names for O(1) lookups
-    const carryoverNames = new Set<string>();
-    semesters.forEach(semester => {
-      semester.courses.forEach(course => {
-        if (course.isCarryover) {
-          carryoverNames.add(course.name.toLowerCase().replace(/\s+/g, ''));
-        }
-      });
-    });
+  const getGradeFromPoints = (gradePoint: number, grades: GradeRange[]): string => {
+    const sorted = [...grades].sort((a, b) => b.points - a.points);
+    for (const grade of sorted) {
+      if (gradePoint >= grade.points) return grade.grade;
+    }
+    return sorted[sorted.length - 1]?.grade ?? 'F';
+  };
 
-    // Collect all courses, tracking latest attempt per course name for carryovers
-    const courseMap = new Map<string, { gradePoint: number; credits: number; semesterIndex: number }>();
-    const nonCarryoverCourses: { gradePoint: number; credits: number }[] = [];
+  // Policy-aware CGPA calculation driven by active university repeat policy
+  const calculateProgramSummary = useCallback((
+    semesters: Semester[],
+    settings: AppSettings = data.settings,
+  ): { cgpa: number; totalCredits: number; totalGradePoints: number } => {
+    const activeUni = getAllUniversities().find(
+      (u) => u.shortName === settings.activeUniversity,
+    );
+    const repeatPolicy = activeUni?.repeatPolicy.method ?? 'replace';
+    const grades = settings.gradeRanges;
+    const semesterInputs = semesters.map((semester) => ({
+      name: semester.name,
+      courses: semester.courses.map((course) => {
+        const grade =
+          grades.find((g) => g.points === course.gradePoint)?.grade ??
+          getGradeFromPoints(course.gradePoint, grades);
+        return {
+          name: course.name,
+          credits: Math.round(course.credits),
+          grade,
+        };
+      }),
+    }));
 
-    semesters.forEach((semester, semesterIndex) => {
-      semester.courses.forEach(course => {
-        const key = course.name.toLowerCase().replace(/\s+/g, '');
-        if (course.isCarryover || carryoverNames.has(key)) {
-          // This course has a carryover relationship — track latest attempt only
-          const existing = courseMap.get(key);
-          if (!existing || semesterIndex > existing.semesterIndex) {
-            courseMap.set(key, {
-              gradePoint: course.gradePoint,
-              credits: course.credits,
-              semesterIndex,
-            });
-          }
-        } else {
-          nonCarryoverCourses.push({
-            gradePoint: course.gradePoint,
-            credits: course.credits,
-          });
-        }
-      });
-    });
-
-    let totalGradePoints = 0;
-    let totalCredits = 0;
-
-    // Add non-carryover courses
-    nonCarryoverCourses.forEach(course => {
-      totalGradePoints += course.gradePoint * course.credits;
-      totalCredits += course.credits;
-    });
-
-    // Add only latest attempt for carryover courses
-    courseMap.forEach(course => {
-      totalGradePoints += course.gradePoint * course.credits;
-      totalCredits += course.credits;
-    });
-
-    const cgpa = totalCredits === 0 ? 0 : parseFloat((totalGradePoints / totalCredits).toFixed(2));
-    return { cgpa, totalCredits, totalGradePoints };
-  }, []);
+    const result = calculateEngineCGPA(semesterInputs, grades, repeatPolicy);
+    return {
+      cgpa: result.cgpa,
+      totalCredits: result.totalCredits,
+      totalGradePoints: result.totalQualityPoints,
+    };
+  }, [data.settings]);
 
   const addSemester = useCallback((semesterName: string) => {
     const newSemester: Semester = {
@@ -178,7 +169,7 @@ export function useCGPA() {
 
     setData(prevData => {
       const updatedSemesters = [...prevData.semesters, newSemester];
-      const { cgpa, totalCredits, totalGradePoints } = calculateCGPA(updatedSemesters);
+      const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(updatedSemesters, prevData.settings);
       return {
         ...prevData,
         semesters: updatedSemesters,
@@ -187,12 +178,12 @@ export function useCGPA() {
         totalGradePoints,
       };
     });
-  }, [data.semesters.length, calculateCGPA]);
+  }, [data.semesters.length, calculateProgramSummary]);
 
   const removeSemester = useCallback((semesterId: string) => {
     setData(prevData => {
       const updatedSemesters = prevData.semesters.filter(s => s.id !== semesterId);
-      const { cgpa, totalCredits, totalGradePoints } = calculateCGPA(updatedSemesters);
+      const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(updatedSemesters, prevData.settings);
       const semesterGPAs = { ...prevData.semesterGPAs };
       delete semesterGPAs[semesterId];
       return {
@@ -204,7 +195,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
-  }, [calculateCGPA]);
+  }, [calculateProgramSummary]);
 
   const addCourse = useCallback((semesterId: string, course: Omit<Course, 'id'>) => {
     setData(prevData => {
@@ -218,7 +209,7 @@ export function useCGPA() {
         return semester;
       });
 
-      const { cgpa, totalCredits, totalGradePoints } = calculateCGPA(updatedSemesters);
+      const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(updatedSemesters, prevData.settings);
       const semesterGPAs = { ...prevData.semesterGPAs };
       const semester = updatedSemesters.find(s => s.id === semesterId);
       if (semester) {
@@ -234,7 +225,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
-  }, [calculateCGPA]);
+  }, [calculateProgramSummary]);
 
   const updateCourse = useCallback((semesterId: string, courseId: string, updates: Partial<Course>) => {
     setData(prevData => {
@@ -250,7 +241,7 @@ export function useCGPA() {
         return semester;
       });
 
-      const { cgpa, totalCredits, totalGradePoints } = calculateCGPA(updatedSemesters);
+      const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(updatedSemesters, prevData.settings);
       const semesterGPAs = { ...prevData.semesterGPAs };
       const semester = updatedSemesters.find(s => s.id === semesterId);
       if (semester) {
@@ -266,7 +257,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
-  }, [calculateCGPA]);
+  }, [calculateProgramSummary]);
 
   const removeCourse = useCallback((semesterId: string, courseId: string) => {
     setData(prevData => {
@@ -280,7 +271,7 @@ export function useCGPA() {
         return semester;
       });
 
-      const { cgpa, totalCredits, totalGradePoints } = calculateCGPA(updatedSemesters);
+      const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(updatedSemesters, prevData.settings);
       const semesterGPAs = { ...prevData.semesterGPAs };
       const semester = updatedSemesters.find(s => s.id === semesterId);
       if (semester) {
@@ -296,18 +287,28 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
-  }, [calculateCGPA]);
+  }, [calculateProgramSummary]);
 
   const clearAllData = useCallback(() => {
     setData(getInitialData());
   }, []);
 
   const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
-    setData(prevData => ({
-      ...prevData,
-      settings: { ...prevData.settings, ...newSettings },
-    }));
-  }, []);
+    setData(prevData => {
+      const mergedSettings = { ...prevData.settings, ...newSettings };
+      const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(
+        prevData.semesters,
+        mergedSettings,
+      );
+      return {
+        ...prevData,
+        settings: mergedSettings,
+        currentCGPA: cgpa,
+        totalCredits,
+        totalGradePoints,
+      };
+    });
+  }, [calculateProgramSummary]);
 
   // Carryover statistics
   const carryoverStats = {

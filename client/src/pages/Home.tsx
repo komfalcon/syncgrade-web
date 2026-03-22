@@ -54,7 +54,7 @@ export default function Home() {
       <div
         className="relative overflow-hidden bg-gradient-to-r from-cyan-600 via-teal-600 to-cyan-500 text-white py-16 md:py-24"
         style={{
-          backgroundImage: `url('https://d2xsxph8kpxj0f.cloudfront.net/310519663370303140/R495SLkMAAXYH4T4Q3Hu88/hero-background-LY43fuC9vm4gxQJGTuFAyU.webp')`,
+          backgroundImage: `url('/assets/hero-background.svg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -307,7 +307,7 @@ export default function Home() {
           {cgpa.semesters.length === 0 ? (
             <Card className="p-12 text-center border-2 border-dashed border-cyan-200 bg-cyan-50/50">
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663370303140/R495SLkMAAXYH4T4Q3Hu88/empty-state-illustration-9BY5MtVBJPMMCeqd5q2NEA.webp"
+                src="/assets/empty-state-illustration.svg"
                 alt="Empty state"
                 className="w-48 h-48 mx-auto mb-6 object-contain"
               />

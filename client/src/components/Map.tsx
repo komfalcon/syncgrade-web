@@ -77,7 +77,7 @@
 /// <reference types="@types/google.maps" />
 
 import { useEffect, useRef } from "react";
-import { usePersistFn } from "@/hooks/usePersistFn";
+import { useStableCallback } from "@/hooks/useStableCallback";
 import { cn } from "@/lib/utils";
 
 declare global {
@@ -104,6 +104,7 @@ function loadMapScript() {
     };
     script.onerror = () => {
       console.error("Failed to load Google Maps script");
+      resolve(null);
     };
     document.head.appendChild(script);
   });
@@ -124,11 +125,17 @@ export function MapView({
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
+  const online = typeof navigator === "undefined" ? true : navigator.onLine;
 
-  const init = usePersistFn(async () => {
+  const init = useStableCallback(async () => {
+    if (!online) return;
+    if (!API_KEY) return;
     await loadMapScript();
     if (!mapContainer.current) {
       console.error("Map container not found");
+      return;
+    }
+    if (!window.google?.maps) {
       return;
     }
     map.current = new window.google.maps.Map(mapContainer.current, {
@@ -148,6 +155,24 @@ export function MapView({
   useEffect(() => {
     init();
   }, [init]);
+
+  if (!online || !API_KEY) {
+    return (
+      <div
+        className={cn(
+          "w-full h-[500px] rounded-md border border-slate-200 bg-slate-50 flex items-center justify-center p-6 text-center",
+          className,
+        )}
+      >
+        <div>
+          <p className="font-semibold text-slate-800">Map unavailable offline</p>
+          <p className="mt-1 text-sm text-slate-600">
+            Reconnect to load interactive maps.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />

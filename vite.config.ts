@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import { VitePWA } from "vite-plugin-pwa";
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -150,7 +151,48 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [
+  react(),
+  tailwindcss(),
+  jsxLocPlugin(),
+  vitePluginManusRuntime(),
+  vitePluginManusDebugCollector(),
+  VitePWA({
+    registerType: "autoUpdate",
+    includeAssets: ["favicon.ico", "assets/*.svg"],
+    manifest: {
+      name: "CGPA Calculator",
+      short_name: "CGPA",
+      theme_color: "#0891b2",
+      background_color: "#f8fafc",
+      display: "standalone",
+      start_url: "/",
+    },
+    workbox: {
+      cleanupOutdatedCaches: true,
+      globPatterns: ["**/*.{js,css,html,svg,png,webp,woff2}"],
+      runtimeCaching: [
+        {
+          urlPattern: ({ request }) => request.destination === "document",
+          handler: "NetworkFirst",
+          options: {
+            cacheName: "documents",
+            expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 7 },
+          },
+        },
+        {
+          urlPattern: ({ request }) =>
+            ["style", "script", "font", "image"].includes(request.destination),
+          handler: "CacheFirst",
+          options: {
+            cacheName: "static-assets",
+            expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
+          },
+        },
+      ],
+    },
+  }),
+];
 
 export default defineConfig({
   plugins,
