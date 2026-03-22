@@ -1,3 +1,8 @@
+import {
+  DEFAULT_NIGERIAN_DEGREE_CLASSES as SHARED_DEFAULT_NIGERIAN_DEGREE_CLASSES,
+  DEFAULT_NIGERIAN_GRADES as SHARED_DEFAULT_NIGERIAN_GRADES,
+} from "@shared/const";
+
 /**
  * University configuration types for the CGPA academic platform.
  * Each university config is a standalone, validated data structure
@@ -64,7 +69,3 @@ export const DEFAULT_NIGERIAN_DEGREE_CLASSES: DegreeClass[] =
   SHARED_DEFAULT_NIGERIAN_DEGREE_CLASSES.map((degreeClass) => ({
     ...degreeClass,
   }));
-import {
-  DEFAULT_NIGERIAN_DEGREE_CLASSES as SHARED_DEFAULT_NIGERIAN_DEGREE_CLASSES,
-  DEFAULT_NIGERIAN_GRADES as SHARED_DEFAULT_NIGERIAN_GRADES,
-} from "@shared/const";

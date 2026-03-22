@@ -128,13 +128,17 @@ export default function BackupRestore() {
       settings: backup.settings,
     };
 
-    await setStoredValue(STORAGE_KEYS.cgpaData, JSON.stringify(restoredData));
-    if (backup.settings) {
-      await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(backup.settings));
-    }
+    try {
+      await setStoredValue(STORAGE_KEYS.cgpaData, JSON.stringify(restoredData));
+      if (backup.settings) {
+        await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(backup.settings));
+      }
 
-    toast.success('Backup restored! Reloading…');
-    setTimeout(() => window.location.reload(), 500);
+      toast.success('Backup restored! Reloading…');
+      setTimeout(() => window.location.reload(), 500);
+    } catch {
+      toast.error('Failed to persist restored backup.');
+    }
   };
 
   return (
