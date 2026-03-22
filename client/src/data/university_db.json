@@ -1,0 +1,384 @@
+{
+  "universities": [
+    {
+      "id": "abu",
+      "name": "Ahmadu Bello University, Zaria",
+      "shortName": "ABU",
+      "country": "Nigeria",
+      "location": "Zaria, Kaduna State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "E", "min": 40, "max": 44, "points": 1 },
+          { "grade": "F", "min": 0, "max": 39, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class", "minCGPA": 1.5, "maxCGPA": 2.39 },
+        { "name": "Pass", "minCGPA": 1, "maxCGPA": 1.49 },
+        { "name": "Fail", "minCGPA": 0, "maxCGPA": 0.99 }
+      ],
+      "creditRules": {
+        "minimumCredits": 15,
+        "maximumPerSemester": 24,
+        "minimumPerSemester": 15,
+        "graduationCredits": [
+          { "min": 120, "max": 150, "programYears": 4 },
+          { "min": 150, "max": 190, "programYears": 5 },
+          { "min": 190, "max": 225, "programYears": 6 }
+        ]
+      },
+      "repeatPolicy": {
+        "method": "both",
+        "description": "Both the initial and resit grades count in the CGPA calculation."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student whose CGPA falls below 1.00 is placed on probation."
+      },
+      "dismissal": {
+        "description": "Two consecutive semesters on probation may lead to dismissal."
+      },
+      "maxProgramDuration": "50% extension beyond the standard duration (e.g., 6 years for a 4-year programme).",
+      "version": "2021-2022",
+      "sourceDocuments": ["Undergraduate Student Handbook (2021/2022 Session)"]
+    },
+    {
+      "id": "covenant",
+      "name": "Covenant University",
+      "shortName": "Covenant",
+      "country": "Nigeria",
+      "location": "Ota, Ogun State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "F", "min": 0, "max": 44, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class", "minCGPA": 1.5, "maxCGPA": 2.39 }
+      ],
+      "creditRules": {
+        "minimumCredits": 15,
+        "maximumPerSemester": 25,
+        "minimumPerSemester": 15,
+        "graduationCredits": []
+      },
+      "repeatPolicy": {
+        "method": "replace",
+        "description": "Failed courses must be re-registered; the new grade replaces the old one, subject to a 25-unit semester maximum."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student with a CGPA between 1.00 and 1.49 is placed on probation."
+      },
+      "dismissal": {
+        "description": "A student whose CGPA falls below 1.00, or remains below 1.50 after a probation year, may be dismissed."
+      },
+      "maxProgramDuration": "Standard programme duration plus 2 years.",
+      "version": "2019-2022",
+      "sourceDocuments": ["The Student Handbook (2019–2022)"]
+    },
+    {
+      "id": "funaab",
+      "name": "Federal University of Agriculture, Abeokuta",
+      "shortName": "FUNAAB",
+      "country": "Nigeria",
+      "location": "Abeokuta, Ogun State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "E", "min": 40, "max": 44, "points": 1 },
+          { "grade": "F", "min": 0, "max": 39, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class", "minCGPA": 1.5, "maxCGPA": 2.39 },
+        { "name": "Pass", "minCGPA": 1, "maxCGPA": 1.49 },
+        { "name": "Fail", "minCGPA": 0, "maxCGPA": 0.99 }
+      ],
+      "creditRules": {
+        "minimumCredits": 15,
+        "maximumPerSemester": 24,
+        "minimumPerSemester": 15,
+        "graduationCredits": [
+          { "min": 120, "max": 150, "programYears": 4 },
+          { "min": 150, "max": 190, "programYears": 5 },
+          { "min": 190, "max": 225, "programYears": 6 }
+        ]
+      },
+      "repeatPolicy": {
+        "method": "both",
+        "description": "Both the original and repeat grades are factored into the CGPA."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student whose CGPA falls below 1.00 is placed on probation."
+      },
+      "dismissal": {
+        "description": "Failure to rise above a 1.00 CGPA after the probation period may lead to dismissal."
+      },
+      "maxProgramDuration": "50% extension beyond the standard duration (e.g., 6 years for a 4-year programme).",
+      "version": "NUC-standard",
+      "sourceDocuments": ["Inferred from NUC Minimum Academic Standards"]
+    },
+    {
+      "id": "futminna",
+      "name": "Federal University of Technology, Minna",
+      "shortName": "FUTMINNA",
+      "country": "Nigeria",
+      "location": "Minna, Niger State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "E", "min": 40, "max": 44, "points": 1 },
+          { "grade": "F", "min": 0, "max": 39, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class Honours", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper Honours", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower Honours", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class Honours", "minCGPA": 1.5, "maxCGPA": 2.39 },
+        { "name": "Pass", "minCGPA": 1, "maxCGPA": 1.49 }
+      ],
+      "creditRules": {
+        "minimumCredits": 16,
+        "maximumPerSemester": 24,
+        "minimumPerSemester": 16,
+        "graduationCredits": []
+      },
+      "repeatPolicy": {
+        "method": "both",
+        "description": "Both the original and repeat grades are included in the CGPA calculation."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student whose CGPA falls below 1.00 is placed on probation."
+      },
+      "dismissal": {
+        "description": "Two consecutive sessions on probation without improvement may lead to dismissal."
+      },
+      "maxProgramDuration": "50% extension beyond the standard duration (e.g., 6 years for a 4-year programme).",
+      "version": "2019-2021",
+      "sourceDocuments": ["Students' Handbook & Information Guide (2019–2021)"]
+    },
+    {
+      "id": "oau",
+      "name": "Obafemi Awolowo University, Ile-Ife",
+      "shortName": "OAU",
+      "country": "Nigeria",
+      "location": "Ile-Ife, Osun State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "E", "min": 40, "max": 44, "points": 1 },
+          { "grade": "F", "min": 0, "max": 39, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class", "minCGPA": 1.5, "maxCGPA": 2.39 },
+        { "name": "Pass", "minCGPA": 1, "maxCGPA": 1.49 }
+      ],
+      "creditRules": {
+        "minimumCredits": 16,
+        "maximumPerSemester": 24,
+        "minimumPerSemester": 16,
+        "graduationCredits": []
+      },
+      "repeatPolicy": {
+        "method": "replace",
+        "description": "Failed courses must be repeated; electives may be substituted. The new grade replaces the old one."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student whose CGPA falls below 1.00 is placed on probation."
+      },
+      "dismissal": {
+        "description": "Two consecutive sessions on probation may lead to dismissal."
+      },
+      "maxProgramDuration": "50% extension beyond the standard duration (e.g., 6 years for a 4-year programme).",
+      "version": "faculty-handbook",
+      "sourceDocuments": ["Faculty Handbook (Faculty of Technology)"]
+    },
+    {
+      "id": "ui",
+      "name": "University of Ibadan",
+      "shortName": "UI",
+      "country": "Nigeria",
+      "location": "Ibadan, Oyo State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "E", "min": 40, "max": 44, "points": 1 },
+          { "grade": "F", "min": 0, "max": 39, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class Honours", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class", "minCGPA": 1.5, "maxCGPA": 2.39 },
+        { "name": "Pass", "minCGPA": 1, "maxCGPA": 1.49 }
+      ],
+      "creditRules": {
+        "minimumCredits": 15,
+        "maximumPerSemester": 24,
+        "minimumPerSemester": 15,
+        "graduationCredits": [
+          { "min": 120, "max": 150, "programYears": 4 },
+          { "min": 150, "max": 190, "programYears": 5 },
+          { "min": 190, "max": 225, "programYears": 6 }
+        ]
+      },
+      "repeatPolicy": {
+        "method": "both",
+        "description": "Both the original and repeat grades are included in the CGPA calculation."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student whose CGPA falls below 1.00 is placed on probation."
+      },
+      "dismissal": {
+        "description": "Sustained low academic performance may lead to dismissal."
+      },
+      "maxProgramDuration": "50% extension beyond the standard duration (e.g., 6 years for a 4-year programme).",
+      "version": "academic-regulations",
+      "sourceDocuments": ["University of Ibadan Academic Regulations"]
+    },
+    {
+      "id": "uniben",
+      "name": "University of Benin",
+      "shortName": "UNIBEN",
+      "country": "Nigeria",
+      "location": "Benin City, Edo State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "E", "min": 40, "max": 44, "points": 1 },
+          { "grade": "F", "min": 0, "max": 39, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class Honours", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class", "minCGPA": 1.5, "maxCGPA": 2.39 },
+        { "name": "Pass", "minCGPA": 1, "maxCGPA": 1.49 }
+      ],
+      "creditRules": {
+        "minimumCredits": 15,
+        "maximumPerSemester": 24,
+        "minimumPerSemester": 15,
+        "graduationCredits": [
+          { "min": 120, "max": 150, "programYears": 4 },
+          { "min": 150, "max": 190, "programYears": 5 },
+          { "min": 190, "max": 225, "programYears": 6 }
+        ]
+      },
+      "repeatPolicy": {
+        "method": "both",
+        "description": "Both the original and repeat grades are factored into the CGPA."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student whose CGPA falls below 1.00 is placed on probation."
+      },
+      "dismissal": {
+        "description": "Continuous academic failure may lead to dismissal."
+      },
+      "maxProgramDuration": "50% extension beyond the standard duration (e.g., 6 years for a 4-year programme).",
+      "version": "2022",
+      "sourceDocuments": ["Student Information Hand Book (2022)"]
+    },
+    {
+      "id": "unn",
+      "name": "University of Nigeria, Nsukka",
+      "shortName": "UNN",
+      "country": "Nigeria",
+      "location": "Nsukka, Enugu State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "grade": "A", "min": 70, "max": 100, "points": 5 },
+          { "grade": "B", "min": 60, "max": 69, "points": 4 },
+          { "grade": "C", "min": 50, "max": 59, "points": 3 },
+          { "grade": "D", "min": 45, "max": 49, "points": 2 },
+          { "grade": "E", "min": 40, "max": 44, "points": 1 },
+          { "grade": "F", "min": 0, "max": 39, "points": 0 }
+        ]
+      },
+      "degreeClasses": [
+        { "name": "First Class Honours", "minCGPA": 4.5, "maxCGPA": 5 },
+        { "name": "Second Class Upper Honours", "minCGPA": 3.5, "maxCGPA": 4.49 },
+        { "name": "Second Class Lower Honours", "minCGPA": 2.4, "maxCGPA": 3.49 },
+        { "name": "Third Class", "minCGPA": 1.5, "maxCGPA": 2.39 },
+        { "name": "Pass", "minCGPA": 1, "maxCGPA": 1.49 }
+      ],
+      "creditRules": {
+        "minimumCredits": 15,
+        "maximumPerSemester": 24,
+        "minimumPerSemester": 15,
+        "graduationCredits": [
+          { "min": 120, "max": 120, "programYears": 4 },
+          { "min": 150, "max": 150, "programYears": 5 },
+          { "min": 180, "max": 180, "programYears": 6 }
+        ]
+      },
+      "repeatPolicy": {
+        "method": "replace",
+        "description": "Failed courses must be repeated; the new grade replaces the old one in the CGPA calculation."
+      },
+      "probation": {
+        "minCGPA": 1,
+        "description": "A student whose CGPA falls below 1.00 is placed on probation."
+      },
+      "dismissal": {
+        "description": "Two consecutive sessions with a CGPA below 1.00 may lead to dismissal."
+      },
+      "maxProgramDuration": "50% extension beyond the standard duration (e.g., 6 years for a 4-year programme).",
+      "version": "2013-2014",
+      "sourceDocuments": ["Undergraduate Academic Regulations (2013/2014)"]
+    }
+  ]
+}

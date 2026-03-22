@@ -55,21 +55,16 @@ export interface UniversityConfig {
 }
 
 /** Default 5-point Nigerian grading scale (NUC standard) */
-export const DEFAULT_NIGERIAN_GRADES: GradeRange[] = [
-  { grade: "A", min: 70, max: 100, points: 5.0 },
-  { grade: "B", min: 60, max: 69, points: 4.0 },
-  { grade: "C", min: 50, max: 59, points: 3.0 },
-  { grade: "D", min: 45, max: 49, points: 2.0 },
-  { grade: "E", min: 40, max: 44, points: 1.0 },
-  { grade: "F", min: 0, max: 39, points: 0.0 },
-];
+export const DEFAULT_NIGERIAN_GRADES: GradeRange[] = SHARED_DEFAULT_NIGERIAN_GRADES.map(
+  (grade) => ({ ...grade }),
+);
 
 /** Default 5-point Nigerian degree classification */
-export const DEFAULT_NIGERIAN_DEGREE_CLASSES: DegreeClass[] = [
-  { name: "First Class", minCGPA: 4.50, maxCGPA: 5.00 },
-  { name: "Second Class Upper", minCGPA: 3.50, maxCGPA: 4.49 },
-  { name: "Second Class Lower", minCGPA: 2.40, maxCGPA: 3.49 },
-  { name: "Third Class", minCGPA: 1.50, maxCGPA: 2.39 },
-  { name: "Pass", minCGPA: 1.00, maxCGPA: 1.49 },
-  { name: "Fail", minCGPA: 0.00, maxCGPA: 0.99 },
-];
+export const DEFAULT_NIGERIAN_DEGREE_CLASSES: DegreeClass[] =
+  SHARED_DEFAULT_NIGERIAN_DEGREE_CLASSES.map((degreeClass) => ({
+    ...degreeClass,
+  }));
+import {
+  DEFAULT_NIGERIAN_DEGREE_CLASSES as SHARED_DEFAULT_NIGERIAN_DEGREE_CLASSES,
+  DEFAULT_NIGERIAN_GRADES as SHARED_DEFAULT_NIGERIAN_GRADES,
+} from "@shared/const";

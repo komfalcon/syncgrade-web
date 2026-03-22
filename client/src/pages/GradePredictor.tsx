@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,11 @@ import { ArrowLeft, Target, Plus, Trash2, Save, Clock } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { useCGPA } from '@/hooks/useCGPA';
 import { toast } from 'sonner';
+import { projectCGPA, simulateWhatIf } from '@/engine/calculations';
+import { getAllUniversities } from '@/universities/nigeria';
+import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
+import { DEFAULT_MAX_SEMESTER_UNITS } from '@shared/const';
+import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 
 const MAX_WHAT_IF_COURSES = 20;
 
@@ -37,26 +42,19 @@ interface SavedPrediction {
   verdict: string;
 }
 
-const PREDICTIONS_KEY = 'cgpa-saved-predictions';
-
-function loadSavedPredictions(): SavedPrediction[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const saved = localStorage.getItem(PREDICTIONS_KEY);
-    return saved ? (JSON.parse(saved) as SavedPrediction[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function savePredictions(predictions: SavedPrediction[]): void {
-  localStorage.setItem(PREDICTIONS_KEY, JSON.stringify(predictions));
-}
-
 export default function GradePredictor() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
   const scale = cgpa.settings.gpaScale;
+  const universityConfig = useMemo(
+    () =>
+      getAllUniversities().find(
+        (u) => u.shortName === cgpa.settings.activeUniversity,
+      ) ?? null,
+    [cgpa.settings.activeUniversity],
+  );
+  const maxSemesterUnits =
+    universityConfig?.creditRules.maximumPerSemester ?? DEFAULT_MAX_SEMESTER_UNITS;
 
   // Section 1 - Current Standing
   const [currentCGPAInput, setCurrentCGPAInput] = useState(
@@ -78,7 +76,27 @@ export default function GradePredictor() {
   ]);
 
   // Saved predictions
-  const [savedPredictions, setSavedPredictions] = useState<SavedPrediction[]>(loadSavedPredictions);
+  const [savedPredictions, setSavedPredictions] = useState<SavedPrediction[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const saved = await getStoredValue(STORAGE_KEYS.predictions);
+        if (!active) return;
+        setSavedPredictions(saved ? (JSON.parse(saved) as SavedPrediction[]) : []);
+      } catch {
+        if (active) setSavedPredictions([]);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    void setStoredValue(STORAGE_KEYS.predictions, JSON.stringify(savedPredictions));
+  }, [savedPredictions]);
 
   const getLetterGrade = useCallback(
     (gpa: number): string => {
@@ -128,14 +146,23 @@ export default function GradePredictor() {
       return;
     }
 
-    const totalUnits = completed + remaining;
-    const requiredGPA = (target * totalUnits - current * completed) / remaining;
+    if (remaining > maxSemesterUnits) {
+      toast.error(`Remaining units cannot exceed ${maxSemesterUnits} for this university.`);
+      return;
+    }
 
-    const { verdict, icon, achievable } = getVerdict(requiredGPA);
+    const projection = projectCGPA(
+      current,
+      Math.round(completed),
+      target,
+      Math.round(remaining),
+      scale,
+    );
+    const { verdict, icon, achievable } = getVerdict(projection.requiredGPA);
 
     setResult({
-      requiredGPA: parseFloat(requiredGPA.toFixed(2)),
-      letterGrade: getLetterGrade(requiredGPA),
+      requiredGPA: projection.requiredGPA,
+      letterGrade: getLetterGrade(projection.requiredGPA),
       verdict,
       verdictIcon: icon,
       isAchievable: achievable,
@@ -157,14 +184,12 @@ export default function GradePredictor() {
     };
     const updated = [prediction, ...savedPredictions];
     setSavedPredictions(updated);
-    savePredictions(updated);
     toast.success('Prediction saved!');
   };
 
   const handleDeletePrediction = (id: string) => {
     const updated = savedPredictions.filter(p => p.id !== id);
     setSavedPredictions(updated);
-    savePredictions(updated);
   };
 
   // Uniform distribution table
@@ -177,17 +202,22 @@ export default function GradePredictor() {
     const current = parseFloat(currentCGPAInput);
     if (isNaN(current)) return [];
 
-    const totalUnits = completed + remaining;
     const offsets = [-0.4, -0.2, 0, 0.2, 0.4];
 
     return offsets.map(offset => {
       const t = Math.max(0, Math.min(scale, target + offset));
-      const req = (t * totalUnits - current * completed) / remaining;
-      const { verdict, icon } = getVerdict(req);
+      const projection = projectCGPA(
+        current,
+        Math.round(completed),
+        t,
+        Math.round(remaining),
+        scale,
+      );
+      const { verdict, icon } = getVerdict(projection.requiredGPA);
       return {
         target: t.toFixed(2),
-        requiredGPA: req.toFixed(2),
-        grade: getLetterGrade(req),
+        requiredGPA: projection.requiredGPA.toFixed(2),
+        grade: getLetterGrade(projection.requiredGPA),
         verdict: `${icon} ${verdict}`,
         isTarget: offset === 0,
       };
@@ -200,18 +230,29 @@ export default function GradePredictor() {
     const completed = parseFloat(completedCredits);
     if (isNaN(current) || isNaN(completed)) return null;
 
-    const existingPoints = current * completed;
-    let newPoints = 0;
-    let newCredits = 0;
-    whatIfCourses.forEach(c => {
-      newPoints += c.gradePoint * c.credits;
-      newCredits += c.credits;
-    });
+    const totalWhatIfUnits = whatIfCourses.reduce((sum, c) => sum + c.credits, 0);
+    if (totalWhatIfUnits > maxSemesterUnits) return null;
 
-    const totalCredits = completed + newCredits;
-    if (totalCredits === 0) return null;
-    return parseFloat(((existingPoints + newPoints) / totalCredits).toFixed(2));
-  }, [currentCGPAInput, completedCredits, whatIfCourses]);
+    const grades = cgpa.settings.gradeRanges;
+    const result = simulateWhatIf(
+      current,
+      Math.round(completed),
+      {
+        semesterName: 'What-If',
+        courses: whatIfCourses.map((c) => ({
+          name: c.name,
+          credits: Math.round(c.credits),
+          grade:
+            grades.find((g) => g.points === c.gradePoint)?.grade ??
+            grades[grades.length - 1]?.grade ??
+            'F',
+        })),
+      },
+      grades,
+      universityConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES,
+    );
+    return result.projectedCGPA;
+  }, [currentCGPAInput, completedCredits, whatIfCourses, cgpa.settings.gradeRanges, universityConfig, maxSemesterUnits]);
 
   const getCGPAColor = (gpa: number | null) => {
     if (gpa === null) return 'text-slate-600';
@@ -222,6 +263,11 @@ export default function GradePredictor() {
 
   const addWhatIfCourse = () => {
     if (whatIfCourses.length >= MAX_WHAT_IF_COURSES) return;
+    const currentUnits = whatIfCourses.reduce((sum, c) => sum + c.credits, 0);
+    if (currentUnits + 3 > maxSemesterUnits) {
+      toast.error(`Cannot exceed ${maxSemesterUnits} units.`);
+      return;
+    }
     setWhatIfCourses(prev => [
       ...prev,
       {
@@ -234,9 +280,15 @@ export default function GradePredictor() {
   };
 
   const updateWhatIfCourse = (id: string, updates: Partial<WhatIfCourse>) => {
-    setWhatIfCourses(prev =>
-      prev.map(c => (c.id === id ? { ...c, ...updates } : c))
-    );
+    setWhatIfCourses((prev) => {
+      const next = prev.map((c) => (c.id === id ? { ...c, ...updates } : c));
+      const totalUnits = next.reduce((sum, c) => sum + c.credits, 0);
+      if (totalUnits > maxSemesterUnits) {
+        toast.error(`What-if course load cannot exceed ${maxSemesterUnits} units.`);
+        return prev;
+      }
+      return next;
+    });
   };
 
   const removeWhatIfCourse = (id: string) => {
@@ -320,6 +372,9 @@ export default function GradePredictor() {
                 value={remainingCredits}
                 onChange={e => setRemainingCredits(e.target.value)}
               />
+              <p className="text-xs text-slate-500">
+                Max per semester: {maxSemesterUnits} units
+              </p>
             </div>
           </div>
         </Card>
@@ -432,6 +487,9 @@ export default function GradePredictor() {
                         {predictedCGPA !== null ? predictedCGPA.toFixed(2) : '—'}
                       </span>
                     </div>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Load cap: {maxSemesterUnits} units
+                    </p>
                   </div>
 
                   {/* Course rows */}

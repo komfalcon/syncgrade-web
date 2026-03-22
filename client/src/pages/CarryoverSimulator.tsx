@@ -22,6 +22,7 @@ import {
 } from '@/universities/types';
 import type { GradeRange, DegreeClass } from '@/universities/types';
 import type { CarryoverImpactResult } from '@/engine/types';
+import { DEFAULT_MAX_SEMESTER_UNITS } from '@shared/const';
 
 interface FailedCourse {
   name: string;
@@ -74,6 +75,11 @@ export default function CarryoverSimulator() {
     [universityConfig],
   );
 
+  const maxSemesterUnits = useMemo(
+    () => universityConfig?.creditRules?.maximumPerSemester ?? DEFAULT_MAX_SEMESTER_UNITS,
+    [universityConfig],
+  );
+
   const updateCourse = (index: number, field: keyof FailedCourse, value: string | number) => {
     setCourses((prev) => {
       const updated = [...prev];
@@ -106,6 +112,12 @@ export default function CarryoverSimulator() {
     );
     if (invalid) {
       toast.error('Please fill in all fields for every course.');
+      return;
+    }
+
+    const totalUnits = courses.reduce((sum, c) => sum + c.credits, 0);
+    if (totalUnits > maxSemesterUnits) {
+      toast.error(`Total carryover load cannot exceed ${maxSemesterUnits} units.`);
       return;
     }
 
@@ -156,6 +168,10 @@ export default function CarryoverSimulator() {
             <div className="rounded-lg bg-cyan-50 p-4 text-center">
               <p className="text-sm text-gray-500">Total Credits</p>
               <p className="text-2xl font-bold text-cyan-700">{totalCredits}</p>
+            </div>
+            <div className="rounded-lg bg-slate-50 p-4 text-center">
+              <p className="text-sm text-gray-500">Max Semester Units</p>
+              <p className="text-2xl font-bold text-slate-700">{maxSemesterUnits}</p>
             </div>
             <div className="rounded-lg bg-orange-50 p-4 text-center">
               <p className="text-sm text-gray-500">Repeat Policy</p>
@@ -258,6 +274,9 @@ export default function CarryoverSimulator() {
           <Button className="mt-6 w-full" onClick={handleSimulate}>
             <RefreshCw className="mr-2 h-4 w-4" /> Simulate Impact
           </Button>
+          <p className="mt-2 text-xs text-slate-500">
+            Total input load must not exceed {maxSemesterUnits} units.
+          </p>
         </Card>
 
         {/* Results */}

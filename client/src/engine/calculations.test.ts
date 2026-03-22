@@ -360,3 +360,16 @@ describe("validateUniversityConfig", () => {
     expect(result.valid).toBe(true);
   });
 });
+
+describe("rounding parity guard", () => {
+  it("avoids positive half-tie precision drift", () => {
+    const result = calculateGPA(
+      [
+        { name: "A", credits: 1, grade: "A" },
+        { name: "B", credits: 1, grade: "C" },
+      ],
+      grades,
+    );
+    expect(result.gpa).toBe(4);
+  });
+});
