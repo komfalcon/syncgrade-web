@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import type { GradeRange } from '@/universities/types';
 import { DEFAULT_NIGERIAN_GRADES } from '@/universities/types';
 import { calculateCGPA as calculateEngineCGPA } from '@/engine/calculations';
-import { getAllUniversities } from '@/universities/nigeria';
 import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
+import { useUniversities } from '@/hooks/useUniversities';
 
 export interface Course {
   id: string;
@@ -61,6 +61,7 @@ const getInitialData = (): CGPAData => ({
 export function useCGPA() {
   const [data, setData] = useState<CGPAData>(getInitialData());
   const [hydrated, setHydrated] = useState(false);
+  const { universities } = useUniversities();
 
   useEffect(() => {
     let active = true;
@@ -133,7 +134,7 @@ export function useCGPA() {
     semesters: Semester[],
     settings: AppSettings = data.settings,
   ): { cgpa: number; totalCredits: number; totalGradePoints: number } => {
-    const activeUni = getAllUniversities().find(
+    const activeUni = universities.find(
       (u) => u.shortName === settings.activeUniversity,
     );
     const repeatPolicy = activeUni?.repeatPolicy.method ?? 'replace';
@@ -158,7 +159,7 @@ export function useCGPA() {
       totalCredits: result.totalCredits,
       totalGradePoints: result.totalQualityPoints,
     };
-  }, [data.settings]);
+  }, [data.settings, universities]);
 
   const addSemester = useCallback((semesterName: string) => {
     const newSemester: Semester = {

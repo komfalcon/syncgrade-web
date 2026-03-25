@@ -29,27 +29,28 @@ import {
   assessDegreeRisk,
   projectBestWorstCase,
 } from '@/engine/calculations';
-import { getAllUniversities } from '@/universities/nigeria';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
+import { useUniversities } from '@/hooks/useUniversities';
 
 export default function Analytics() {
   const { semesters, currentCGPA, totalCredits, semesterGPAs, settings } =
     useCGPA();
   const [, setLocation] = useLocation();
   const [remainingCredits, setRemainingCredits] = useState(60);
+  const { universities } = useUniversities();
 
   const scale = settings.gpaScale;
 
   // Resolve degree classes from the active university or use defaults
   const degreeClasses = useMemo(() => {
     if (settings.activeUniversity) {
-      const config = getAllUniversities().find(
+      const config = universities.find(
         (u) => u.shortName === settings.activeUniversity,
       );
       if (config) return config.degreeClasses;
     }
     return DEFAULT_NIGERIAN_DEGREE_CLASSES;
-  }, [settings.activeUniversity]);
+  }, [settings.activeUniversity, universities]);
 
   // Build semester data for the engine
   const semesterData = useMemo(

@@ -9,10 +9,10 @@ import { useLocation } from 'wouter';
 import { useCGPA } from '@/hooks/useCGPA';
 import { toast } from 'sonner';
 import { projectCGPA, simulateWhatIf } from '@/engine/calculations';
-import { getAllUniversities } from '@/universities/nigeria';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { DEFAULT_MAX_SEMESTER_UNITS } from '@shared/const';
 import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
+import { useUniversities } from '@/hooks/useUniversities';
 
 const MAX_WHAT_IF_COURSES = 20;
 
@@ -45,13 +45,14 @@ interface SavedPrediction {
 export default function GradePredictor() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
+  const { universities } = useUniversities();
   const scale = cgpa.settings.gpaScale;
   const universityConfig = useMemo(
     () =>
-      getAllUniversities().find(
+      universities.find(
         (u) => u.shortName === cgpa.settings.activeUniversity,
       ) ?? null,
-    [cgpa.settings.activeUniversity],
+    [cgpa.settings.activeUniversity, universities],
   );
   const maxSemesterUnits =
     universityConfig?.creditRules.maximumPerSemester ?? DEFAULT_MAX_SEMESTER_UNITS;

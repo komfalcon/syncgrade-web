@@ -6,10 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Scale, GraduationCap } from "lucide-react";
 import { useLocation } from "wouter";
-import { getAllUniversities } from "@/universities/nigeria";
 import { getDegreeClass } from "@/engine/calculations";
 import type { UniversityConfig } from "@/universities/types";
 import { toast } from "sonner";
+import { useUniversities } from "@/hooks/useUniversities";
 
 const SCORE_SAMPLES = [95, 85, 75, 65, 55, 45, 40, 35, 20] as const;
 
@@ -22,7 +22,7 @@ function getGradeForScore(score: number, uni: UniversityConfig) {
 
 export default function UniversityComparison() {
   const [, setLocation] = useLocation();
-  const universities = getAllUniversities();
+  const { universities } = useUniversities();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [gpaInput, setGpaInput] = useState("");
 

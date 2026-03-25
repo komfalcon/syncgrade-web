@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ArrowLeft, GraduationCap, MapPin, Check, BookOpen, RefreshCw, FileText } from 'lucide-react';
+import { ArrowLeft, GraduationCap, MapPin, Check, BookOpen, RefreshCw, FileText, Search } from 'lucide-react';
 import { useLocation } from 'wouter';
-import { nigerianUniversities } from '@/universities/nigeria';
+import { getUniversityDbMeta } from '@/universities/nigeria';
 import type { UniversityConfig } from '@/universities/types';
 import { useCGPA } from '@/hooks/useCGPA';
+import { Input } from '@/components/ui/input';
+import { useUniversities } from '@/hooks/useUniversities';
 import {
   Dialog,
   DialogContent,
@@ -19,7 +21,25 @@ import { toast } from 'sonner';
 export default function NigerianUniversities() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
+  const { universities } = useUniversities();
   const [selectedUni, setSelectedUni] = useState<UniversityConfig | null>(null);
+  const [query, setQuery] = useState('');
+  const meta = getUniversityDbMeta();
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredUniversities = useMemo(() => {
+    if (!normalizedQuery) return universities;
+    return universities.filter((uni) => {
+      const words = uni.name.toLowerCase().split(/\s+/).filter(Boolean);
+      const acronym = words.map((w) => w[0]).join('');
+      return (
+        uni.name.toLowerCase().includes(normalizedQuery) ||
+        uni.shortName.toLowerCase().includes(normalizedQuery) ||
+        uni.location.toLowerCase().includes(normalizedQuery) ||
+        acronym.includes(normalizedQuery)
+      );
+    });
+  }, [normalizedQuery, universities]);
 
   const handleApply = (university: UniversityConfig) => {
     cgpa.updateSettings({
@@ -48,6 +68,9 @@ export default function NigerianUniversities() {
           <p className="text-green-100 mt-2">
             Select your university to apply its official grading system
           </p>
+          <p className="text-xs text-green-200 mt-2">
+            Data Version: {meta.version} · Last updated: {new Date(meta.lastUpdated).toLocaleDateString()}
+          </p>
           {cgpa.settings.activeUniversity && (
             <div className="mt-3 inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 text-sm">
               <Check className="w-4 h-4" />
@@ -59,8 +82,32 @@ export default function NigerianUniversities() {
 
       {/* University List */}
       <div className="container mx-auto px-4 py-8">
+        <Card className="mb-4 p-4 shadow-md border-0">
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by name, acronym, or location (e.g., ABU, UI)"
+              className="pl-9"
+            />
+          </div>
+        </Card>
+
+        {filteredUniversities.length === 0 && (
+          <Card className="p-6 shadow-md border-0 text-center">
+            <p className="text-slate-600 mb-4">No university matched your search.</p>
+            <Button
+              className="bg-gradient-to-r from-cyan-600 to-teal-600 text-white"
+              onClick={() => setLocation('/custom-university')}
+            >
+              Can't find your school? Create a Custom Profile
+            </Button>
+          </Card>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {nigerianUniversities.map(uni => {
+          {filteredUniversities.map(uni => {
             const isActive = cgpa.settings.activeUniversity === uni.shortName;
             return (
               <Card
