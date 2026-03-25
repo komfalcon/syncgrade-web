@@ -8,11 +8,41 @@ import {
 } from "./gradingTemplates";
 
 /** All Nigerian university configurations */
-type UniversityDbEntry = (typeof universityDb.universities)[number];
-type UniversityDbSession = UniversityDbEntry["gradingSystem"][number];
+type UniversityDbSession = {
+  session_start: string;
+  session_end: string;
+  /**
+   * Preferred compact form for standardized grading setups.
+   * If present, grading values are resolved from gradingTemplates.ts.
+   * Inline scale/grades remain supported for legacy or custom rows.
+   */
+  templateId?: string;
+  scale?: number;
+  grades?: Array<{
+    letter: string;
+    points: number;
+    min: number;
+    max: number;
+  }>;
+};
+
+type UniversityDbEntry = {
+  id: string;
+  name: string;
+  shortName: string;
+  location: string;
+  gradingSystem: UniversityDbSession[];
+  repeatPolicy: string;
+  creditRules: {
+    maxUnitsPerSemester: number;
+    probationCGPA: number;
+  };
+};
+
+const universityEntries = universityDb.universities as UniversityDbEntry[];
 
 function toSessionGradingSystem(session: UniversityDbSession): SessionGradingSystem {
-  if ("templateId" in session && session.templateId) {
+  if (session.templateId) {
     const template = resolveGradingTemplate(session.templateId as GradingTemplateId);
     return {
       session_start: session.session_start,
@@ -25,8 +55,8 @@ function toSessionGradingSystem(session: UniversityDbSession): SessionGradingSys
   return {
     session_start: session.session_start,
     session_end: session.session_end,
-    scale: session.scale,
-    grades: session.grades.map((grade) => ({
+    scale: session.scale ?? 5,
+    grades: (session.grades ?? []).map((grade) => ({
       grade: grade.letter,
       points: grade.points,
       min: grade.min,
@@ -187,7 +217,7 @@ function fromCustomEntry(entry: CustomUniversityEntry): UniversityConfig {
   };
 }
 
-export const nigerianUniversities: UniversityConfig[] = universityDb.universities.map(toUniversityConfig);
+export const nigerianUniversities: UniversityConfig[] = universityEntries.map(toUniversityConfig);
 let mergedUniversities: UniversityConfig[] = [...nigerianUniversities];
 
 export async function getCustomUniversities(): Promise<UniversityConfig[]> {

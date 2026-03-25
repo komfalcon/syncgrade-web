@@ -29,6 +29,8 @@ import {
 import { toast } from 'sonner';
 import { appDb } from '@/storage/db';
 
+const ADMISSION_SESSION_REGEX = /^(\d{4})\/(\d{4})$/;
+
 export default function NigerianUniversities() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
@@ -51,6 +53,17 @@ export default function NigerianUniversities() {
     });
   }, [normalizedQuery, universities]);
 
+  const cardResolvedScales = useMemo(
+    () =>
+      Object.fromEntries(
+        filteredUniversities.map((uni) => [
+          uni.id,
+          resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession),
+        ]),
+      ),
+    [filteredUniversities, cgpa.settings.admissionSession],
+  );
+
   const resolvedSelected = useMemo(() => {
     if (!selectedUni) return null;
     return resolveUniversityGradingSystem(
@@ -70,9 +83,22 @@ export default function NigerianUniversities() {
 
   const handleApply = async () => {
     if (!selectedUni || !resolvedSelected) return;
+    const trimmedSession = selectedSession.trim();
+    const sessionMatch = trimmedSession.match(ADMISSION_SESSION_REGEX);
+    if (!sessionMatch || Number(sessionMatch[2]) !== Number(sessionMatch[1]) + 1) {
+      toast.error('Please enter session in YYYY/YYYY format (e.g., 2023/2024).');
+      return;
+    }
+    const now = new Date();
+    const currentAcademicStartYear =
+      now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1;
+    if (Number(sessionMatch[1]) > currentAcademicStartYear) {
+      toast.error('Admission session cannot be in the future.');
+      return;
+    }
 
     const admissionSession =
-      selectedSession.trim() ||
+      trimmedSession ||
       cgpa.settings.admissionSession ||
       resolvedSelected.session_start;
 
@@ -162,7 +188,9 @@ export default function NigerianUniversities() {
 
           {filteredUniversities.map((uni) => {
             const isActive = cgpa.settings.activeUniversity === uni.shortName;
-            const resolved = resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession);
+            const resolved =
+              cardResolvedScales[uni.id] ??
+              resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession);
             return (
               <Card
                 key={uni.id}
