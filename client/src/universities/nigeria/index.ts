@@ -2,9 +2,38 @@ import type { SessionGradingSystem, UniversityConfig } from "../types";
 import universityDb from "@/data/university_db.json";
 import { appDb, type CustomUniversityEntry } from "@/storage/db";
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from "../types";
+import {
+  resolveGradingTemplate,
+  type GradingTemplateId,
+} from "./gradingTemplates";
 
 /** All Nigerian university configurations */
 type UniversityDbEntry = (typeof universityDb.universities)[number];
+type UniversityDbSession = UniversityDbEntry["gradingSystem"][number];
+
+function toSessionGradingSystem(session: UniversityDbSession): SessionGradingSystem {
+  if ("templateId" in session && session.templateId) {
+    const template = resolveGradingTemplate(session.templateId as GradingTemplateId);
+    return {
+      session_start: session.session_start,
+      session_end: session.session_end,
+      scale: template.scale,
+      grades: template.grades,
+    };
+  }
+
+  return {
+    session_start: session.session_start,
+    session_end: session.session_end,
+    scale: session.scale,
+    grades: session.grades.map((grade) => ({
+      grade: grade.letter,
+      points: grade.points,
+      min: grade.min,
+      max: grade.max,
+    })),
+  };
+}
 
 export interface UniversityDbMeta {
   version: string;
@@ -85,17 +114,7 @@ function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
     shortName: entry.shortName,
     country: "Nigeria",
     location: entry.location,
-    gradingSystem: entry.gradingSystem.map((session) => ({
-      session_start: session.session_start,
-      session_end: session.session_end,
-      scale: session.scale,
-      grades: session.grades.map((grade) => ({
-        grade: grade.letter,
-        points: grade.points,
-        min: grade.min,
-        max: grade.max,
-      })),
-    })),
+    gradingSystem: entry.gradingSystem.map((session) => toSessionGradingSystem(session)),
     degreeClasses: DEFAULT_NIGERIAN_DEGREE_CLASSES.map((degreeClass) => ({ ...degreeClass })),
     creditRules: {
       minimumCredits: 15,
