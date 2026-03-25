@@ -21,6 +21,8 @@ const gradeRowSchema = z.object({
   max: z.number().min(0).max(100),
 });
 
+const admissionSessionRegex = /^(\d{4})\/(\d{4})$/;
+
 const schema = z.object({
   name: z.string().trim().min(2, "University name is required"),
   shortName: z.string().trim().min(2, "Short name is required"),
@@ -30,6 +32,13 @@ const schema = z.object({
   repeatPolicy: z.union([z.literal("replace"), z.literal("both")]),
   maxUnitsPerSemester: z.number().min(1).max(40),
   probationCGPA: z.number().min(0).max(5),
+  admissionSession: z.string().trim().regex(admissionSessionRegex, "Use format YYYY/YYYY").refine((value) => {
+    const match = value.match(admissionSessionRegex);
+    if (!match) return false;
+    const first = Number(match[1]);
+    const second = Number(match[2]);
+    return second === first + 1;
+  }, "Second year must be first year + 1"),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -50,6 +59,7 @@ const defaultValues: FormValues = {
   repeatPolicy: "replace",
   maxUnitsPerSemester: 24,
   probationCGPA: 1,
+  admissionSession: "",
 };
 
 export default function CustomUniversityForm() {
@@ -97,10 +107,12 @@ export default function CustomUniversityForm() {
       name: values.name.trim(),
       shortName: values.shortName.trim().toUpperCase(),
       location: values.location.trim(),
-      gradingSystem: {
+      gradingSystem: [{
+        session_start: values.admissionSession.trim(),
+        session_end: "present",
         scale: values.scale,
         grades: normalizedGrades,
-      },
+      }],
       repeatPolicy: values.repeatPolicy,
       creditRules: {
         maxUnitsPerSemester: Number(values.maxUnitsPerSemester),
@@ -149,6 +161,11 @@ export default function CustomUniversityForm() {
                 <Label htmlFor="location">Location</Label>
                 <Input id="location" {...register("location")} />
                 {errors.location && <p className="mt-1 text-xs text-red-600">{errors.location.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="admissionSession">Gain of Admission Session</Label>
+                <Input id="admissionSession" placeholder="e.g. 2024/2025" {...register("admissionSession")} />
+                {errors.admissionSession && <p className="mt-1 text-xs text-red-600">{errors.admissionSession.message}</p>}
               </div>
             </div>
           </Card>

@@ -23,6 +23,7 @@ import type { GradeRange, DegreeClass } from '@/universities/types';
 import type { CarryoverImpactResult } from '@/engine/types';
 import { DEFAULT_MAX_SEMESTER_UNITS } from '@shared/const';
 import { useUniversities } from '@/hooks/useUniversities';
+import { resolveUniversityGradingSystem } from '@/universities/nigeria';
 
 interface FailedCourse {
   name: string;
@@ -62,7 +63,7 @@ export default function CarryoverSimulator() {
   }, [settings.activeUniversity, universities]);
 
   const grades: GradeRange[] = useMemo(
-    () => universityConfig?.gradingSystem.grades ?? DEFAULT_NIGERIAN_GRADES,
+    () => universityConfig ? resolveUniversityGradingSystem(universityConfig, settings.admissionSession).grades : DEFAULT_NIGERIAN_GRADES,
     [universityConfig],
   );
 

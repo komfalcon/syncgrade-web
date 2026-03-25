@@ -159,18 +159,18 @@ const plugins = [
   vitePluginManusDebugCollector(),
   VitePWA({
     registerType: "autoUpdate",
-    includeAssets: ["favicon.ico", "assets/*.svg"],
+    includeAssets: ["favicon.png", "manifest.json", "icons/*.png", "icons/syncgrade-icon.svg", "assets/*.svg"],
     manifest: {
-      name: "CGPA Calculator",
-      short_name: "CGPA",
-      theme_color: "#0891b2",
-      background_color: "#f8fafc",
+      name: "SyncGrade",
+      short_name: "SyncGrade",
+      theme_color: "#1A237E",
+      background_color: "#1A237E",
       display: "standalone",
       start_url: "/",
     },
     workbox: {
       cleanupOutdatedCaches: true,
-      globPatterns: ["**/*.{js,css,html,svg,png,webp,woff2}"],
+      globPatterns: ["**/*.{js,css,html,json,svg,png,webp,woff2}"],
       runtimeCaching: [
         {
           urlPattern: ({ request }) => request.destination === "document",

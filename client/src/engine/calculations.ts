@@ -478,8 +478,9 @@ export function recommendStudyLoad(
   config: UniversityConfig
 ): StudyLoadRecommendation {
   const { creditRules, gradingSystem } = config;
-  const grades = gradingSystem.grades;
-  const scale = gradingSystem.scale;
+  const activeGrading = gradingSystem[gradingSystem.length - 1];
+  const grades = activeGrading?.grades ?? [];
+  const scale = activeGrading?.scale ?? 5;
   const maxCredits = creditRules.maximumPerSemester;
   const minCredits = creditRules.minimumPerSemester;
 
@@ -510,7 +511,8 @@ export function recommendStudyLoad(
   const sortedGrades = [...grades].sort((a, b) => a.points - b.points);
   const minGrade =
     sortedGrades.find((g) => g.points >= targetGPA)?.grade ??
-    sortedGrades[sortedGrades.length - 1].grade;
+    sortedGrades[sortedGrades.length - 1]?.grade ??
+    "F";
 
   // Build a course plan using the default credit unit per course.
   const courseCredits = config.creditRules.minimumCredits || DEFAULT_COURSE_CREDITS;
@@ -600,23 +602,30 @@ export function validateUniversityConfig(
 
   // Grading system
   const { gradingSystem } = config;
-  if (!gradingSystem || !gradingSystem.grades || gradingSystem.grades.length === 0) {
-    warnings.push("Grading system has no grades defined.");
+  if (!gradingSystem || gradingSystem.length === 0) {
+    warnings.push("Grading system has no session entries defined.");
   } else {
-    const maxPoints = Math.max(...gradingSystem.grades.map((g) => g.points));
-    if (gradingSystem.scale !== maxPoints) {
-      warnings.push(
-        `Scale (${gradingSystem.scale}) does not match the highest grade points (${maxPoints}).`
-      );
-    }
+    for (const session of gradingSystem) {
+      if (!session.grades || session.grades.length === 0) {
+        warnings.push(`Session ${session.session_start} has no grades defined.`);
+        continue;
+      }
 
-    // Check for overlapping ranges
-    const sorted = [...gradingSystem.grades].sort((a, b) => a.min - b.min);
-    for (let i = 1; i < sorted.length; i++) {
-      if (sorted[i].min <= sorted[i - 1].max) {
+      const maxPoints = Math.max(...session.grades.map((g) => g.points));
+      if (session.scale !== maxPoints) {
         warnings.push(
-          `Overlapping grade ranges: "${sorted[i - 1].grade}" (${sorted[i - 1].min}–${sorted[i - 1].max}) and "${sorted[i].grade}" (${sorted[i].min}–${sorted[i].max}).`
+          `Session ${session.session_start} scale (${session.scale}) does not match the highest grade points (${maxPoints}).`
         );
+      }
+
+      // Check for overlapping ranges
+      const sorted = [...session.grades].sort((a, b) => a.min - b.min);
+      for (let i = 1; i < sorted.length; i++) {
+        if (sorted[i].min <= sorted[i - 1].max) {
+          warnings.push(
+            `Session ${session.session_start}: overlapping grade ranges "${sorted[i - 1].grade}" (${sorted[i - 1].min}–${sorted[i - 1].max}) and "${sorted[i].grade}" (${sorted[i].min}–${sorted[i].max}).`
+          );
+        }
       }
     }
   }

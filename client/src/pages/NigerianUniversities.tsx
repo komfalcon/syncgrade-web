@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowLeft, GraduationCap, MapPin, Check, BookOpen, RefreshCw, FileText, Search } from 'lucide-react';
 import { useLocation } from 'wouter';
-import { getUniversityDbMeta } from '@/universities/nigeria';
+import { getUniversityDbMeta, resolveUniversityGradingSystem } from '@/universities/nigeria';
 import type { UniversityConfig } from '@/universities/types';
 import { useCGPA } from '@/hooks/useCGPA';
 import { Input } from '@/components/ui/input';
@@ -42,9 +42,10 @@ export default function NigerianUniversities() {
   }, [normalizedQuery, universities]);
 
   const handleApply = (university: UniversityConfig) => {
+    const resolved = resolveUniversityGradingSystem(university, cgpa.settings.admissionSession);
     cgpa.updateSettings({
-      gpaScale: university.gradingSystem.scale,
-      gradeRanges: university.gradingSystem.grades,
+      gpaScale: resolved.scale,
+      gradeRanges: resolved.grades,
       activeUniversity: university.shortName,
     });
     setSelectedUni(null);
@@ -135,11 +136,11 @@ export default function NigerianUniversities() {
                         {uni.shortName}
                       </span>
                       <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold border ${
-                        uni.gradingSystem.scale === 5.0
+resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.0
                           ? 'bg-purple-100 text-purple-700 border-purple-200'
                           : 'bg-blue-100 text-blue-700 border-blue-200'
                       }`}>
-                        {uni.gradingSystem.scale.toFixed(1)} Scale
+                        {resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale.toFixed(1)} Scale
                       </span>
                       <span className="inline-flex items-center gap-1 text-xs text-slate-500">
                         <MapPin className="w-3 h-3" />
@@ -203,14 +204,14 @@ export default function NigerianUniversities() {
           <DialogHeader>
             <DialogTitle>Apply {selectedUni?.name} Grading System?</DialogTitle>
             <DialogDescription>
-              This will update your GPA scale to {selectedUni?.gradingSystem.scale.toFixed(1)} and grade ranges to match {selectedUni?.shortName}'s official system.
+              This will update your GPA scale to {selectedUni ? resolveUniversityGradingSystem(selectedUni, cgpa.settings.admissionSession).scale.toFixed(1) : "0.0"} and grade ranges to match {selectedUni?.shortName}'s official system.
             </DialogDescription>
           </DialogHeader>
           {selectedUni && (
             <div className="py-4 space-y-5">
               {/* Grading System */}
               <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Grading System ({selectedUni.gradingSystem.scale.toFixed(1)} Scale)</p>
+                <p className="text-sm font-semibold text-slate-700 mb-2">Grading System ({resolveUniversityGradingSystem(selectedUni, cgpa.settings.admissionSession).scale.toFixed(1)} Scale)</p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
@@ -221,7 +222,7 @@ export default function NigerianUniversities() {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedUni.gradingSystem.grades.map(g => (
+                      {resolveUniversityGradingSystem(selectedUni, cgpa.settings.admissionSession).grades.map(g => (
                         <tr key={g.grade} className="border-b border-slate-100">
                           <td className="py-1.5 pr-3 font-mono font-semibold text-slate-900">{g.grade}</td>
                           <td className="py-1.5 pr-3 text-slate-600">{g.min} – {g.max}</td>

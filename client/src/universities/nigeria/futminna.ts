@@ -8,10 +8,12 @@ export const futminnaConfig: UniversityConfig = {
   shortName: "FUTMINNA",
   country: "Nigeria",
   location: "Minna, Niger State",
-  gradingSystem: {
+  gradingSystem: [{
+    session_start: "2000/2001",
+    session_end: "present",
     scale: 5,
     grades: DEFAULT_NIGERIAN_GRADES,
-  },
+  }],
   degreeClasses: [
     { name: "First Class Honours", minCGPA: 4.50, maxCGPA: 5.00 },
     { name: "Second Class Upper Honours", minCGPA: 3.50, maxCGPA: 4.49 },

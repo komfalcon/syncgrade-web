@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">SyncGrade App Icon</title>
+  <desc id="desc">Blue rounded square with intertwined white arrows forming S and a gold star center.</desc>
+  <rect x="24" y="24" width="464" height="464" rx="80" fill="#1A237E"/>
+
+  <path d="M 140 170 A 130 130 0 0 1 338 138" fill="none" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="352,126 382,156 338,164" fill="#FFFFFF"/>
+
+  <path d="M 372 342 A 130 130 0 0 1 174 374" fill="none" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="160,386 130,356 174,348" fill="#FFFFFF"/>
+
+  <polygon fill="#FFD700" points="256,210 268,244 304,244 275,265 286,299 256,279 226,299 237,265 208,244 244,244"/>
+</svg>
