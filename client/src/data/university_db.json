@@ -1,603 +1,181 @@
 {
+  "version": "2024.1.0",
+  "lastUpdated": "2026-03-25T00:00:00.000Z",
   "universities": [
     {
-      "university": "Ahmadu Bello University, Zaria (ABU)",
-      "document_sources": [
-        "Undergraduate Student Handbook (2021/2022 Session)"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), E = 1 (40–44%), F = 0 (0–39%). Diploma grading: A = 4.0 (80–100%), AB = 3.5 (70–79%), B = 3.0 (60–69%), BC = 2.5 (50–59%), C = 2.0 (40–49%), F = 0 (below 40%).",
-        "degree_classification": "First Class (4.50–5.00), Second Class Upper Division (3.50–4.49), Second Class Lower Division (2.40–3.49), Third Class (1.50–2.39), Pass (1.00–1.49), Fail (below 1.00). Unclassified degrees (DVM, B.Pharm, MBBS) are awarded simply as 'Pass' with a minimum pass mark of 50%.",
-        "credit_unit_requirements": "4-year programs: 120–150 units; 5-year programs: 150–190 units; 6-year programs: 190–225 units.",
-        "minimum_cgpa_to_graduate": "1.00 for classified degrees; 2.40 for non-classified degrees."
+      "id": "abu",
+      "name": "Ahmadu Bello University, Zaria",
+      "shortName": "ABU",
+      "location": "Zaria, Kaduna State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "E", "points": 1, "min": 40, "max": 44 },
+          { "letter": "F", "points": 0, "min": 0, "max": 39 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "1.00 (classified degrees); 2.40 (unclassified degrees).",
-        "academic_probation_rules": "A student whose CGPA falls below 1.00 (classified) or 2.40 (unclassified) at the end of the year of study shall be placed on probation.",
-        "withdrawal_or_dismissal_conditions": "A student who remains on probation for two consecutive semesters and fails to attain the status of good academic standing shall be withdrawn from the program.",
-        "carryover_or_failed_course_policies": "A student failing a supplementary examination may repeat the failed course up to a maximum load of 24 credit units per semester. Both the initial grade point and the resit grade point count towards the CGPA.",
-        "course_repeat_rules": "Failed courses may be repeated subject to a maximum load of 24 credit units per semester. Both initial and resit grade points are included in CGPA computation.",
-        "maximum_credit_load_per_semester": "24 credit units (for repeat/carryover purposes).",
-        "maximum_program_duration": "An extension of not more than 50% of the normal period is allowed (e.g., maximum of 6 years for a 4-year program)."
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Attendance is required in all classes, laboratories, clinics, field practicals, and theatre training.",
-        "minimum_attendance_percentage": "75% attendance in all classes, laboratories, clinics, field practicals, and theatre training is required to qualify to sit for semester examinations.",
-        "penalties_for_absence": "A student absent from any examination without valid medical grounds certified by an ABU Medical Officer shall be deemed to have failed the course."
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Students arriving more than 15 minutes after the scheduled lecture time may be marked absent for that session. [INFERRED — Common Nigerian Federal University Practice; consistent with general ABU academic expectations]",
-        "lateness_to_examinations": "Students must be at the examination room at least 30 minutes before the advertised time. A student may be admitted up to 45 minutes after the start but will not be given extra time. No student is allowed to leave during the first hour or the last fifteen minutes of the examination."
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "At least two continuous assessment tests must be given per course per semester.",
-        "coursework_requirements": "Continuous assessment includes routine term papers, frequent tests, and assignments.",
-        "ca_exam_weighting": "Continuous assessment weight falls within the range of 30% to 70% of the aggregate marks for the year."
-      },
-      "examination_rules": {
-        "exam_eligibility": "Students must have met the 75% attendance requirement and must display their examination card and identity card prominently on their desk.",
-        "exam_hall_rules": "Bags, briefcases, and other unauthorized materials must be deposited at the invigilator's desk before the exam begins. Students must not speak to each other or make any noise during the examination. Silence must be maintained and no unauthorized materials are allowed.",
-        "entering_or_leaving_exam_hall": "Students must arrive at least 30 minutes before the advertised time. A student may be admitted up to 45 minutes after the start but will not be given extra time. No student is allowed to leave during the first hour or the last fifteen minutes.",
-        "special_exam_conditions": "Medical absence must be certified by an ABU Medical Officer. If validated, the student is granted a first attempt at a later date."
-      },
-      "academic_integrity": {
-        "cheating_rules": "Examination malpractice leading to expulsion: Impersonation, direct involvement in exam leakage, smuggling scripts in or out, and copying from cheat notes. Examination malpractice leading to one-year rustication: Non-submission of answer scripts, introducing foreign materials into the hall, and bringing mobile phones into the exam hall.",
-        "plagiarism_rules": "Plagiarism and academic dishonesty, including submitting another person's work as one's own, purchasing academic work, or failing to properly attribute sources in any academic submission, are prohibited under ABU's academic integrity framework consistent with NUC guidelines. Penalties mirror the examination malpractice categories, ranging from course failure and suspension to expulsion depending on the severity of the offense. [INFERRED — ABU Academic Integrity Framework aligned with NUC Policy on Academic Malpractice]",
-        "exam_malpractice_policies": "Malpractice offenses are categorized by severity with corresponding penalties ranging from one-year rustication to expulsion.",
-        "penalties": "Penalties range from a written warning and rustication for one academic year up to outright expulsion."
-      },
-      "discipline_system": {
-        "warning_system": "Written warning.",
-        "probation": "Academic probation for CGPA falling below minimum thresholds.",
-        "suspension": "Rustication for one academic year.",
-        "expulsion": "Outright expulsion for the most serious offenses.",
-        "other_penalties": "Additional penalties include mandatory counseling, loss of university privileges (including library and ICT facility access), deferred graduation, and community service for minor infractions. [INFERRED — Common Nigerian Federal University Disciplinary Practice]"
-      },
-      "student_conduct_rules": {
-        "dress_code": "Indecent dressing (short and skimpy dresses, tight shirts and skirts, transparent clothing, tattered jeans, male wearing earrings, or male plaiting of hair) is strictly prohibited.",
-        "electronics_policy": "Electronic transmission or broadcasts in any form and the erection of antennas for TVs or radios are prohibited and lead to loss of bed-space. Radios and musical instruments may only be used between 6:00 am and 12:00 midnight without disturbing others.",
-        "classroom_behaviour": "Students are expected to maintain orderly conduct during lectures, switch off or silence mobile phones, and refrain from any activity disruptive to the learning environment. Disruptive behavior is subject to disciplinary action. [INFERRED — Common Nigerian Federal University Classroom Conduct Standard]",
-        "campus_behaviour": "Cultism and secret society membership are strictly banned and attract expulsion. Students must resolve disputes through official university channels. Unauthorized demonstrations, vandalism, and violence are prohibited. Students are expected to comply with directives from university officials at all times. [INFERRED — Common ABU and Nigerian Federal University Campus Behavior Policy]"
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Sale, giving out, or illegal swapping of bed spaces is strictly prohibited and penalized with rustication for one semester.",
-        "visitor_rules": "Visitors are not allowed in the halls beyond 9:00 pm. Male students cannot enter female hostels and vice versa.",
-        "cooking_policies": "Cooking in hostel rooms is strictly prohibited. The use of electrical appliances for cooking or boiling water is forbidden.",
-        "campus_safety": "ABU operates a 24-hour University Security Service that patrols campus. Students are advised to report suspicious activities or criminal matters to the Security Office through official university channels. Emergency medical services are available through the ABU Teaching Hospital on campus. [INFERRED — Common Nigerian Federal University Security Practice; ABU Teaching Hospital presence is publicly known]",
-        "other_welfare_rules": "Off-Campus Housing: It is the policy of the University that all undergraduates must live off-campus for one year during the course of their study. Tertiary Institutes Social Health Insurance Scheme (TISHIS): ABU provides healthcare coverage that includes vacations, supported by an arrangement with HMOs. Emergency Referral Students' Medical Fund (ERSMF): Covers life-threatening ailments diagnosed by a doctor on campus but will not cover students involved in accidents on unapproved journeys."
-      },
-      "unique_or_notable_rules": "Aegrotat Degree: An unclassified degree may be awarded to a student who has successfully completed the program except for final exams, provided they were prevented from completing them due to a serious illness or permanent disability. Emergency Referral Students' Medical Fund (ERSMF) and Tertiary Institutes Social Health Insurance Scheme (TISHIS) provide layered healthcare coverage for students, including during vacation periods."
+      "repeatPolicy": "both",
+      "creditRules": {
+        "maxUnitsPerSemester": 24,
+        "probationCGPA": 1
+      }
     },
     {
-      "university": "Covenant University",
-      "document_sources": [
-        "The Student Handbook (2019–2022)"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), F = 0 (0–44%).",
-        "degree_classification": "First Class (4.50–5.00), Second Class Upper Division (3.50–4.49), Second Class Lower Division (2.40–3.49), Third Class (1.50–2.39).",
-        "credit_unit_requirements": "Maximum of 25 units and a minimum of 15 units per semester.",
-        "minimum_cgpa_to_graduate": "1.50."
+      "id": "covenant",
+      "name": "Covenant University",
+      "shortName": "Covenant",
+      "location": "Ota, Ogun State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "F", "points": 0, "min": 0, "max": 44 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "1.50, with less than 20 credit units of failed courses.",
-        "academic_probation_rules": "Students with a CGPA of 1.0–1.49 are placed on probation. No student is allowed to be on probation twice.",
-        "withdrawal_or_dismissal_conditions": "A student with a CGPA of less than 1.0 at the end of the session in their first attempt, or a CGPA below 1.5 at the end of a probation year, shall be required to withdraw.",
-        "carryover_or_failed_course_policies": "Failed or dropped courses must be registered first before current semester courses. The total number of credit units registered (including failed courses) shall not exceed 25 units per semester.",
-        "course_repeat_rules": "Failed courses must be registered before current semester courses and are subject to the 25-unit maximum per semester.",
-        "maximum_credit_load_per_semester": "25 credit units.",
-        "maximum_program_duration": "Covenant University allows a maximum program duration of the standard length plus two additional years (e.g., a maximum of 6 years for a 4-year program). [INFERRED — Common Private University Practice in Nigeria; consistent with NUC Minimum Academic Standards on maximum program duration]"
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Mandatory attendance is enforced for lectures, university general assemblies, chapel services, public and inaugural lectures, and daily hostel roll calls.",
-        "minimum_attendance_percentage": "75% attendance in each selected course is required to qualify to sit for examinations.",
-        "penalties_for_absence": "Any student who fails to meet the 75% attendance requirement in any course will be deemed to have failed the course."
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Covenant University enforces strict punctuality. Students are expected to be seated before a lecture begins. Arriving after attendance has been taken may result in the student being marked absent. Habitual lateness is treated as a disciplinary matter. [INFERRED — Consistent with Covenant University's known strict code of conduct and time-management culture as reflected throughout the Student Handbook]",
-        "lateness_to_examinations": "Students must report to the examination hall at least 30 minutes before the commencement of the examination. No student shall be admitted 30 minutes after the commencement of the examination."
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "A minimum of two continuous assessment tests are conducted per course per semester, consistent with NUC guidelines. [INFERRED — Consistent with NUC Minimum Academic Standards for continuous assessment administration, applied at Covenant University]",
-        "coursework_requirements": "Students are required to complete all assigned tests, assignments, projects, and presentations as specified in course outlines. Failure to participate in scheduled coursework components may affect continuous assessment scores and overall course grades. [INFERRED — Common Nigerian University Coursework Practice]",
-        "ca_exam_weighting": "Continuous Assessment (CA) accounts for 30% and the final examination accounts for 70% of the total course grade, consistent with NUC minimum guidelines. Individual departments may apply a 40/60 split. [INFERRED — Consistent with NUC guidelines and common Covenant University practice; exact ratio not stated in source document]"
-      },
-      "examination_rules": {
-        "exam_eligibility": "Students must have met the 75% attendance requirement.",
-        "exam_hall_rules": "It is mandatory that students pray before the commencement of examinations. No borrowing of any material is allowed. The use of scrap paper is not permitted; all rough work must be done in the answer booklets. Students are not allowed to take away any used or unused scripts from the examination hall.",
-        "entering_or_leaving_exam_hall": "No student is allowed to leave the examination hall with the intention of returning, except to visit the conveniences while accompanied by an attendant. No student shall be admitted 30 minutes after the commencement of the examination.",
-        "special_exam_conditions": "Students are not permitted to process visas or sit for professional examinations during mid-semester or end-of-semester examinations."
-      },
-      "academic_integrity": {
-        "cheating_rules": "All cases of examination misconduct attract an expulsion penalty except where otherwise indicated. Unauthorized assistance and unauthorized materials are prohibited.",
-        "plagiarism_rules": "Presenting the ideas or works of another as one's own without due acknowledgment is prohibited. Re-submission of work previously submitted for another course is forbidden.",
-        "exam_malpractice_policies": "Cases of examination misconduct are handled by the Students Disciplinary Committee (SDC).",
-        "penalties": "Penalties include Letter of Warning, Letter of Caution, Fines, Confiscation of Items, Reimbursement, Loss of Privilege, Disciplinary Probation, Definite Suspension (3 weeks to 1 year), Indefinite Suspension, Advised-to-Withdraw, and Expulsion. Examination misconduct typically attracts Expulsion."
-      },
-      "discipline_system": {
-        "warning_system": "Letter of Warning; Letter of Caution.",
-        "probation": "Disciplinary Probation: A period of observation restricting extracurricular activities.",
-        "suspension": "Definite Suspension ranging from 3 weeks to 1 year; Indefinite Suspension.",
-        "expulsion": "Permanent withdrawal of studentship.",
-        "other_penalties": "Fines, Confiscation of Items, Reimbursement, Loss of Privilege, Advised-to-Withdraw."
-      },
-      "student_conduct_rules": {
-        "dress_code": "Corporate dressing is required during lectures and examinations (8:00 am – 6:00 pm). Female students must wear skirt suits, skirts and blouses, or smart dresses; skirts must be 5–10 cm (2–4 inches) below the knees. Spaghetti straps, tight or clinging clothes, and face caps are prohibited. Male students must dress corporately with shirt, necktie, trousers, and covered shoes with socks; sagging, earrings, and beards are prohibited. Males must be clean-shaven. Jeans, chinos, and slippers are prohibited.",
-        "electronics_policy": "Mobile phones, SIM-enabled devices, and gadgets capable of placing calls through GSM or CDMA networks are strictly prohibited. Laptops and tablets must not contain indecent videos or music.",
-        "classroom_behaviour": "Students must maintain strict decorum during lectures. Mobile phones and all SIM-enabled devices are prohibited on campus. Disruption of any academic activity, including talking out of turn or engaging in non-academic activities during lectures, is a disciplinary offense. [INFERRED — Consistent with Covenant University's strict code of conduct as documented throughout the Student Handbook]",
-        "campus_behaviour": "Pairing (two students of the opposite sex being together outside interactive hours of 6:00 am to 7:00 pm) is penalized. Public displays of affection are forbidden. Overnight visits by visitors or opposite-sex students are prohibited."
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Magna Silencio (Great Silence) is observed from 12 midnight to 5:00 am; students must be in their rooms. Lights out is at 12:30 am. Mandatory roll call is held at 9:00 pm daily. Squatting and bed space trafficking are strictly prohibited and attract penalties ranging from warnings to suspension.",
-        "visitor_rules": "No accommodating any visitor or student of the opposite sex overnight in rooms.",
-        "cooking_policies": "Cooking is strictly prohibited in the halls of residence. Students must purchase meals from university-provided facilities.",
-        "campus_safety": "Covenant University operates a 24-hour security system with access-controlled gates, CCTV surveillance, and security patrols. All visitors must be registered at the university gate. Emergency response services are available on campus. [INFERRED — Consistent with widely documented Covenant University campus security infrastructure]",
-        "other_welfare_rules": "Covenant University provides a health center, counseling and psychological services, and sports facilities for student welfare. Students are covered under the university's health insurance arrangements. The mandatory Covenant Hour of Prayer (C.H.O.P) also serves as a structured spiritual welfare program. [INFERRED — Consistent with known Covenant University student services and the Student Handbook's emphasis on holistic student development]"
-      },
-      "unique_or_notable_rules": "Towards A Total Graduate (TTG) Course: A mandatory program evaluating character and leadership; failing the TTG program means the student cannot graduate. Covenant Hour of Prayer (C.H.O.P): Early morning devotion from 5:30 am to 6:30 am, Monday to Friday, is mandatory. Students are not permitted to go off-campus to process visas or attend professional examinations during mid-semester or end-of-semester examination periods."
+      "repeatPolicy": "replace",
+      "creditRules": {
+        "maxUnitsPerSemester": 25,
+        "probationCGPA": 1
+      }
     },
     {
-      "university": "Federal University of Agriculture, Abeokuta (FUNAAB)",
-      "document_sources": [
-        "Policy on Information and Communication Technology (2013)"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale. [INFERRED — NUC Minimum Academic Standards applicable to all accredited Nigerian universities; FUNAAB is an NUC-accredited federal university]",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), E = 1 (40–44%), F = 0 (0–39%). [INFERRED — NUC Minimum Academic Standards; FUNAAB follows the standard federal university 5-point grading scale. The only provided source document (ICT Policy, 2013) does not contain grading information]",
-        "degree_classification": "First Class (4.50–5.00), Second Class Upper Division (3.50–4.49), Second Class Lower Division (2.40–3.49), Third Class (1.50–2.39), Pass (1.00–1.49). [INFERRED — NUC Minimum Academic Standards for degree classification; applicable to all accredited Nigerian universities including FUNAAB]",
-        "credit_unit_requirements": "Minimum of 15 credit units and maximum of 24 credit units per semester. Graduation totals vary by program: approximately 120–150 units for 4-year programs; 150–190 units for 5-year programs. [INFERRED — NUC Minimum Academic Standards and common federal agricultural university practice]",
-        "minimum_cgpa_to_graduate": "1.00 for classified degree programs. [INFERRED — Standard federal university minimum graduation threshold consistent with NUC guidelines]"
+      "id": "funaab",
+      "name": "Federal University of Agriculture, Abeokuta",
+      "shortName": "FUNAAB",
+      "location": "Abeokuta, Ogun State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "E", "points": 1, "min": 40, "max": 44 },
+          { "letter": "F", "points": 0, "min": 0, "max": 39 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "1.00. [INFERRED — Consistent with NUC guidelines and standard Nigerian federal university practice]",
-        "academic_probation_rules": "A student who fails to achieve a minimum CGPA of 1.00 at the end of an academic session shall be placed on academic probation and required to repeat the year of study. [INFERRED — Common Nigerian Federal University Practice consistent with NUC guidelines]",
-        "withdrawal_or_dismissal_conditions": "A student who remains on probation and fails to achieve the required CGPA by the end of the probationary period shall be required to withdraw from their program of study. A student may not be placed on probation more than twice during their academic career. [INFERRED — Common Nigerian Federal University Practice]",
-        "carryover_or_failed_course_policies": "Failed courses must be registered and retaken at the next available opportunity. Carryover courses are registered alongside current courses, subject to the maximum credit load of 24 units per semester. Both the original and repeat grades are included in CGPA computation. [INFERRED — Common Nigerian Federal University Practice aligned with NUC guidelines]",
-        "course_repeat_rules": "Students may retake failed courses; both the original and repeat grades are factored into CGPA computation per NUC guidelines. [INFERRED — NUC Policy on CGPA computation]",
-        "maximum_credit_load_per_semester": "24 credit units. [INFERRED — NUC standard maximum credit load for Nigerian federal universities]",
-        "maximum_program_duration": "An extension of not more than 50% of the normal program duration is permitted (e.g., a maximum of 6 years for a 4-year program). [INFERRED — NUC Minimum Academic Standards for maximum program duration at federal universities]"
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Attendance is compulsory in all lectures, laboratory practicals, field trips, and SIWES activities as part of program requirements. [INFERRED — Common Nigerian Federal Agricultural University Practice]",
-        "minimum_attendance_percentage": "A minimum of 75% attendance is required in each course to qualify to sit for end-of-semester examinations. [INFERRED — NUC Minimum Academic Standards; 75% is the standard threshold across all accredited Nigerian universities]",
-        "penalties_for_absence": "A student who fails to meet the 75% attendance requirement in any course shall be barred from writing the examination in that course and shall be deemed to have failed it. [INFERRED — Standard consequence consistent with NUC attendance requirements]"
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Students arriving more than 15 minutes after the scheduled lecture time may be marked absent for that session. [INFERRED — Common Nigerian Federal University Practice]",
-        "lateness_to_examinations": "Candidates are expected to be at the examination venue at least 30 minutes before the scheduled start time. No candidate shall be admitted more than 30 minutes after the commencement of the examination. [INFERRED — Standard practice consistent with NUC examination guidelines and common federal university procedure]"
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "A minimum of two continuous assessment tests are administered per course per semester as prescribed by NUC guidelines. [INFERRED — NUC Minimum Academic Standards for continuous assessment]",
-        "coursework_requirements": "All students must complete assigned practicals, SIWES, field work, and project reports as stipulated in respective course requirements. [INFERRED — Common requirement for Nigerian federal agricultural universities with emphasis on practical and field-based learning]",
-        "ca_exam_weighting": "Continuous Assessment accounts for 30% and the final examination accounts for 70% of the total course grade, consistent with NUC minimum guidelines. Some departments may apply a 40/60 split. [INFERRED — NUC Minimum Academic Standards; the most common weighting at Nigerian federal universities]"
-      },
-      "examination_rules": {
-        "exam_eligibility": "Students must have met the 75% attendance requirement and completed approved course registration to be eligible to sit for examinations. A valid student identity card must be presented at the examination venue. [INFERRED — Standard practice consistent with federal university examination eligibility criteria]",
-        "exam_hall_rules": "Students must present a valid identity card. Bags and unauthorized materials must be deposited with the invigilator before the examination begins. Silence must be maintained throughout. No unauthorized communication is permitted. The use of scrap paper is not permitted; all rough work must be done in the answer booklet. [INFERRED — Standard Nigerian federal university examination hall rules]",
-        "entering_or_leaving_exam_hall": "No candidate shall enter the examination hall after 30 minutes from commencement. No candidate shall leave the hall during the first 30 minutes of the examination. [INFERRED — Standard practice consistent with NUC and common federal university examination procedure]",
-        "special_exam_conditions": "The university provides licensed software and dedicated servers for the purpose of conducting e-examinations locally. Students who miss examinations due to documented illness may apply for a deferred examination, subject to submission of a valid medical certificate from the University Medical Centre within 48 hours of the missed examination. [OFFICIAL (e-examination): Policy on Information and Communication Technology (2013); deferred examination component: INFERRED — Common Nigerian Federal University Practice]"
-      },
-      "academic_integrity": {
-        "cheating_rules": "Any candidate caught engaging in examination malpractice, including copying, smuggling of materials, impersonation, or unauthorized communication, shall face disciplinary action ranging from cancellation of the paper to outright expulsion. [INFERRED — NUC Policy on Examination Malpractice and common federal university practice]",
-        "plagiarism_rules": "Submission of another person's work as one's own, including project reports, theses, and assignments, without proper attribution constitutes academic dishonesty and attracts penalties consistent with examination malpractice categories, up to and including expulsion. [INFERRED — Common Nigerian Federal University Academic Integrity Framework]",
-        "exam_malpractice_policies": "Cases of examination malpractice are handled by the University Examination Malpractice Committee in accordance with NUC guidelines and university disciplinary regulations. [INFERRED — Common Nigerian Federal University Governance Structure]",
-        "penalties": "Penalties for academic integrity violations range from cancellation of the examination paper and suspension for one semester or one session, to outright expulsion for the most severe offenses. [INFERRED — Common Nigerian Federal University Disciplinary Framework aligned with NUC guidelines]"
-      },
-      "discipline_system": {
-        "warning_system": "A written warning is issued as the first-level disciplinary response for minor infractions or first-time offenses. [INFERRED — Common Nigerian Federal University Disciplinary Practice]",
-        "probation": "Academic probation is imposed when a student's CGPA falls below the minimum threshold (1.00). Disciplinary probation may also be imposed for misconduct, restricting participation in extracurricular activities. [INFERRED — Common Nigerian Federal University Practice]",
-        "suspension": "Suspension from the university for a defined period ranging from one semester to one session may be imposed for moderate violations of academic or conduct rules. [INFERRED — Common Nigerian Federal University Disciplinary Practice]",
-        "expulsion": "Outright expulsion is the penalty for the most severe offenses, including examination malpractice involving impersonation, leakage, forgery, or cultism. [INFERRED — NUC Policy and Common Nigerian Federal University Practice]",
-        "other_penalties": "Additional penalties may include fines, mandatory counseling, community service, loss of university privileges (library, ICT, and hostel access), and deferred graduation. [INFERRED — Common Nigerian Federal University Disciplinary Practice]"
-      },
-      "student_conduct_rules": {
-        "dress_code": "Students are expected to dress decently and modestly at all times on campus. Indecent dressing, including skimpy, tattered, or transparent clothing, spaghetti tops, and shorts above the knee, is prohibited. Male students wearing earrings or plaiting their hair is prohibited. [INFERRED — Common Nigerian Federal University Dress Code Policy; consistent with NUC student welfare guidelines]",
-        "electronics_policy": "Mobile phones and unauthorized electronic devices are not allowed in the examination hall. The use of electronic devices must not disrupt academic activities on campus. Campus CCTV and biometric systems are actively enforced per the university's ICT policy. [OFFICIAL (CCTV/biometric enforcement): Policy on Information and Communication Technology (2013); exam electronics prohibition: INFERRED — Common Federal University Practice]",
-        "classroom_behaviour": "Students must maintain orderly conduct during lectures and must not engage in any activity disruptive to the learning environment, including noise-making, eating, or using mobile phones during class. [INFERRED — Common Nigerian Federal University Classroom Conduct Standard]",
-        "campus_behaviour": "Cultism and secret society activities are strictly banned and attract severe disciplinary action including expulsion. Vandalism, violence, unauthorized demonstrations, and disruptive gatherings are prohibited. Students must comply with all campus rules and directives from university officials. [INFERRED — Common Nigerian Federal University Campus Behavior Policy]"
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Students must occupy only their officially allocated room or bed space. Squatting and illegal swapping or sale of bed spaces are prohibited. Hostel quiet hours must be observed. [INFERRED — Common Nigerian Federal University Hostel Regulations]",
-        "visitor_rules": "Visitors are allowed only in designated common areas and are not permitted in hostel rooms. Cross-gender visits to hostel rooms are strictly prohibited. Visitors must leave university premises before the designated curfew (typically 10:00 pm). [INFERRED — Common Nigerian Federal University Visitor Policy]",
-        "cooking_policies": "Cooking in hostel rooms is strictly prohibited. Students are directed to use university-approved cafeterias and kitchenettes. [INFERRED — Common Nigerian Federal University Hostel Policy]",
-        "campus_safety": "A campus-wide CCTV deployment is utilized. The Identity Card System for staff and students includes biometric features to enhance security. A University Security Unit patrols campus. Students are advised to report security threats to university authorities. [OFFICIAL (CCTV/biometric): Policy on Information and Communication Technology (2013); security unit patrols: INFERRED — Common Nigerian Federal University Practice]",
-        "other_welfare_rules": "The university provides a health center and counseling unit for student welfare. Students are covered under the National Health Insurance Scheme (NHIS) or equivalent health coverage arrangements available to federal university students. [INFERRED — Common Nigerian Federal University Welfare Practice]"
-      },
-      "unique_or_notable_rules": "The university's ICT policy mandates biometric features in the Identity Card System for staff and students. Campus-wide CCTV is deployed for security purposes."
+      "repeatPolicy": "both",
+      "creditRules": {
+        "maxUnitsPerSemester": 24,
+        "probationCGPA": 1
+      }
     },
     {
-      "university": "Federal University of Technology, Minna (FUTMINNA)",
-      "document_sources": [
-        "2023/2024 Session Students' Handbook"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), E = 1 (40–44%), F = 0 (0–39%). Diploma grading: A (80–100) = 4.0, AB (70–79) = 3.5, B (60–69) = 3.0, BC (50–59) = 2.5, C (40–49) = 2.0.",
-        "degree_classification": "First Class Honours (4.50–5.00), Second Class Honours Upper Division (3.50–4.49), Second Class Honours Lower Division (2.40–3.49), Third Class Honours (1.50–2.39).",
-        "credit_unit_requirements": "Maximum of 24 credit units and a minimum of 16 credit units per semester.",
-        "minimum_cgpa_to_graduate": "Not specified directly; a CGPA of 1.0 is the threshold below which a student is placed on sessional probation."
+      "id": "futminna",
+      "name": "Federal University of Technology, Minna",
+      "shortName": "FUTMINNA",
+      "location": "Minna, Niger State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "E", "points": 1, "min": 40, "max": 44 },
+          { "letter": "F", "points": 0, "min": 0, "max": 39 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "1.0 (below this, a student is placed on sessional probation).",
-        "academic_probation_rules": "Any student who records a CGPA below 1.0 at the end of a session is placed on Sessional Probation.",
-        "withdrawal_or_dismissal_conditions": "Students in the Schools of Engineering (SEET) and Infrastructure (SIPET) with a CGPA below 1.0 at the end of 100 Level, or who fail specific credit requirements in Mathematics, Physics, or Chemistry, shall be withdrawn from these Schools to other Schools.",
-        "carryover_or_failed_course_policies": "Failed courses (grades E or F) must be carried over. Any course registered for and not sat for is deemed failed. Both the old and new grades in a carryover course are used in computing the CGPA.",
-        "course_repeat_rules": "Both the original and the repeat grade points are included in CGPA computation.",
-        "maximum_credit_load_per_semester": "24 credit units.",
-        "maximum_program_duration": "15 semesters for UTME (100 Level entry); 13 semesters for Direct Entry (200 Level); 11 semesters for Direct Entry (300 Level)."
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Attendance is required in lectures, practicals, laboratory exercises, class assignments, SWEP, and SIWES.",
-        "minimum_attendance_percentage": "75% attendance in lectures; 100% participation in practicals, laboratory exercises, class assignments, SWEP, and SIWES.",
-        "penalties_for_absence": "Any student who fails to meet these attendance requirements in any course shall be deemed to have failed the course."
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Any student who is not in class 15 minutes after the scheduled time of the lecture shall be deemed to be absent.",
-        "lateness_to_examinations": "Candidates must report to the designated holding place at least 30 minutes before e-examinations commence. No candidate may enter after 30 minutes of commencement. Arriving late without valid reason may lead to exclusion from the examination."
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "Each lecturer is required to administer at least two continuous assessments before the final examination.",
-        "coursework_requirements": "Attendance and participation in class assignments, SWEP, and SIWES are mandatory components.",
-        "ca_exam_weighting": "Continuous Assessment (CA) accounts for 40% of the final grade; Examination accounts for 60%."
-      },
-      "examination_rules": {
-        "exam_eligibility": "Students must have met the 75% attendance and 100% practical participation requirements.",
-        "exam_hall_rules": "No candidate may leave the venue within the first 30 minutes. Talking to another student results in an on-the-spot deduction of 5 marks. Writing on the question paper results in an on-the-spot deduction of 10 marks.",
-        "entering_or_leaving_exam_hall": "No candidate may enter after 30 minutes of commencement. No candidate may leave within the first 30 minutes. For e-exams, students must drop worksheets in the garbage bin before leaving and must not contact awaiting candidates; they cannot return to the holding place after leaving.",
-        "special_exam_conditions": "Students who miss examinations due to documented illness or genuine emergency may apply to the appropriate university authority for a deferred examination. A medical certificate from a FUTMINNA-registered medical officer must be submitted within 48 hours of the missed examination. [INFERRED — Common Nigerian Federal University Practice for missed examination procedures; consistent with standard FUTMINNA procedures]"
-      },
-      "academic_integrity": {
-        "cheating_rules": "Bringing in extraneous materials, impersonation, or aiding and abetting examination misconduct leads to suspension or expulsion.",
-        "plagiarism_rules": "Copying another person's academic research or allowing another person to complete a project or thesis for a student (outsourcing) attracts a one-and-a-half session suspension and counseling, or expulsion.",
-        "exam_malpractice_policies": "Bringing a GSM handset or unauthorized electronic devices into the examination hall leads to expulsion.",
-        "penalties": "Penalties range from Letter of Warning or Caution, Counseling, 3 weeks suspension, one semester suspension, one session suspension, to outright expulsion. Forgery of certificates or falsification of documents results in expulsion."
-      },
-      "discipline_system": {
-        "warning_system": "Letter of Warning; Letter of Caution.",
-        "probation": "Sessional Probation for CGPA below 1.0 at the end of a session.",
-        "suspension": "3 weeks suspension, one semester suspension, or one session suspension depending on the offense.",
-        "expulsion": "Outright expulsion for the most serious offenses (e.g., bringing electronic devices into exam hall, forgery, impersonation).",
-        "other_penalties": "Counseling."
-      },
-      "student_conduct_rules": {
-        "dress_code": "Unkempt or haggard appearance, tattered or crazy jeans, transparent dresses, spaghetti wears, shorts above the knee, and sagging are prohibited. Male earrings and female nose or lip rings are also prohibited. Penalties range from warning to suspension.",
-        "electronics_policy": "Bringing a GSM handset or unauthorized electronic devices into the examination hall leads to expulsion.",
-        "classroom_behaviour": "Students are expected to be in class before the scheduled lecture time; arriving more than 15 minutes late constitutes absence. Mobile phones are prohibited from active use in class. Disruptive behavior including noise-making, eating, or engaging in non-academic activities during lectures is not permitted. [INFERRED — Consistent with FUTMINNA's documented 15-minute lateness rule in the Students' Handbook and common federal university classroom conduct norms]",
-        "campus_behaviour": "Male visitors are not allowed in female hostels and vice versa. Intimate open embrace (hugging or kissing) and sitting on each other's laps by opposite sexes are prohibited. Grievances and misunderstandings between students must first be reported to university authorities; reporting directly to law enforcement agencies is not encouraged."
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Squatting or illegal occupancy leads to ejection and disciplinary action: Letter of Caution for the first instance, 3 weeks suspension for a repeat offense, and 1 session suspension for cross-hall squatting.",
-        "visitor_rules": "Male visitors are not allowed in female hostels and vice versa.",
-        "cooking_policies": "Cooking is strictly prohibited in rooms. Students must use kitchenettes. Violation leads to confiscation and a ₦10,000 fine.",
-        "campus_safety": "FUTMINNA operates a University Security Unit that patrols campus 24 hours a day. Search Media (Campus Radio 92.3 FM and TV) serves as an emergency communication and announcement channel. Students are encouraged to report security threats to university authorities rather than directly to external law enforcement, consistent with the university's conflict resolution policy. [INFERRED (Security Unit patrols) — Common Federal University Practice; Search Media role from 2023/2024 Session Students' Handbook]",
-        "other_welfare_rules": "Students' Welfare Insurance Scheme (SWIS): All registered undergraduate students are covered for accidental death or permanent disability (up to ₦200,000) and medical expenses related to an accident (up to ₦50,000). Search Media (Campus Radio 92.3 FM and TV) serves as an official medium for announcements, exam timetable updates, and retrieval of missing items."
-      },
-      "unique_or_notable_rules": "Students' Welfare Insurance Scheme (SWIS) covers accidental death, permanent disability, and accident-related medical expenses for all registered undergraduate students. Search Media (Campus Radio 92.3 FM and TV) is an official university communication channel. Conflict resolution policy discourages students from reporting grievances directly to law enforcement; matters must first go through university authorities."
+      "repeatPolicy": "both",
+      "creditRules": {
+        "maxUnitsPerSemester": 24,
+        "probationCGPA": 1
+      }
     },
     {
-      "university": "Obafemi Awolowo University, Ile-Ife (OAU)",
-      "document_sources": [
-        "Faculty Handbook, Faculty of Technology (year not specified)"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), E = 1 (40–44%), F = 0 (0–39%). Note: An alternate grade mapping also appears in the source referencing B+ (60–69%) not mapped to a GPA value, and D = 2 (40–44%); the primary extracted GPA scale is A=5, B=4, C=3, D=2, E=1, F=0.",
-        "degree_classification": "First Class (4.50–5.00), Second Class Upper Division (3.50–4.49), Second Class Lower Division (2.40–3.49), Third Class Honours (1.50–2.39), Pass (1.00–1.49).",
-        "credit_unit_requirements": "Full-time students must register for a minimum of 16 units and a maximum of 24 units per semester (one section of the source states the maximum as 22 or 24 units).",
-        "minimum_cgpa_to_graduate": "An overall grade point average of not less than 1.50 is required to be awarded the honours degree."
+      "id": "oau",
+      "name": "Obafemi Awolowo University",
+      "shortName": "OAU",
+      "location": "Ile-Ife, Osun State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "E", "points": 1, "min": 40, "max": 44 },
+          { "letter": "F", "points": 0, "min": 0, "max": 39 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "A CGPA of at least 1.00 per semester is required to remain in good academic standing. A CGPA below 1.00 in two consecutive semesters triggers mandatory withdrawal. The overall minimum CGPA for graduation is 1.50. [INFERRED from the withdrawal condition documented in the Faculty Handbook; the source specifies withdrawal below 1.00 for two consecutive semesters but does not explicitly define 'good standing' as a standalone threshold]",
-        "academic_probation_rules": "A student who scores a CGPA below 1.00 in one semester may be placed on academic warning or probation, giving one additional semester to recover before the mandatory withdrawal threshold is triggered. [INFERRED — Consistent with the two-consecutive-semester withdrawal rule in the source document and common OAU Faculty of Technology practice]",
-        "withdrawal_or_dismissal_conditions": "A candidate who scores a CGPA of less than 1.00 in two consecutive semesters shall be required to withdraw from the University.",
-        "carryover_or_failed_course_policies": "A candidate must repeat a failed course at the next available opportunity. If the course is an elective, another elective may be substituted. The failed grade will be reflected in the transcript.",
-        "course_repeat_rules": "Failed courses must be repeated at the next available opportunity; electives may be substituted.",
-        "maximum_credit_load_per_semester": "Maximum of 24 units (or 22 units per one section of the source); minimum of 16 units.",
-        "maximum_program_duration": "An extension of not more than 50% of the normal program duration is permitted (e.g., a maximum of 6 years for a 4-year program, or 7.5 years for a 5-year program). [INFERRED — NUC Minimum Academic Standards for maximum program duration; consistent with OAU's known academic regulations]"
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Attendance in courses of instruction and passing the prescribed examinations is compulsory.",
-        "minimum_attendance_percentage": "A minimum of 75% attendance is required in each course to qualify to sit for examinations. [INFERRED — NUC Minimum Academic Standards; OAU applies the 75% threshold consistent with federal university requirements]",
-        "penalties_for_absence": "Students who fail to meet the 75% attendance requirement in any course shall not qualify to sit for the examination in that course and shall be deemed to have failed it. [INFERRED — Standard consequence consistent with NUC attendance requirements and common OAU practice]"
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Students arriving more than 15 minutes after the scheduled lecture start time may be marked absent for that session. [INFERRED — Common OAU and Nigerian Federal University Practice]",
-        "lateness_to_examinations": "Candidates are required to be at the examination venue at least 30 minutes before the scheduled start time. No candidate shall be admitted after 30 minutes from the commencement of the examination. Candidates who arrive late will not be given extra time. [INFERRED — Standard practice at OAU consistent with common Nigerian university examination regulations]"
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "At least two continuous assessment tests are administered per course per semester, consistent with NUC guidelines. [INFERRED — NUC Minimum Academic Standards for continuous assessment administration]",
-        "coursework_requirements": "Each course is examined at the end of the course, normally by a theory paper of 1–3 hours, plus potential practical or oral examinations.",
-        "ca_exam_weighting": "Continuous assessment constitutes 40% of measured performance; examinations constitute the remaining 60% (implied)."
-      },
-      "examination_rules": {
-        "exam_eligibility": "Students must have met the 75% attendance requirement and completed approved course registration. A valid student identity card must be presented at the examination venue. [INFERRED — Standard OAU and Nigerian university examination eligibility requirements]",
-        "exam_hall_rules": "Students must present a valid identity card. Bags and unauthorized materials must be deposited with the invigilator. No communication between candidates is permitted during the examination. No unauthorized written materials are allowed. All rough work must be done in the answer booklet. Used and unused scripts must not be taken out of the hall. [INFERRED — Standard Nigerian university examination hall rules; consistent with practices at comparable institutions]",
-        "entering_or_leaving_exam_hall": "No candidate shall be admitted after 30 minutes from the commencement of the examination. No candidate shall leave the hall during the first 30 minutes of the examination. [INFERRED — Standard OAU practice consistent with Nigerian university examination regulations]",
-        "special_exam_conditions": "Incomplete Grade (I): Awarded when, for valid reasons (e.g., medical), a student is unable to complete the prescribed requirements. The grade is removed when the requirements are met."
-      },
-      "academic_integrity": {
-        "cheating_rules": "Any candidate found giving or receiving unauthorized assistance, or found in possession of unauthorized materials during an examination, shall face disciplinary action ranging from cancellation of the paper to expulsion. [INFERRED — Consistent with OAU's disciplinary framework and NUC Policy on Examination Malpractice]",
-        "plagiarism_rules": "Plagiarism in any form, including copying from published sources, internet resources, or peers' work without proper attribution, is an academic offense. Submitting another person's work as one's own or purchasing academic work is prohibited and attracts sanctions consistent with the university's academic integrity framework. [INFERRED — Common Nigerian University Academic Integrity Policy aligned with NUC guidelines]",
-        "exam_malpractice_policies": "Cases of examination malpractice are handled by the Faculty Student Disciplinary Committee and forwarded to the relevant Senate committee for confirmation of penalties. Penalties range from cancellation of the paper to expulsion depending on the severity of the offense. [INFERRED — Consistent with OAU's Faculty governance structure and Nigerian university malpractice procedures]",
-        "penalties": "Having a disciplinary problem automatically disqualifies a student from the Annual Roll of Honours Award. Additional penalties for malpractice and misconduct range from cancellation of papers and suspension to outright expulsion. [OFFICIAL (Roll of Honours disqualification): Faculty Handbook; malpractice penalties range: INFERRED — Consistent with OAU disciplinary framework and NUC guidelines]"
-      },
-      "discipline_system": {
-        "warning_system": "A written warning or letter of caution is issued for minor infractions or first-time offenses. Cumulative warnings may escalate to probation or suspension. [INFERRED — Common Nigerian Federal University Disciplinary Practice]",
-        "probation": "Academic probation for CGPA falling below 1.00 in a semester. Disciplinary probation for conduct violations, restricting participation in extracurricular activities. [INFERRED — Consistent with OAU's withdrawal policy and common Nigerian university disciplinary practice]",
-        "suspension": "Suspension (rustication) from the university for a defined period ranging from one semester to one academic year for moderate violations, including examination malpractice and conduct offenses. [INFERRED — Common OAU and Nigerian Federal University Disciplinary Practice]",
-        "expulsion": "Outright expulsion for severe violations including impersonation in examinations, exam leakage, cultism, violence, and possession of weapons. [INFERRED — Consistent with OAU's known stance on cultism and severe malpractice, and NUC guidelines]",
-        "other_penalties": "Disciplinary problems result in exclusion from the Roll of Honours. Additional penalties may include fines, mandatory counseling, and loss of university privileges. [OFFICIAL (Roll of Honours exclusion): Faculty Handbook; other penalties: INFERRED — Common Nigerian Federal University Disciplinary Practice]"
-      },
-      "student_conduct_rules": {
-        "dress_code": "Students are expected to dress decently and modestly on campus at all times. Indecent dressing, including revealing, transparent, tattered, or skimpy clothing, is prohibited. Male students wearing earrings are discouraged. [INFERRED — Common OAU and Nigerian Federal University Dress Code Policy]",
-        "electronics_policy": "Mobile phones and other electronic devices must be switched off or silenced during lectures and examinations. Unauthorized electronic devices are not permitted in the examination hall. [INFERRED — Standard Nigerian Federal University Electronics Policy]",
-        "classroom_behaviour": "Students must maintain orderly conduct during lectures. Mobile phones must be switched off or silenced. Disruptive behaviors such as noise-making, unauthorized conversations, or engaging in non-academic activities during class are prohibited. [INFERRED — Common OAU and Nigerian Federal University Classroom Conduct Standard]",
-        "campus_behaviour": "Cultism and secret society activities are strictly banned at OAU and attract severe penalties including expulsion. Unauthorized demonstrations, violence, and vandalism are prohibited. Students must resolve grievances through official university channels. [INFERRED — Consistent with OAU's publicly known stance on cultism and campus peace]"
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Students must occupy only their officially allocated hostel room or bed space. Squatting and illegal swapping or sale of bed spaces are strictly prohibited. Hostel quiet hours must be observed. [INFERRED — Common OAU and Nigerian Federal University Hostel Regulations]",
-        "visitor_rules": "Visitors are restricted to common areas within hostel premises. Cross-gender visits to hostel rooms are prohibited. Visitors must sign in at the porter's lodge and must leave the hostel before the designated curfew (typically 10:00 pm). [INFERRED — Common OAU Hall Regulation Practice]",
-        "cooking_policies": "Cooking in hostel rooms is prohibited. Students are directed to use designated kitchens or university cafeterias. [INFERRED — Common Nigerian Federal University Hostel Policy]",
-        "campus_safety": "OAU operates a University Security Unit that patrols campus. Students are advised to report suspicious activities or criminal matters to the Security Office or Dean of Students. The proximity of the Obafemi Awolowo University Teaching Hospital also provides emergency medical access for students. [INFERRED — Common knowledge of OAU's security and medical infrastructure]",
-        "other_welfare_rules": "OAU provides a health center, counseling and psychological services, and sports facilities for student welfare. Students are encouraged to access university medical services for all healthcare needs. [INFERRED — Common OAU Student Welfare Services]"
-      },
-      "unique_or_notable_rules": "Roll of Honours: Beneficiaries must maintain a minimum CGPA of 4.0 for Departmental Honours, 4.25 for Provost or Deans Honours, and 4.5 for the Vice-Chancellor's Honours Roll. Students must have no disciplinary problems, no carryover courses, and be of good conduct. Special Electives: Passing 12 units of Special Electives is a mandatory requirement for graduation. Residence Requirements: Candidates must spend a minimum of two academic years at OAU to qualify for a degree."
+      "repeatPolicy": "both",
+      "creditRules": {
+        "maxUnitsPerSemester": 24,
+        "probationCGPA": 1
+      }
     },
     {
-      "university": "University of Benin (UNIBEN)",
-      "document_sources": [
-        "Student Information Hand Book (2022)"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale. [INFERRED — NUC Minimum Academic Standards; UNIBEN is an NUC-accredited federal university and uses the standard 5-point grading scale. The provided Student Information Hand Book (2022) did not include the grading scale table]",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), E = 1 (40–44%), F = 0 (0–39%). [INFERRED — NUC Minimum Academic Standards; consistent with UNIBEN's published academic regulations and the standard Nigerian federal university grading framework]",
-        "degree_classification": "First Class Honours (4.50–5.00), Second Class Upper Division (3.50–4.49), Second Class Lower Division (2.40–3.49), Third Class (1.50–2.39), Pass (1.00–1.49). [INFERRED — Standard Nigerian university degree classification consistent with NUC Minimum Academic Standards and common UNIBEN practice]",
-        "credit_unit_requirements": "Minimum of 15 credit units and maximum of 24 credit units per semester. Graduation totals: 4-year programs approximately 120–150 units; 5-year programs 150–190 units; 6-year programs 190–225 units. [INFERRED — NUC Minimum Academic Standards for credit unit requirements, applicable to UNIBEN]",
-        "minimum_cgpa_to_graduate": "1.00 for classified degree programs. [INFERRED — Standard federal university minimum graduation CGPA consistent with NUC guidelines and common UNIBEN practice]"
+      "id": "ui",
+      "name": "University of Ibadan",
+      "shortName": "UI",
+      "location": "Ibadan, Oyo State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "E", "points": 1, "min": 40, "max": 44 },
+          { "letter": "F", "points": 0, "min": 0, "max": 39 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "1.00. A student must maintain a cumulative GPA of not less than 1.00 to remain in good academic standing. [INFERRED — Standard Nigerian federal university threshold for academic standing consistent with NUC guidelines and common UNIBEN practice]",
-        "academic_probation_rules": "A student who fails to achieve a minimum CGPA of 1.00 at the end of an academic session shall be placed on academic probation and required to repeat the year of study. [INFERRED — Common Nigerian Federal University Practice consistent with NUC guidelines]",
-        "withdrawal_or_dismissal_conditions": "A student who remains on probation and fails to achieve the required CGPA by the end of the probationary period shall be required to withdraw from their program of study. A student may not be placed on probation more than twice during their academic career. [INFERRED — Common Nigerian Federal University Practice]",
-        "carryover_or_failed_course_policies": "Failed courses must be registered and retaken at the next available opportunity. The total credit load including carryovers shall not exceed the maximum of 24 units per semester. Both the original and repeat grades are included in CGPA computation. [INFERRED — Common Nigerian Federal University Practice]",
-        "course_repeat_rules": "Unruly behavior during examinations that results in removal leads to a carryover of the affected course. Additionally, all failed courses must be retaken at the next available opportunity; both the original and repeat grades are used in CGPA computation. [OFFICIAL (conduct-triggered carryover): Student Information Hand Book (2022); general repeat/CGPA component: INFERRED — Common Nigerian Federal University Practice]",
-        "maximum_credit_load_per_semester": "24 credit units. [INFERRED — NUC standard maximum credit load for Nigerian federal universities]",
-        "maximum_program_duration": "An extension of not more than 50% of the normal program duration is permitted (e.g., a maximum of 6 years for a 4-year program). [INFERRED — NUC Minimum Academic Standards for maximum program duration]"
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Attendance is compulsory in all lectures, laboratory practicals, clinical training, and field trips. [INFERRED — Common Nigerian Federal University Attendance Policy]",
-        "minimum_attendance_percentage": "A minimum of 75% attendance is required in each course to qualify to sit for end-of-semester examinations. [INFERRED — NUC Minimum Academic Standards; 75% is the standard threshold for all accredited Nigerian universities including UNIBEN]",
-        "penalties_for_absence": "A student who fails to meet the 75% attendance requirement in any course shall be barred from writing the examination in that course and shall be deemed to have failed it. [INFERRED — Standard consequence consistent with NUC attendance requirements and common UNIBEN practice]"
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Students arriving more than 15 minutes after the scheduled lecture time may be marked absent for that session. [INFERRED — Common Nigerian Federal University Practice]",
-        "lateness_to_examinations": "Candidates must be in the Examination Hall at least 30 minutes before the examination starts. A candidate shall not leave the Examination Hall until the first 30 minutes have elapsed and must have special permission from the Chief Invigilator to do so."
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "A minimum of two continuous assessment tests must be administered per course per semester, consistent with NUC guidelines. [INFERRED — NUC Minimum Academic Standards for continuous assessment; standard practice at UNIBEN]",
-        "coursework_requirements": "Students are required to complete all laboratory practicals, assignments, projects, and other coursework as specified in course outlines. [INFERRED — Common Nigerian Federal University Coursework Requirement]",
-        "ca_exam_weighting": "Continuous Assessment (CA) accounts for 30% and the final examination accounts for 70% of the total course grade. [INFERRED — Most common CA/exam weighting at UNIBEN consistent with NUC minimum guidelines; some departments may apply a 40/60 split]"
-      },
-      "examination_rules": {
-        "exam_eligibility": "Candidates must bring and display their identity card. Non-production of an identity card or authorized letter leads to immediate removal from the Examination Hall.",
-        "exam_hall_rules": "Candidates must deposit any handbag, briefcase, or prohibited material at the Chief Invigilator's Desk. Candidates must write their Examination Number, not their name, distinctly at the top of every Answer Book. On finishing, students must draw a line through any blank space or page of each Answer Sheet.",
-        "entering_or_leaving_exam_hall": "Candidates must arrive at least 30 minutes before the examination starts. No candidate may leave during the first 30 minutes without special permission from the Chief Invigilator.",
-        "special_exam_conditions": "Students who miss examinations due to documented illness must present a medical certificate from the University Medical Centre to the Faculty Examination Officer within 48 hours of the missed examination. A deferred or supplementary examination may be granted at the discretion of the appropriate university authority. [INFERRED — Common Nigerian Federal University Practice for missed examination procedures]"
-      },
-      "academic_integrity": {
-        "cheating_rules": "Proven cases of fore-knowledge of examination questions, bringing in electronic devices (e.g., GSM handsets, smartwatches), or impersonation results in expulsion. Any form of unauthorized communication results in losing 10 minutes of examination time; persistence leads to relocation or cancellation of the paper.",
-        "plagiarism_rules": "Plagiarism in any form, including copying from published sources, internet resources, or peers' work without proper attribution in assignments, projects, and theses, is an academic offense. Sanctions range from course failure to suspension or expulsion depending on severity. [INFERRED — Common Nigerian Federal University Academic Integrity Policy aligned with NUC guidelines]",
-        "exam_malpractice_policies": "Smuggling question papers and answer booklets out of the hall leads to expulsion. Three letters of warning for examination misconduct equate to rustication for a minimum period of one session.",
-        "penalties": "Disciplinary measures range from Fines, Disciplinary Probation, Loss of Privileges, Reimbursement, and Suspension to Expulsion. Three letters of warning result in rustication for a minimum of one session."
-      },
-      "discipline_system": {
-        "warning_system": "Letter of Warning; three letters of warning for examination misconduct result in rustication for a minimum of one session.",
-        "probation": "Disciplinary Probation.",
-        "suspension": "Suspension and rustication for a minimum of one session (upon three warnings).",
-        "expulsion": "Expulsion for fore-knowledge of questions, bringing electronic devices into the hall, impersonation, or smuggling examination materials.",
-        "other_penalties": "Fines, Loss of Privileges, Reimbursement."
-      },
-      "student_conduct_rules": {
-        "dress_code": "Indecent dressing such as short and skimpy dresses, tight shirts and skirts, transparent clothing, and tattered jeans are strictly prohibited. Male earrings and male hair plaiting are prohibited.",
-        "electronics_policy": "Bringing electronic devices (e.g., GSM handsets, smartwatches) into the examination hall results in expulsion. Heavy electrical gadgets (refrigerators, washing machines, hot plates) are strictly prohibited in student rooms.",
-        "classroom_behaviour": "Unruly behavior in the examination hall (such as smoking, drinking liquor, or making noise) attracts a verbal warning by the invigilator; if persistent, the student must leave the hall and carry over the course.",
-        "campus_behaviour": "All nocturnal clubs (e.g., Neo-Black Movement, Eiye, Maphite, Buccaneer, Female Amazon, Jezebel, Black Bra) are banned, and severe disciplinary action awaits members."
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Hostels and university gates are closed between 12 midnight and 6:00 am each day. Squatting and sale of allocated accommodation are prohibited; offenders forfeit their accommodation.",
-        "visitor_rules": "Visitors are allowed in rooms only between 4:00 pm and 8:00 pm on weekdays, and 12:00 noon and 8:00 pm on weekends. Male visitors are not allowed in women's halls, and female visitors are not allowed in male hostels.",
-        "cooking_policies": "Cooking in rooms is strictly prohibited; students must use kitchenettes or Bukaterias.",
-        "campus_safety": "All nocturnal clubs are banned. Hostels and university gates are locked between 12 midnight and 6:00 am.",
-        "other_welfare_rules": "Heavy electrical gadgets (refrigerators, washing machines, hot plates) are strictly prohibited in student rooms. Buka System: Meals are provided in Bukaterias by private contractors on a pay-as-you-eat basis with no fixed meal amounts."
-      },
-      "unique_or_notable_rules": "Change of Name: A student is permitted to change their name only once during their stay, providing a newspaper publication and an affidavit. No final year student will be allowed to change their name after the Senate has approved examination results for that session. Defacing or Damaging Property: Defacing university walls with posters or bills attracts repainting costs and suspension for up to 6 months. Buka System: University-supervised private contractors provide meals on a pay-as-you-eat basis."
+      "repeatPolicy": "both",
+      "creditRules": {
+        "maxUnitsPerSemester": 24,
+        "probationCGPA": 1
+      }
     },
     {
-      "university": "University of Ibadan",
-      "document_sources": [
-        "Payment of Levies and Course Registration Guideline (2025/2026)",
-        "Examination Regulations, Student General Conduct and Discipline (year not specified)"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale. [OFFICIAL — University of Ibadan Academic Regulations (publicly available); UI uses the standard NUC 5-point grading scale]",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), E = 1 (40–44%), F = 0 (0–39%). [OFFICIAL — University of Ibadan Academic Regulations (publicly available); UI's long-established grading scale retains the E grade. Note: the NUC 2014 benchmark recommended abolishing the E grade for some programs; individual UI faculties may have adopted the revised scale]",
-        "degree_classification": "First Class Honours (4.50–5.00), Second Class Upper Division (3.50–4.49), Second Class Lower Division (2.40–3.49), Third Class Honours (1.50–2.39), Pass (1.00–1.49). [OFFICIAL — University of Ibadan Academic Regulations (publicly available); standard classification applied at UI]",
-        "credit_unit_requirements": "Minimum of 15 credit units and maximum of 24 credit units per semester for regular undergraduate programs. Total graduation credit requirements vary by faculty and program. [INFERRED — NUC Minimum Academic Standards; consistent with UI's known academic framework]",
-        "minimum_cgpa_to_graduate": "1.00 for classified degree programs. [INFERRED — Standard for Nigerian federal universities; consistent with UI's academic regulation framework]"
+      "id": "uniben",
+      "name": "University of Benin",
+      "shortName": "UNIBEN",
+      "location": "Benin City, Edo State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "E", "points": 1, "min": 40, "max": 44 },
+          { "letter": "F", "points": 0, "min": 0, "max": 39 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "1.00. A student must maintain a minimum CGPA of 1.00 to remain in good academic standing. [INFERRED — Consistent with common Nigerian federal university standards and UI's academic regulation framework]",
-        "academic_probation_rules": "A student who fails to achieve a CGPA of 1.00 at the end of an academic session shall be placed on academic probation and required to repeat the year of study. [INFERRED — Common Nigerian Federal University Practice consistent with NUC guidelines and standard UI academic regulations]",
-        "withdrawal_or_dismissal_conditions": "A student who remains on probation and fails to achieve the required CGPA by the end of the probationary period shall be required to withdraw from the program. A student may not be placed on probation more than twice during their academic career. [INFERRED — Common Nigerian Federal University Practice]",
-        "carryover_or_failed_course_policies": "Failed courses must be retaken at the next available opportunity. Carryover courses are registered alongside current courses within the maximum credit load per semester. Both the original and repeat grades are factored into CGPA computation. [INFERRED — Common Nigerian Federal University Practice]",
-        "course_repeat_rules": "Students may retake failed courses; both the original and repeat grades are factored into CGPA computation. [INFERRED — Common Nigerian Federal University Practice]",
-        "maximum_credit_load_per_semester": "24 credit units per semester. [INFERRED — NUC standard maximum credit load; consistent with UI's known academic regulations]",
-        "maximum_program_duration": "An extension of not more than 50% of the normal program duration is permitted (e.g., a maximum of 6 years for a 4-year program). [INFERRED — NUC Minimum Academic Standards for maximum program duration; consistent with UI's regulatory framework]"
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Unapproved course registration will not be reckoned with for purposes of attendance. [Source: Payment of Levies and Course Registration Guideline]",
-        "minimum_attendance_percentage": "A minimum of 75% attendance is required in each course to qualify to sit for examinations. [INFERRED — NUC Minimum Academic Standards; the 75% threshold is well-established at the University of Ibadan and required for examination eligibility]",
-        "penalties_for_absence": "A student who fails to meet the 75% attendance requirement in any course shall not qualify to sit for the examination in that course and shall be deemed to have failed it. [INFERRED — Standard consequence consistent with NUC attendance requirements and common UI practice]"
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Students arriving more than 15 minutes after the scheduled lecture start time may be marked absent for that session. [INFERRED — Common Nigerian Federal University Practice; consistent with general UI expectations]",
-        "lateness_to_examinations": "Candidates must be at the venue of the examination thirty (30) minutes before the time the examination is due to start. Candidates arriving more than half an hour after the examination has started shall not be allowed to participate, or may be admitted only at the discretion of the Chief Invigilator. [Source: Examination Regulations, Student General Conduct and Discipline]"
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "Unapproved course registration will not be reckoned with for purposes of continuous assessment. [Source: Payment of Levies and Course Registration Guideline]",
-        "coursework_requirements": "Students are required to complete all laboratory practicals, assignments, projects, and other coursework as specified in individual course outlines. Unapproved course registration will not be reckoned with for coursework purposes. [INFERRED (coursework requirements component) — Common Nigerian Federal University Practice; registration component from Payment of Levies and Course Registration Guideline (2025/2026)]",
-        "ca_exam_weighting": "Continuous Assessment accounts for 30% and the final examination accounts for 70% of the total course grade. [INFERRED — Most common CA/exam weighting at UI consistent with NUC minimum guidelines; individual faculties may vary]"
-      },
-      "examination_rules": {
-        "exam_eligibility": "Unapproved course registration will not be reckoned with for examination purposes. Students must display their University Identity cards during each examination. [Sources: Payment of Levies and Course Registration Guideline; Examination Regulations, Student General Conduct and Discipline]",
-        "exam_hall_rules": "Candidates may not leave the examination hall during the first and last half hour of the examination. Temporary leave is only allowed with permission and if accompanied by an invigilator. Lecture notes, textbooks, bags, and mobile telephones must not be brought into the examination hall. The use of scrap paper is not permitted; all rough work must be done in the answer booklet and crossed neatly through. Answer scripts or sheets, whether used or unused, should not be taken out of the examination hall. [Source: Examination Regulations, Student General Conduct and Discipline]",
-        "entering_or_leaving_exam_hall": "Candidates must arrive 30 minutes before the start time. No candidate may leave during the first or last half hour. No candidate may enter more than 30 minutes after commencement, or may be admitted only at the Chief Invigilator's discretion. [Source: Examination Regulations, Student General Conduct and Discipline]",
-        "special_exam_conditions": "Students who miss examinations due to documented illness must present a medical certificate from the University Health Service to the Faculty Examination Officer within 48 hours of the missed examination. A deferred or supplementary examination may be granted at the discretion of the appropriate university authority. [INFERRED — Common Nigerian Federal University Practice; consistent with standard UI Health Service and examination procedures]"
-      },
-      "academic_integrity": {
-        "cheating_rules": "While the examination is in progress, communication between candidates is strictly forbidden. Any candidate found giving or receiving irregular assistance may be required to withdraw from the examination. [Source: Examination Regulations, Student General Conduct and Discipline]",
-        "plagiarism_rules": "Plagiarism in any form, including copying from published sources, internet resources, or peers' work without proper attribution, is an academic offense at the University of Ibadan. Students found guilty of plagiarism in assignments, projects, dissertations, or theses may face penalties consistent with the examination misconduct framework, including suspension or expulsion. [INFERRED — Common Nigerian Federal University Academic Integrity Policy; consistent with UI's academic standards]",
-        "exam_malpractice_policies": "Examination misconduct or malpractice can lead to a student being expelled from the University. Investigations are processed formally through the Examinations Officer and the Faculty Student Disciplinary Committee. [Source: Examination Regulations, Student General Conduct and Discipline]",
-        "penalties": "Sanctions include Fines (Masters or Mistresses of Halls may impose fines of ₦1,000 or more), Disciplinary Probation, Suspension or Rustication, Expulsion, Loss of Privilege, and Reimbursement. [Source: Examination Regulations, Student General Conduct and Discipline]"
-      },
-      "discipline_system": {
-        "warning_system": "A written warning or letter of caution is issued for minor infractions or first-time offenses. Cumulative warnings may escalate to probation or rustication. The Central Student Disciplinary Committee (CSDC), chaired by the Vice-Chancellor, handles escalated cases of indiscipline. [INFERRED (warning issuance and escalation mechanism) — Common Nigerian Federal University Disciplinary Practice; CSDC reference from Examination Regulations, Student General Conduct and Discipline]",
-        "probation": "Disciplinary Probation.",
-        "suspension": "Suspension or Rustication.",
-        "expulsion": "Expulsion for examination misconduct or malpractice.",
-        "other_penalties": "Fines (₦1,000 or more imposed by Masters or Mistresses of Halls), Loss of Privilege, Reimbursement."
-      },
-      "student_conduct_rules": {
-        "dress_code": "Students should be in academic robes whilst meeting formally with the Vice-Chancellor. General campus dress expectations require decent and modest attire at all times; indecent or offensive dressing is not acceptable. [OFFICIAL (academic robes requirement): Examination Regulations, Student General Conduct and Discipline; general campus dress standard: INFERRED — Common Nigerian Federal University Campus Conduct Standard]",
-        "electronics_policy": "Mobile telephones must not be brought into the examination hall. [Source: Examination Regulations, Student General Conduct and Discipline]",
-        "classroom_behaviour": "Students must maintain orderly conduct during lectures. Mobile phones must be switched off or silenced during academic activities. Disruption of lectures or any academic activity in any form is prohibited and subject to disciplinary action. [INFERRED — Common Nigerian Federal University Classroom Conduct Standard]",
-        "campus_behaviour": "The Vice-Chancellor's Lodge is out of bounds to all students. Demonstrations and protests must be peaceful and orderly; demonstrating students must notify the authorities in writing at least 48 hours in advance about the nature, place, and time of the demonstration, ensuring no services are disrupted and no violence occurs. Locking, barricading, or vandalizing entry gates, streets, or offices is heavily sanctioned. [Source: Examination Regulations, Student General Conduct and Discipline]"
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Students must occupy only their officially allocated hostel room or bed space. Squatting and illegal swapping or sale of bed spaces are strictly prohibited. Hostel quiet hours must be observed. [INFERRED — Common Nigerian Federal University Hostel Regulations; consistent with standard UI Hall regulations]",
-        "visitor_rules": "Visitors are restricted to common areas within hostel premises. Cross-gender visits to hostel rooms are prohibited. Visitors must sign in at the porter's lodge and must leave the hostel before the designated curfew time (as determined by individual halls, typically 10:00 pm or 11:00 pm). [INFERRED — Common UI Hall Regulation Practice]",
-        "cooking_policies": "Cooking in hostel rooms is strictly prohibited. Students are directed to use university cafeterias or designated kitchen facilities. [INFERRED — Common Nigerian Federal University Hostel Policy; standard at UI]",
-        "campus_safety": "The University operates a Security Service that patrols campus 24 hours a day. Students are advised to report criminal activities or security concerns to the University Security Office or relevant university authority. [INFERRED — Common Nigerian Federal University Security Practice; consistent with known UI security arrangements]",
-        "other_welfare_rules": "The University Health Service provides medical care to students. Counseling services are also available through the Student Counseling Centre. Students are covered under health insurance arrangements accessible through the university's health services. [INFERRED — Common University of Ibadan student welfare services]"
-      },
-      "unique_or_notable_rules": "Course registration requires successful payment of all mandatory fees and levies, including the bundle fee or school fee, technology levy, utility levy, and where applicable, health or laboratory professional levies, before a student may proceed to course registration. [Source: Payment of Levies and Course Registration Guideline] The Central Student Disciplinary Committee (CSDC) is chaired by the Vice-Chancellor and handles individual cases of indiscipline. [Source: Examination Regulations, Student General Conduct and Discipline] Demonstrations and protests must be notified to authorities at least 48 hours in advance in writing. [Source: Examination Regulations, Student General Conduct and Discipline]"
+      "repeatPolicy": "both",
+      "creditRules": {
+        "maxUnitsPerSemester": 24,
+        "probationCGPA": 1
+      }
     },
     {
-      "university": "University of Nigeria, Nsukka (UNN)",
-      "document_sources": [
-        "Undergraduate Academic Regulations (2013/2014)"
-      ],
-      "academic_structure": {
-        "cgpa_grading_scale": "5-point scale",
-        "grade_letters_and_points": "A = 5 (70–100%), B = 4 (60–69%), C = 3 (50–59%), D = 2 (45–49%), F = 0 (0–39%). Note: The pass grade of E (40–44%) is abolished in line with the NUC benchmark effective 2013/2014; the new minimum pass mark is 45% (D grade).",
-        "degree_classification": "First Class Honours (4.50–5.00), Second Class Honours Upper (3.50–4.49), Second Class Honours Lower (2.40–3.49), Third Class Honours (1.50–2.39). Pass degrees (1.00–1.49) have been abolished. Professional programs (Medicine, Pharmacy) have a pass mark of 50%, except Dispensing and Forensic Pharmacy which is 60%.",
-        "credit_unit_requirements": "4-year programs: 120 units minimum; 5-year programs: 150 units minimum; 6-year programs: 180 units minimum. Sessional load: minimum 15 units, maximum 24 units per semester.",
-        "minimum_cgpa_to_graduate": "1.00."
+      "id": "unn",
+      "name": "University of Nigeria, Nsukka",
+      "shortName": "UNN",
+      "location": "Nsukka, Enugu State",
+      "gradingSystem": {
+        "scale": 5,
+        "grades": [
+          { "letter": "A", "points": 5, "min": 70, "max": 100 },
+          { "letter": "B", "points": 4, "min": 60, "max": 69 },
+          { "letter": "C", "points": 3, "min": 50, "max": 59 },
+          { "letter": "D", "points": 2, "min": 45, "max": 49 },
+          { "letter": "E", "points": 1, "min": 40, "max": 44 },
+          { "letter": "F", "points": 0, "min": 0, "max": 39 }
+        ]
       },
-      "progression_and_academic_standing": {
-        "minimum_cgpa_for_good_standing": "1.00.",
-        "academic_probation_rules": "Any student who fails to attain a CGPA of 1.00 at the end of the session shall be required to repeat the year of study (probation). No student is allowed more than two periods of probation in their academic career.",
-        "withdrawal_or_dismissal_conditions": "If at the end of the probationary period the student still fails to attain a CGPA of 1.00, they shall be required to withdraw from the program. A student who has been on probation twice and still cannot meet the requirement must withdraw.",
-        "carryover_or_failed_course_policies": "A student must register for a failed course at the appropriate semester before registering courses for the current year of study. Final year students with a CGPA of 1.0 and above may sit for failed courses up to a maximum of 14 credit units per semester as external candidates without registering formally as regular students.",
-        "course_repeat_rules": "Failed courses must be repeated at the appropriate semester. Final year students meeting the CGPA threshold may sit as external candidates for up to 14 credit units.",
-        "maximum_credit_load_per_semester": "24 credit units.",
-        "maximum_program_duration": "An extension of not more than 50% of the normal period is allowed (e.g., a maximum of 6 years for a 4-year program)."
-      },
-      "attendance_policy": {
-        "attendance_requirements": "Attendance in all classes is required.",
-        "minimum_attendance_percentage": "75% class attendance in a course is required to qualify to take examinations in that course.",
-        "penalties_for_absence": "Students who have not reached 75% class attendance in a course shall normally not qualify to take examinations in that course."
-      },
-      "lateness_policy": {
-        "lateness_to_lectures": "Students arriving more than 15 minutes after the scheduled lecture start time may be marked absent for that session. [INFERRED — Common Nigerian Federal University Practice; consistent with general UNN academic culture]",
-        "lateness_to_examinations": "No candidate shall normally be allowed to leave the examination hall within the first 30 minutes, or to enter the examination hall after 30 minutes from commencement."
-      },
-      "assignment_and_coursework_rules": {
-        "continuous_assessment_policies": "A minimum of two continuous assessment tests are administered per course per semester, consistent with NUC guidelines. Continuous assessment results are used to compute final grades where examinations are missed for valid reasons. [INFERRED (minimum two CA tests) — NUC Minimum Academic Standards; CA-for-grade-computation component from Undergraduate Academic Regulations (2013/2014)]",
-        "coursework_requirements": "Students are required to complete all assigned laboratory practicals, field trips, projects, and other coursework as specified in course outlines. Non-completion of required coursework may affect continuous assessment scores and examination eligibility. [INFERRED — Common Nigerian Federal University Coursework Requirement]",
-        "ca_exam_weighting": "Continuous assessment receives 30% weight; the semester examination receives 70% weight."
-      },
-      "examination_rules": {
-        "exam_eligibility": "Students must have met the 75% attendance requirement. Students must sign their signature against their name and registration number in the attendance register during examinations.",
-        "exam_hall_rules": "Students must sign the attendance register. No unauthorized materials are permitted.",
-        "entering_or_leaving_exam_hall": "No candidate may leave within the first 30 minutes or enter after 30 minutes from commencement.",
-        "special_exam_conditions": "Any student prevented from sitting an end-of-semester examination due to ill-health must submit a medical certificate from the Director of the University Medical Centre within 48 hours. If missed without valid reason, the continuous assessment record shall be used to return an appropriate grade. Final year students with a CGPA of 1.0 and above may sit for failed courses (up to 14 credit units) as external candidates."
-      },
-      "academic_integrity": {
-        "cheating_rules": "Category D (Cancellation of paper): Copying or giraffing, exposing script, refusing to submit script, unruly behavior.",
-        "plagiarism_rules": "Plagiarism and academic fraud in projects, theses, assignments, and coursework are prohibited at UNN. Such offenses are treated as academic dishonesty and may attract penalties consistent with the examination malpractice categorization system, ranging from course failure and suspension to expulsion depending on the severity. [INFERRED — Common Nigerian Federal University Academic Integrity Framework; consistent with UNN's broader examination malpractice policy]",
-        "exam_malpractice_policies": "Category A (Expulsion): Impersonation, exam leakage, smuggling scripts, physical assault, bringing weapons or guns into the hall. Category B (Suspension 1 Session + Rustication from hostel): Procuring fake medical certificates, lobbying for grades, bringing unauthorized materials into the hall. Category C (Step down 1 semester + Rustication from hostel): Mutilation of registration forms, forcing entry while unregistered. Category D (Cancellation of paper): Copying or giraffing, exposing script, refusing to submit script, unruly behavior.",
-        "penalties": "Penalties range from cancellation of paper, 1 semester suspension, 1 session suspension, and rustication from hostel, to expulsion. Cases are investigated by an examination malpractice committee."
-      },
-      "discipline_system": {
-        "warning_system": "A written warning or letter of caution is issued for minor infractions or first-time offenses. More serious offenses are escalated to the Examination Malpractice Committee or the appropriate disciplinary body. [INFERRED — Common Nigerian Federal University Disciplinary Practice; consistent with UNN's tiered malpractice response system documented in the Undergraduate Academic Regulations]",
-        "probation": "Academic probation (repeat year) for CGPA below 1.00.",
-        "suspension": "1 semester suspension or 1 session suspension depending on the category of offense.",
-        "expulsion": "Expulsion for Category A offenses (impersonation, exam leakage, smuggling scripts, physical assault, weapons in hall).",
-        "other_penalties": "Cancellation of paper (Category D); rustication from hostel (Categories B and C); step down one semester (Category C)."
-      },
-      "student_conduct_rules": {
-        "dress_code": "Students are expected to dress decently and modestly on campus at all times. Indecent dressing, including skimpy, tattered, transparent, or revealing clothing, is prohibited. [INFERRED — Common UNN and Nigerian Federal University Dress Code Policy]",
-        "electronics_policy": "Mobile phones and unauthorized electronic devices are not permitted in the examination hall. Possession of such devices during examinations constitutes a Category B malpractice offense and attracts suspension for one session plus rustication from the hostel. [INFERRED — Consistent with UNN's documented Category B malpractice rules and common Nigerian federal university electronics policy]",
-        "classroom_behaviour": "Students must maintain orderly conduct during lectures. Mobile phones must be switched off or silenced. Disruptive behavior, noise-making, and non-academic activities during class are prohibited. [INFERRED — Common Nigerian Federal University Classroom Conduct Standard]",
-        "campus_behaviour": "Cultism and secret society activities are strictly banned at UNN and attract severe disciplinary action including expulsion. Unauthorized demonstrations, violence, vandalism, and campus disorder are prohibited. Students are expected to resolve disputes through official university channels. [INFERRED — Consistent with UNN's publicly known stance on cultism and campus peace, and common federal university policy]"
-      },
-      "student_welfare_rules": {
-        "hostel_rules": "Students must occupy only their officially allocated hostel room or bed space. Squatting and illegal swapping or sale of bed spaces are strictly prohibited. Hostel quiet hours must be observed. [INFERRED — Common Nigerian Federal University Hostel Regulations; consistent with general UNN hostel management practice]",
-        "visitor_rules": "Visitors are restricted to common areas within hostel premises. Cross-gender visits to hostel rooms are prohibited. Visitors must leave the hostel before the designated curfew time (typically 10:00 pm). [INFERRED — Common Nigerian Federal University Visitor Policy]",
-        "cooking_policies": "Cooking in hostel rooms is strictly prohibited. Students are directed to use designated kitchens or university cafeterias. [INFERRED — Common Nigerian Federal University Hostel Policy; standard practice at UNN]",
-        "campus_safety": "UNN operates a University Security Service that patrols campus 24 hours a day. Students are advised to report suspicious activities or security threats to university authorities rather than directly to external law enforcement. [INFERRED — Common Nigerian Federal University Security Practice]",
-        "other_welfare_rules": "UNN provides a University Medical Centre for student healthcare, a Student Counseling Centre, and sports facilities. Students are encouraged to utilize the Medical Centre for all health-related matters. The Handouts Policy also serves as a student welfare measure: no lecturer shall force or penalize any student for failing to purchase handouts or textbooks. [INFERRED (health center, counseling, sports) — Common UNN and Nigerian Federal University Welfare Services; Handouts Policy from Undergraduate Academic Regulations (2013/2014)]"
-      },
-      "unique_or_notable_rules": "Handouts Policy: The university administration discourages the production and sale of handouts. No lecturer shall force or penalize any student for failing to purchase handouts or textbooks. Aegrotat Degree: An unclassified degree awarded on compassionate grounds to a final year student unable to complete examinations due to permanent disability, provided their prior academic work was of passing standard. Second Bachelor's Degree: A former graduate of the University may pursue a second bachelor's degree with a minimum attendance period of one session."
+      "repeatPolicy": "both",
+      "creditRules": {
+        "maxUnitsPerSemester": 24,
+        "probationCGPA": 1
+      }
     }
   ]
 }
-```
-
----
-
-## Fill Summary
-
-### Fields Sourced from Official Documents
-
-| University | Field | Source |
-|---|---|---|
-| University of Ibadan | `cgpa_grading_scale` | UI Academic Regulations (publicly available) |
-| University of Ibadan | `grade_letters_and_points` | UI Academic Regulations (publicly available) |
-| University of Ibadan | `degree_classification` | UI Academic Regulations (publicly available) |
-| University of Ibadan | `lateness_to_examinations` | Examination Regulations, Student General Conduct and Discipline |
-| University of Ibadan | `exam_hall_rules` | Examination Regulations, Student General Conduct and Discipline |
-| University of Ibadan | `entering_or_leaving_exam_hall` | Examination Regulations, Student General Conduct and Discipline |
-| University of Ibadan | `cheating_rules` | Examination Regulations, Student General Conduct and Discipline |
-| University of Ibadan | `exam_malpractice_policies` | Examination Regulations, Student General Conduct and Discipline |
-| University of Ibadan | `penalties` | Examination Regulations, Student General Conduct and Discipline |
-| University of Ibadan | `campus_behaviour` | Examination Regulations, Student General Conduct and Discipline |
-| University of Ibadan | `discipline_system` (CSDC reference) | Examination Regulations, Student General Conduct and Discipline |
-| FUNAAB | `special_exam_conditions` (e-exam component) | Policy on Information and Communication Technology (2013) |
-| FUNAAB | `campus_safety` (CCTV/biometric component) | Policy on Information and Communication Technology (2013) |
-| FUNAAB | `electronics_policy` (CCTV/biometric component) | Policy on Information and Communication Technology (2013) |
-| UNIBEN | `course_repeat_rules` (conduct-removal carryover) | Student Information Hand Book (2022) |
-| OAU | `penalties` (Roll of Honours disqualification) | Faculty Handbook |
-| OAU | `other_penalties` (Roll of Honours exclusion) | Faculty Handbook |
-| UNN | `continuous_assessment_policies` (CA used for grade computation) | Undergraduate Academic Regulations (2013/2014) |
-| UNN | `other_welfare_rules` (Handouts Policy component) | Undergraduate Academic Regulations (2013/2014) |
-
----
-
-### Fields Filled by Inference from Common Nigerian University Practice / NUC Guidelines
-
-| University | Fields Inferred |
-|---|---|
-| **ABU** | `lateness_to_lectures`; `plagiarism_rules`; `other_penalties` (discipline); `classroom_behaviour`; `campus_behaviour`; `campus_safety` |
-| **Covenant University** | `maximum_program_duration`; `lateness_to_lectures`; `continuous_assessment_policies`; `coursework_requirements`; `ca_exam_weighting`; `classroom_behaviour`; `campus_safety`; `other_welfare_rules` |
-| **FUNAAB** | All `academic_structure` fields; all `progression_and_academic_standing` fields; all `attendance_policy` fields; all `lateness_policy` fields; all `assignment_and_coursework_rules` fields; `exam_eligibility`; `exam_hall_rules`; `entering_or_leaving_exam_hall`; `special_exam_conditions` (deferred exam component); all `academic_integrity` fields; all `discipline_system` fields; all `student_conduct_rules` fields; `hostel_rules`; `visitor_rules`; `cooking_policies`; `other_welfare_rules`; `campus_safety` (security unit component) |
-| **FUTMINNA** | `special_exam_conditions`; `classroom_behaviour`; `campus_safety` |
-| **OAU** | `minimum_cgpa_for_good_standing`; `academic_probation_rules`; `maximum_program_duration`; `minimum_attendance_percentage`; `penalties_for_absence`; `lateness_to_lectures`; `lateness_to_examinations`; `continuous_assessment_policies`; `exam_eligibility`; `exam_hall_rules`; `entering_or_leaving_exam_hall`; `cheating_rules`; `plagiarism_rules`; `exam_malpractice_policies`; `warning_system`; `probation`; `suspension`; `expulsion`; `dress_code`; `electronics_policy`; `classroom_behaviour`; `campus_behaviour`; `hostel_rules`; `visitor_rules`; `cooking_policies`; `campus_safety`; `other_welfare_rules` |
-| **UNIBEN** | All `academic_structure` fields; `minimum_cgpa_for_good_standing`; `academic_probation_rules`; `withdrawal_or_dismissal_conditions`; `carryover_or_failed_course_policies`; `maximum_credit_load_per_semester`; `maximum_program_duration`; `course_repeat_rules` (CGPA computation component); all `attendance_policy` fields; `lateness_to_lectures`; `continuous_assessment_policies`; `coursework_requirements`; `ca_exam_weighting`; `special_exam_conditions`; `plagiarism_rules` |
-| **University of Ibadan** | `credit_unit_requirements`; `minimum_cgpa_to_graduate`; `minimum_cgpa_for_good_standing`; `academic_probation_rules`; `withdrawal_or_dismissal_conditions`; `carryover_or_failed_course_policies`; `course_repeat_rules`; `maximum_credit_load_per_semester`; `maximum_program_duration`; `minimum_attendance_percentage`; `penalties_for_absence`; `lateness_to_lectures`; `coursework_requirements`; `ca_exam_weighting`; `special_exam_conditions`; `plagiarism_rules`; `warning_system`; `dress_code` (general campus component); `classroom_behaviour`; `hostel_rules`; `visitor_rules`; `cooking_policies`; `campus_safety`; `other_welfare_rules` |
-| **UNN** | `lateness_to_lectures`; `continuous_assessment_policies` (minimum two CA tests); `coursework_requirements`; `plagiarism_rules`; `warning_system`; `dress_code`; `electronics_policy`; `classroom_behaviour`; `campus_behaviour`; `hostel_rules`; `visitor_rules`; `cooking_policies`; `campus_safety`; `other_welfare_rules` (health/counseling/sports components) |
-
-**Key inference foundations used throughout:** NUC Minimum Academic Standards (2014 and 2019 editions); standard federal university practice for the 75% attendance rule, 30/70 CA-to-exam weighting, 15-minute lecture lateness grace period, 30-minute exam arrival requirement, 1.00 minimum graduation CGPA, 50% maximum program extension, and 24-unit maximum semester load. Private university fields (Covenant University) were cross-referenced against known practices at comparable Nigerian private universities.
