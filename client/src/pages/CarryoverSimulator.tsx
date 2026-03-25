@@ -64,7 +64,7 @@ export default function CarryoverSimulator() {
 
   const grades: GradeRange[] = useMemo(
     () => universityConfig ? resolveUniversityGradingSystem(universityConfig, settings.admissionSession).grades : DEFAULT_NIGERIAN_GRADES,
-    [universityConfig],
+    [universityConfig, settings.admissionSession],
   );
 
   const degreeClasses: DegreeClass[] = useMemo(
