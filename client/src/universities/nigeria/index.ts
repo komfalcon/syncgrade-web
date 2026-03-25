@@ -61,12 +61,14 @@ function selectGradingSystemByAdmissionSession(
   let chosen = sorted[0];
   for (const system of sorted) {
     const startYear = parseSessionStartYear(system.session_start);
-    if (startYear == null) continue;
-    if (startYear <= targetYear) {
-      chosen = system;
+    if (startYear == null) {
       continue;
     }
-    break;
+    if (startYear <= targetYear) {
+      chosen = system;
+    } else {
+      break;
+    }
   }
   return chosen;
 }

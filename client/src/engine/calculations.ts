@@ -606,6 +606,9 @@ export function validateUniversityConfig(
     warnings.push("Grading system has no session entries defined.");
   } else {
     for (const session of gradingSystem) {
+      if (!session.session_start || !session.session_end) {
+        warnings.push("Each grading session must include session_start and session_end.");
+      }
       if (!session.grades || session.grades.length === 0) {
         warnings.push(`Session ${session.session_start} has no grades defined.`);
         continue;
