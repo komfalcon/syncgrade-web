@@ -47,6 +47,7 @@ export default function NigerianUniversities() {
       gpaScale: resolved.scale,
       gradeRanges: resolved.grades,
       activeUniversity: university.shortName,
+      admissionSession: cgpa.settings.admissionSession ?? resolved.session_start,
     });
     setSelectedUni(null);
     toast.success(`✅ ${university.name} grading system applied!`);
