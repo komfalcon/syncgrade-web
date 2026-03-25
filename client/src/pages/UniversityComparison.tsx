@@ -10,11 +10,14 @@ import { getDegreeClass } from "@/engine/calculations";
 import type { UniversityConfig } from "@/universities/types";
 import { toast } from "sonner";
 import { useUniversities } from "@/hooks/useUniversities";
+import { useCGPA } from "@/hooks/useCGPA";
+import { resolveUniversityGradingSystem } from "@/universities/nigeria";
 
 const SCORE_SAMPLES = [95, 85, 75, 65, 55, 45, 40, 35, 20] as const;
 
-function getGradeForScore(score: number, uni: UniversityConfig) {
-  const match = uni.gradingSystem.grades.find(
+function getGradeForScore(score: number, uni: UniversityConfig, admissionSession: string | null) {
+  const active = resolveUniversityGradingSystem(uni, admissionSession);
+  const match = active.grades.find(
     (g) => score >= g.min && score <= g.max,
   );
   return match ?? null;
@@ -23,6 +26,7 @@ function getGradeForScore(score: number, uni: UniversityConfig) {
 export default function UniversityComparison() {
   const [, setLocation] = useLocation();
   const { universities } = useUniversities();
+  const { settings } = useCGPA();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [gpaInput, setGpaInput] = useState("");
 
@@ -152,7 +156,7 @@ export default function UniversityComparison() {
                       </td>
                       {selectedUniversities.map((uni) => (
                         <td key={uni.id} className="py-3 px-3">
-                          {uni.gradingSystem.scale}.0
+                          {resolveUniversityGradingSystem(uni, settings.admissionSession).scale}.0
                         </td>
                       ))}
                     </tr>
@@ -164,8 +168,8 @@ export default function UniversityComparison() {
                       </td>
                       {selectedUniversities.map((uni) => (
                         <td key={uni.id} className="py-3 px-3">
-                          {uni.gradingSystem.grades.length} (
-                          {uni.gradingSystem.grades
+                          {resolveUniversityGradingSystem(uni, settings.admissionSession).grades.length} (
+                          {resolveUniversityGradingSystem(uni, settings.admissionSession).grades
                             .map((g) => g.grade)
                             .join(", ")}
                           )
@@ -291,7 +295,7 @@ export default function UniversityComparison() {
                       <tr key={score} className="hover:bg-slate-50/60">
                         <td className="py-2.5 pr-4 font-medium">{score}%</td>
                         {selectedUniversities.map((uni) => {
-                          const match = getGradeForScore(score, uni);
+                          const match = getGradeForScore(score, uni, settings.admissionSession);
                           return (
                             <td key={uni.id} className="py-2.5 px-3">
                               {match ? (

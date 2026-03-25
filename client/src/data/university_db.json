@@ -7,17 +7,51 @@
       "name": "Ahmadu Bello University, Zaria",
       "shortName": "ABU",
       "location": "Zaria, Kaduna State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "E", "points": 1, "min": 40, "max": 44 },
-          { "letter": "F", "points": 0, "min": 0, "max": 39 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "E",
+              "points": 1,
+              "min": 40,
+              "max": 44
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 39
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "both",
       "creditRules": {
         "maxUnitsPerSemester": 24,
@@ -29,16 +63,45 @@
       "name": "Covenant University",
       "shortName": "Covenant",
       "location": "Ota, Ogun State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "F", "points": 0, "min": 0, "max": 44 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 44
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "replace",
       "creditRules": {
         "maxUnitsPerSemester": 25,
@@ -50,17 +113,51 @@
       "name": "Federal University of Agriculture, Abeokuta",
       "shortName": "FUNAAB",
       "location": "Abeokuta, Ogun State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "E", "points": 1, "min": 40, "max": 44 },
-          { "letter": "F", "points": 0, "min": 0, "max": 39 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "E",
+              "points": 1,
+              "min": 40,
+              "max": 44
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 39
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "both",
       "creditRules": {
         "maxUnitsPerSemester": 24,
@@ -72,17 +169,51 @@
       "name": "Federal University of Technology, Minna",
       "shortName": "FUTMINNA",
       "location": "Minna, Niger State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "E", "points": 1, "min": 40, "max": 44 },
-          { "letter": "F", "points": 0, "min": 0, "max": 39 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "E",
+              "points": 1,
+              "min": 40,
+              "max": 44
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 39
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "both",
       "creditRules": {
         "maxUnitsPerSemester": 24,
@@ -94,17 +225,51 @@
       "name": "Obafemi Awolowo University",
       "shortName": "OAU",
       "location": "Ile-Ife, Osun State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "E", "points": 1, "min": 40, "max": 44 },
-          { "letter": "F", "points": 0, "min": 0, "max": 39 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "E",
+              "points": 1,
+              "min": 40,
+              "max": 44
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 39
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "both",
       "creditRules": {
         "maxUnitsPerSemester": 24,
@@ -116,17 +281,51 @@
       "name": "University of Ibadan",
       "shortName": "UI",
       "location": "Ibadan, Oyo State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "E", "points": 1, "min": 40, "max": 44 },
-          { "letter": "F", "points": 0, "min": 0, "max": 39 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "E",
+              "points": 1,
+              "min": 40,
+              "max": 44
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 39
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "both",
       "creditRules": {
         "maxUnitsPerSemester": 24,
@@ -138,17 +337,51 @@
       "name": "University of Benin",
       "shortName": "UNIBEN",
       "location": "Benin City, Edo State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "E", "points": 1, "min": 40, "max": 44 },
-          { "letter": "F", "points": 0, "min": 0, "max": 39 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "E",
+              "points": 1,
+              "min": 40,
+              "max": 44
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 39
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "both",
       "creditRules": {
         "maxUnitsPerSemester": 24,
@@ -160,17 +393,51 @@
       "name": "University of Nigeria, Nsukka",
       "shortName": "UNN",
       "location": "Nsukka, Enugu State",
-      "gradingSystem": {
-        "scale": 5,
-        "grades": [
-          { "letter": "A", "points": 5, "min": 70, "max": 100 },
-          { "letter": "B", "points": 4, "min": 60, "max": 69 },
-          { "letter": "C", "points": 3, "min": 50, "max": 59 },
-          { "letter": "D", "points": 2, "min": 45, "max": 49 },
-          { "letter": "E", "points": 1, "min": 40, "max": 44 },
-          { "letter": "F", "points": 0, "min": 0, "max": 39 }
-        ]
-      },
+      "gradingSystem": [
+        {
+          "session_start": "2000/2001",
+          "session_end": "present",
+          "scale": 5,
+          "grades": [
+            {
+              "letter": "A",
+              "points": 5,
+              "min": 70,
+              "max": 100
+            },
+            {
+              "letter": "B",
+              "points": 4,
+              "min": 60,
+              "max": 69
+            },
+            {
+              "letter": "C",
+              "points": 3,
+              "min": 50,
+              "max": 59
+            },
+            {
+              "letter": "D",
+              "points": 2,
+              "min": 45,
+              "max": 49
+            },
+            {
+              "letter": "E",
+              "points": 1,
+              "min": 40,
+              "max": 44
+            },
+            {
+              "letter": "F",
+              "points": 0,
+              "min": 0,
+              "max": 39
+            }
+          ]
+        }
+      ],
       "repeatPolicy": "both",
       "creditRules": {
         "maxUnitsPerSemester": 24,

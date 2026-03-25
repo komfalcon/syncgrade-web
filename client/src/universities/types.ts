@@ -34,16 +34,20 @@ export interface RepeatPolicy {
   description: string;
 }
 
+export interface SessionGradingSystem {
+  session_start: string;
+  session_end: string;
+  scale: number;
+  grades: GradeRange[];
+}
+
 export interface UniversityConfig {
   id: string;
   name: string;
   shortName: string;
   country: string;
   location: string;
-  gradingSystem: {
-    scale: number;
-    grades: GradeRange[];
-  };
+  gradingSystem: SessionGradingSystem[];
   degreeClasses: DegreeClass[];
   creditRules: CreditRules;
   repeatPolicy: RepeatPolicy;

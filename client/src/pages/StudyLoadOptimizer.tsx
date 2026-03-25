@@ -10,6 +10,7 @@ import { useCGPA } from '@/hooks/useCGPA';
 import { recommendStudyLoad } from '@/engine/calculations';
 import type { StudyLoadRecommendation } from '@/engine/types';
 import { useUniversities } from '@/hooks/useUniversities';
+import { resolveUniversityGradingSystem } from '@/universities/nigeria';
 
 export default function StudyLoadOptimizer() {
   const { currentCGPA, totalCredits, settings } = useCGPA();
@@ -27,7 +28,7 @@ export default function StudyLoadOptimizer() {
     return null;
   }, [settings.activeUniversity, universities]);
 
-  const scale = universityConfig?.gradingSystem.scale ?? 5;
+  const scale = universityConfig ? resolveUniversityGradingSystem(universityConfig, settings.admissionSession).scale : 5;
   const defaultTarget =
     totalCredits > 0
       ? Math.min(parseFloat((currentCGPA + 0.5).toFixed(2)), scale)

@@ -11,10 +11,12 @@ export const funaabConfig: UniversityConfig = {
   shortName: "FUNAAB",
   country: "Nigeria",
   location: "Abeokuta, Ogun State",
-  gradingSystem: {
+  gradingSystem: [{
+    session_start: "2000/2001",
+    session_end: "present",
     scale: 5,
     grades: DEFAULT_NIGERIAN_GRADES,
-  },
+  }],
   degreeClasses: DEFAULT_NIGERIAN_DEGREE_CLASSES,
   creditRules: {
     minimumCredits: 15,

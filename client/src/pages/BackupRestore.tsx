@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { useCGPA } from '@/hooks/useCGPA';
 import { exportBackup, parseBackupFile, generateCSV } from '@/engine/backup';
 import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
+import DataManagement from '@/components/DataManagement';
 
 export default function BackupRestore() {
   const { semesters, currentCGPA, totalCredits, settings } = useCGPA();
@@ -302,6 +303,8 @@ export default function BackupRestore() {
             </Button>
           </div>
         </Card>
+
+        <DataManagement />
       </div>
     </div>
   );

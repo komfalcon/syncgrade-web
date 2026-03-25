@@ -7,7 +7,9 @@ export const covenantConfig: UniversityConfig = {
   shortName: "Covenant",
   country: "Nigeria",
   location: "Ota, Ogun State",
-  gradingSystem: {
+  gradingSystem: [{
+    session_start: "2000/2001",
+    session_end: "present",
     scale: 5,
     grades: [
       { grade: "A", min: 70, max: 100, points: 5.0 },
@@ -16,7 +18,7 @@ export const covenantConfig: UniversityConfig = {
       { grade: "D", min: 45, max: 49, points: 2.0 },
       { grade: "F", min: 0, max: 44, points: 0.0 },
     ],
-  },
+  }],
   degreeClasses: [
     { name: "First Class", minCGPA: 4.50, maxCGPA: 5.00 },
     { name: "Second Class Upper", minCGPA: 3.50, maxCGPA: 4.49 },

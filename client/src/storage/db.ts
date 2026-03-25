@@ -12,7 +12,9 @@ export interface CustomUniversityEntry {
   name: string;
   shortName: string;
   location: string;
-  gradingSystem: {
+  gradingSystem: Array<{
+    session_start: string;
+    session_end: string;
     scale: 4 | 5;
     grades: Array<{
       letter: string;
@@ -20,7 +22,7 @@ export interface CustomUniversityEntry {
       min: number;
       max: number;
     }>;
-  };
+  }>;
   repeatPolicy: RepeatPolicy["method"];
   creditRules: {
     maxUnitsPerSemester: number;

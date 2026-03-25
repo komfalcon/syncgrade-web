@@ -1,4 +1,4 @@
-# CGPA Calculator
+# SyncGrade
 
 An interactive web application that helps students calculate their Cumulative Grade Point Average (CGPA) across multiple semesters with an intuitive interface.
 

@@ -1,4 +1,4 @@
-# CGPA Calculator Design Brainstorming
+# SyncGrade Design Brainstorming
 
 ## Response 1: Academic Minimalism (Probability: 0.08)
 

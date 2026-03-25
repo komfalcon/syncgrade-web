@@ -25,6 +25,7 @@ export interface AppSettings {
   gpaScale: number;
   gradeRanges: GradeRange[];
   activeUniversity: string | null;
+  admissionSession: string | null;
 }
 
 interface CGPAData {
@@ -43,6 +44,7 @@ const getDefaultSettings = (): AppSettings => ({
   gpaScale: 5.0,
   gradeRanges: [...DEFAULT_NIGERIAN_GRADES],
   activeUniversity: null,
+  admissionSession: null,
 });
 
 const loadSettings = (): AppSettings => {

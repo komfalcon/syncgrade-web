@@ -62,7 +62,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-black/30"></div>
         <div className="relative container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">CGPA Calculator</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">SyncGrade</h1>
           <p className="text-lg md:text-xl text-cyan-50 drop-shadow-md max-w-2xl mx-auto">
             Track your academic performance across semesters and achieve your GPA goals
           </p>
