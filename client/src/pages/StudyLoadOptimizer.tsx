@@ -8,23 +8,24 @@ import { ArrowLeft, BookOpen, Target, Lightbulb } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCGPA } from '@/hooks/useCGPA';
 import { recommendStudyLoad } from '@/engine/calculations';
-import { getAllUniversities } from '@/universities/nigeria';
 import type { StudyLoadRecommendation } from '@/engine/types';
+import { useUniversities } from '@/hooks/useUniversities';
 
 export default function StudyLoadOptimizer() {
   const { currentCGPA, totalCredits, settings } = useCGPA();
   const [, setLocation] = useLocation();
+  const { universities } = useUniversities();
 
   const universityConfig = useMemo(() => {
     if (settings.activeUniversity) {
       return (
-        getAllUniversities().find(
+        universities.find(
           (u) => u.shortName === settings.activeUniversity,
         ) ?? null
       );
     }
     return null;
-  }, [settings.activeUniversity]);
+  }, [settings.activeUniversity, universities]);
 
   const scale = universityConfig?.gradingSystem.scale ?? 5;
   const defaultTarget =

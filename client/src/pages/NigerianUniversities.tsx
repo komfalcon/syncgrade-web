@@ -30,7 +30,7 @@ export default function NigerianUniversities() {
   const filteredUniversities = useMemo(() => {
     if (!normalizedQuery) return universities;
     return universities.filter((uni) => {
-      const words = uni.name.toLowerCase().split(/\s+/);
+      const words = uni.name.toLowerCase().split(/\s+/).filter(Boolean);
       const acronym = words.map((w) => w[0]).join('');
       return (
         uni.name.toLowerCase().includes(normalizedQuery) ||

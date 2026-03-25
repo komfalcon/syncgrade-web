@@ -15,7 +15,6 @@ import { ArrowLeft, Plus, Trash2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCGPA } from '@/hooks/useCGPA';
 import { carryoverImpact } from '@/engine/calculations';
-import { getAllUniversities } from '@/universities/nigeria';
 import {
   DEFAULT_NIGERIAN_GRADES,
   DEFAULT_NIGERIAN_DEGREE_CLASSES,
@@ -23,6 +22,7 @@ import {
 import type { GradeRange, DegreeClass } from '@/universities/types';
 import type { CarryoverImpactResult } from '@/engine/types';
 import { DEFAULT_MAX_SEMESTER_UNITS } from '@shared/const';
+import { useUniversities } from '@/hooks/useUniversities';
 
 interface FailedCourse {
   name: string;
@@ -48,17 +48,18 @@ function getDegreeClass(cgpa: number, classes: DegreeClass[]): string {
 export default function CarryoverSimulator() {
   const { currentCGPA, totalCredits, settings } = useCGPA();
   const [, setLocation] = useLocation();
+  const { universities } = useUniversities();
   const [courses, setCourses] = useState<FailedCourse[]>([{ ...EMPTY_COURSE }]);
   const [result, setResult] = useState<CarryoverImpactResult | null>(null);
 
   const universityConfig = useMemo(() => {
     if (settings.activeUniversity) {
-      return getAllUniversities().find(
+      return universities.find(
         (u) => u.shortName === settings.activeUniversity,
       ) ?? null;
     }
     return null;
-  }, [settings.activeUniversity]);
+  }, [settings.activeUniversity, universities]);
 
   const grades: GradeRange[] = useMemo(
     () => universityConfig?.gradingSystem.grades ?? DEFAULT_NIGERIAN_GRADES,

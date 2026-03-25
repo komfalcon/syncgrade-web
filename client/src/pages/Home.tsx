@@ -13,8 +13,8 @@ import AddSemesterDialog from '@/components/AddSemesterDialog';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useLocation } from 'wouter';
 import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/engine/calculations';
-import { getAllUniversities } from '@/universities/nigeria';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
+import { useUniversities } from '@/hooks/useUniversities';
 
 /**
  * Design Philosophy: Vibrant Data Dashboard
@@ -31,6 +31,7 @@ export default function Home() {
   const [showAddSemester, setShowAddSemester] = useState(false);
   const [expandedSemesterId, setExpandedSemesterId] = useState<string | null>(null);
   const [, setLocation] = useLocation();
+  const { universities } = useUniversities();
   const scale = cgpa.settings.gpaScale;
 
   // Prepare data for charts
@@ -75,7 +76,7 @@ export default function Home() {
 
         {/* Degree Risk Warning */}
         {cgpa.semesters.length > 0 && (() => {
-          const uniConfig = getAllUniversities().find(u => u.shortName === cgpa.settings.activeUniversity);
+          const uniConfig = universities.find(u => u.shortName === cgpa.settings.activeUniversity);
           const degreeClasses = uniConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES;
           const risk = assessDegreeRisk(cgpa.currentCGPA, degreeClasses, cgpa.totalCredits, 150);
           const currentClass = getDegreeClass(cgpa.currentCGPA, degreeClasses);

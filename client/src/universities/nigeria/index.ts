@@ -16,7 +16,12 @@ const baseMetadata: UniversityDbMeta = {
   lastUpdated: universityDb.lastUpdated,
 };
 
+function normalizeRepeatPolicy(value: string): "replace" | "both" {
+  return value === "both" ? "both" : "replace";
+}
+
 function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
+  const repeatPolicy = normalizeRepeatPolicy(entry.repeatPolicy);
   return {
     id: entry.id,
     name: entry.name,
@@ -40,9 +45,9 @@ function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
       graduationCredits: [],
     },
     repeatPolicy: {
-      method: entry.repeatPolicy,
+      method: repeatPolicy,
       description:
-        entry.repeatPolicy === "replace"
+        repeatPolicy === "replace"
           ? "New grade overwrites the old one in CGPA."
           : "Both attempts count toward total units/points.",
     },
