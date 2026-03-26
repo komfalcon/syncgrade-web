@@ -81,6 +81,15 @@ const baseMetadata: UniversityDbMeta = {
     (universityDb as { lastUpdated?: string }).lastUpdated ?? "2026-01-01T00:00:00.000Z",
 };
 
+const NCCE_NCE_CLASSES = [
+  { name: "Distinction", minCGPA: 4.5, maxCGPA: 5.0 },
+  { name: "Credit", minCGPA: 3.5, maxCGPA: 4.49 },
+  { name: "Merit", minCGPA: 2.5, maxCGPA: 3.49 },
+  { name: "Pass", minCGPA: 1.5, maxCGPA: 2.49 },
+  { name: "Low Pass", minCGPA: 1.0, maxCGPA: 1.49 },
+  { name: "Fail", minCGPA: 0.0, maxCGPA: 0.99 },
+] as const;
+
 
 function normalizeSessionLabel(value: string): string {
   return value.trim().toLowerCase();
@@ -177,7 +186,10 @@ function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
     country: "Nigeria",
     location: entry.location,
     gradingSystem: buildDbSessions(entry).map((session) => toSessionGradingSystem(session)),
-    degreeClasses: DEFAULT_NIGERIAN_DEGREE_CLASSES.map((degreeClass) => ({ ...degreeClass })),
+    degreeClasses:
+      entry.type === "college"
+        ? NCCE_NCE_CLASSES.map((degreeClass) => ({ ...degreeClass }))
+        : DEFAULT_NIGERIAN_DEGREE_CLASSES.map((degreeClass) => ({ ...degreeClass })),
     creditRules: {
       minimumCredits: 15,
       maximumPerSemester: entry.academic_rules.max_credit_load,
