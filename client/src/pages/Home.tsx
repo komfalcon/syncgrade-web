@@ -16,6 +16,10 @@ import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/en
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
 
+const POLYTECHNIC_CRITICAL_CGPA = 2.0;
+const UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA = 1.0;
+const UNIVERSITY_OR_COLLEGE_PROBATION_CGPA = 1.5;
+
 /**
  * Design Philosophy: Vibrant Data Dashboard
  * - Teal (#0891b2) to Cyan (#06b6d4) gradient primary colors
@@ -50,11 +54,11 @@ export default function Home() {
     if (!activeUniversityConfig) return null;
     const institutionType = activeUniversityConfig.type;
     if (institutionType === 'polytechnic') {
-      if (cgpa.currentCGPA < 2.0) {
+      if (cgpa.currentCGPA < POLYTECHNIC_CRITICAL_CGPA) {
         return {
           level: 'critical' as const,
           title: 'Standing: Critical Risk',
-          message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below 2.00 for ${activeUniversityConfig.shortName}.`,
+          message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below ${POLYTECHNIC_CRITICAL_CGPA.toFixed(2)} for ${activeUniversityConfig.shortName}.`,
           cardClass: 'border-red-300 bg-red-50',
           iconClass: 'text-red-700',
           textClass: 'text-red-800',
@@ -65,11 +69,11 @@ export default function Home() {
       return null;
     }
 
-    if (cgpa.currentCGPA < 1.0) {
+    if (cgpa.currentCGPA < UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA) {
       return {
         level: 'critical' as const,
         title: 'Standing: Withdrawal Risk',
-        message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below 1.00 for ${activeUniversityConfig.shortName}.`,
+        message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below ${UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA.toFixed(2)} for ${activeUniversityConfig.shortName}.`,
         cardClass: 'border-red-300 bg-red-50',
         iconClass: 'text-red-700',
         textClass: 'text-red-800',
@@ -78,11 +82,11 @@ export default function Home() {
       };
     }
 
-    if (cgpa.currentCGPA < 1.5) {
+    if (cgpa.currentCGPA < UNIVERSITY_OR_COLLEGE_PROBATION_CGPA) {
       return {
         level: 'warning' as const,
         title: 'Standing: Probation Risk',
-        message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below 1.50 for ${activeUniversityConfig.shortName}.`,
+        message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below ${UNIVERSITY_OR_COLLEGE_PROBATION_CGPA.toFixed(2)} for ${activeUniversityConfig.shortName}.`,
         cardClass: 'border-amber-300 bg-amber-50',
         iconClass: 'text-amber-700',
         textClass: 'text-amber-800',

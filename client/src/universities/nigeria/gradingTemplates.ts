@@ -58,7 +58,7 @@ const ENGINEERING_5_BANDS: Band[] = [
   { letter: "F", min: 0, max: 44 },
 ];
 
-const NBTE_STANDARD_4_BANDS: Band[] = [
+const NBTE_STANDARD_BANDS: Band[] = [
   { letter: "A", min: 70, max: 100 },
   { letter: "B", min: 60, max: 69 },
   { letter: "C", min: 50, max: 59 },
@@ -92,7 +92,7 @@ export const gradingTemplates: Record<GradingTemplateId, { scale: number; grades
   },
   nbte_standard_4_0: {
     scale: 4,
-    grades: buildTemplate(4, NBTE_STANDARD_4_BANDS),
+    grades: buildTemplate(4, NBTE_STANDARD_BANDS),
   },
   ncce_standard_5: {
     scale: 5,
