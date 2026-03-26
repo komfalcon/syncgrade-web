@@ -38,6 +38,7 @@ export interface UserProfileEntry {
   universityShortName: string;
   universityName: string;
   admissionSession: string;
+  repeatPolicy: RepeatPolicy["method"];
   configuration: UniversityConfig;
   updatedAt: number;
 }

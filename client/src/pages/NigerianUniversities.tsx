@@ -6,6 +6,7 @@ import {
   GraduationCap,
   MapPin,
   Check,
+  BadgeCheck,
   BookOpen,
   RefreshCw,
   FileText,
@@ -30,6 +31,7 @@ import { toast } from 'sonner';
 import { appDb } from '@/storage/db';
 
 const ADMISSION_SESSION_REGEX = /^(\d{4})\/(\d{4})$/;
+const PAGE_SIZE = 18;
 
 export default function NigerianUniversities() {
   const [, setLocation] = useLocation();
@@ -38,20 +40,33 @@ export default function NigerianUniversities() {
   const [selectedUni, setSelectedUni] = useState<UniversityConfig | null>(null);
   const [selectedSession, setSelectedSession] = useState('');
   const [query, setQuery] = useState('');
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const normalizedQuery = query.trim().toLowerCase();
   const filteredUniversities = useMemo(() => {
     if (!normalizedQuery) return universities;
     return universities.filter((uni) => {
-      const words = uni.name.toLowerCase().split(/\s+/).filter(Boolean);
-      const acronym = words.map((w) => w[0]).join('');
+      const generatedAcronym = uni.name
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((w) => w[0])
+        .join('');
+      const haystack = `${uni.name} ${uni.shortName} ${uni.location} ${generatedAcronym}`.toLowerCase();
       return (
-        uni.name.toLowerCase().includes(normalizedQuery) ||
-        uni.shortName.toLowerCase().includes(normalizedQuery) ||
-        acronym.includes(normalizedQuery)
+        haystack.includes(normalizedQuery) ||
+        normalizedQuery
+          .split(/\s+/)
+          .filter(Boolean)
+          .every((token) => haystack.includes(token))
       );
     });
   }, [normalizedQuery, universities]);
+
+  const visibleUniversities = useMemo(
+    () => filteredUniversities.slice(0, visibleCount),
+    [filteredUniversities, visibleCount],
+  );
 
   const cardResolvedScales = useMemo(
     () =>
@@ -107,6 +122,7 @@ export default function NigerianUniversities() {
       gradeRanges: resolvedSelected.grades,
       activeUniversity: selectedUni.shortName,
       admissionSession,
+      repeatPolicy: selectedUni.repeatPolicy.method,
     });
 
     await appDb.userProfile.put({
@@ -115,6 +131,7 @@ export default function NigerianUniversities() {
       universityShortName: selectedUni.shortName,
       universityName: selectedUni.name,
       admissionSession,
+      repeatPolicy: selectedUni.repeatPolicy.method,
       configuration: {
         ...selectedUni,
         gradingSystem: [resolvedSelected],
@@ -156,13 +173,16 @@ export default function NigerianUniversities() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <Card className="mb-4 p-4 shadow-md border-0">
+        <Card className="sticky top-3 z-10 mb-4 p-4 shadow-md border-0 backdrop-blur supports-[backdrop-filter]:bg-white/80">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
             <Input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by school name or acronym (e.g., UI, ABU)"
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setVisibleCount(PAGE_SIZE);
+              }}
+              placeholder="Search by school name, acronym, or location (e.g., UI, ABU, Lagos)"
               className="pl-9"
             />
           </div>
@@ -186,7 +206,7 @@ export default function NigerianUniversities() {
             </div>
           </Card>
 
-          {filteredUniversities.map((uni) => {
+          {visibleUniversities.map((uni) => {
             const isActive = cgpa.settings.activeUniversity === uni.shortName;
             const resolved =
               cardResolvedScales[uni.id] ??
@@ -206,6 +226,12 @@ export default function NigerianUniversities() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-lg font-bold text-slate-900">{uni.name}</h3>
+                      {!uni.id.startsWith('custom-') && (
+                        <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700 border border-emerald-200">
+                          <BadgeCheck className="w-3 h-3 mr-1" />
+                          NUC Verified
+                        </span>
+                      )}
                       {isActive && (
                         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 border border-green-200">
                           ✅ Active
@@ -260,6 +286,17 @@ export default function NigerianUniversities() {
               Open Custom School Form
             </Button>
           </Card>
+        )}
+
+        {visibleCount < filteredUniversities.length && (
+          <div className="mt-6 flex justify-center">
+            <Button
+              variant="outline"
+              onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+            >
+              Load More Schools ({visibleCount}/{filteredUniversities.length})
+            </Button>
+          </div>
         )}
 
         <Card className="mt-8 p-6 shadow-md border-0 bg-slate-50">

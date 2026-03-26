@@ -26,6 +26,7 @@ export interface AppSettings {
   gradeRanges: GradeRange[];
   activeUniversity: string | null;
   admissionSession: string | null;
+  repeatPolicy: 'replace' | 'average' | 'both' | 'highest';
 }
 
 interface CGPAData {
@@ -45,6 +46,7 @@ const getDefaultSettings = (): AppSettings => ({
   gradeRanges: [...DEFAULT_NIGERIAN_GRADES],
   activeUniversity: null,
   admissionSession: null,
+  repeatPolicy: 'replace',
 });
 
 const loadSettings = (): AppSettings => {
@@ -139,7 +141,7 @@ export function useCGPA() {
     const activeUni = universities.find(
       (u) => u.shortName === settings.activeUniversity,
     );
-    const repeatPolicy = activeUni?.repeatPolicy.method ?? 'replace';
+    const repeatPolicy = settings.repeatPolicy ?? activeUni?.repeatPolicy.method ?? 'replace';
     const grades = settings.gradeRanges;
     const semesterInputs = semesters.map((semester) => ({
       name: semester.name,
