@@ -33,6 +33,35 @@ import { appDb } from '@/storage/db';
 const ADMISSION_SESSION_REGEX = /^(\d{4})\/(\d{4})$/;
 const PAGE_SIZE = 18;
 
+function getInstitutionBadge(type?: UniversityConfig['type']) {
+  if (type === 'university') {
+    return {
+      label: 'NUC Verified',
+      className:
+        'bg-emerald-100 text-emerald-700 border-emerald-200',
+    };
+  }
+  if (type === 'polytechnic') {
+    return {
+      label: 'NBTE Verified',
+      className:
+        'bg-blue-100 text-blue-700 border-blue-200',
+    };
+  }
+  if (type === 'college') {
+    return {
+      label: 'NCCE Verified',
+      className:
+        'bg-amber-100 text-amber-700 border-amber-200',
+    };
+  }
+  return {
+    label: 'Community Added',
+    className:
+      'bg-slate-100 text-slate-700 border-slate-200',
+  };
+}
+
 export default function NigerianUniversities() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
@@ -211,6 +240,7 @@ export default function NigerianUniversities() {
             const resolved =
               cardResolvedScales[uni.id] ??
               resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession);
+            const institutionBadge = getInstitutionBadge(uni.type);
             return (
               <Card
                 key={uni.id}
@@ -226,12 +256,12 @@ export default function NigerianUniversities() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-lg font-bold text-slate-900">{uni.name}</h3>
-                      {!uni.id.startsWith('custom-') && (
-                        <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700 border border-emerald-200">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold border ${institutionBadge.className}`}
+                      >
                           <BadgeCheck className="w-3 h-3 mr-1" />
-                          NUC Verified
-                        </span>
-                      )}
+                          {institutionBadge.label}
+                      </span>
                       {isActive && (
                         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 border border-green-200">
                           ✅ Active

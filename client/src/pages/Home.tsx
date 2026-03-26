@@ -15,7 +15,10 @@ import { useLocation } from 'wouter';
 import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/engine/calculations';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
-import { isOnProbation } from '@/universities/nigeria/gradingTemplates';
+
+const POLYTECHNIC_CRITICAL_CGPA = 2.0;
+const UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA = 1.0;
+const UNIVERSITY_OR_COLLEGE_PROBATION_CGPA = 1.5;
 
 /**
  * Design Philosophy: Vibrant Data Dashboard
@@ -47,13 +50,52 @@ export default function Home() {
     () => universities.find((u) => u.shortName === cgpa.settings.activeUniversity),
     [universities, cgpa.settings.activeUniversity],
   );
-  const onProbation = useMemo(
-    () =>
-      activeUniversityConfig
-        ? isOnProbation(cgpa.currentCGPA, activeUniversityConfig.probation.minCGPA)
-        : false,
-    [activeUniversityConfig, cgpa.currentCGPA],
-  );
+  const standingAlert = useMemo(() => {
+    if (!activeUniversityConfig) return null;
+    const institutionType = activeUniversityConfig.type;
+    if (institutionType === 'polytechnic') {
+      if (cgpa.currentCGPA < POLYTECHNIC_CRITICAL_CGPA) {
+        return {
+          level: 'critical' as const,
+          title: 'Standing: Critical Risk',
+          message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below ${POLYTECHNIC_CRITICAL_CGPA.toFixed(2)} for ${activeUniversityConfig.shortName}.`,
+          cardClass: 'border-red-300 bg-red-50',
+          iconClass: 'text-red-700',
+          textClass: 'text-red-800',
+          titleClass: 'text-red-900',
+          linkClass: 'text-red-900 hover:text-red-700',
+        };
+      }
+      return null;
+    }
+
+    if (cgpa.currentCGPA < UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA) {
+      return {
+        level: 'critical' as const,
+        title: 'Standing: Withdrawal Risk',
+        message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below ${UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA.toFixed(2)} for ${activeUniversityConfig.shortName}.`,
+        cardClass: 'border-red-300 bg-red-50',
+        iconClass: 'text-red-700',
+        textClass: 'text-red-800',
+        titleClass: 'text-red-900',
+        linkClass: 'text-red-900 hover:text-red-700',
+      };
+    }
+
+    if (cgpa.currentCGPA < UNIVERSITY_OR_COLLEGE_PROBATION_CGPA) {
+      return {
+        level: 'warning' as const,
+        title: 'Standing: Probation Risk',
+        message: `Your CGPA (${cgpa.currentCGPA.toFixed(2)}) is below ${UNIVERSITY_OR_COLLEGE_PROBATION_CGPA.toFixed(2)} for ${activeUniversityConfig.shortName}.`,
+        cardClass: 'border-amber-300 bg-amber-50',
+        iconClass: 'text-amber-700',
+        textClass: 'text-amber-800',
+        titleClass: 'text-amber-900',
+        linkClass: 'text-amber-900 hover:text-amber-700',
+      };
+    }
+    return null;
+  }, [activeUniversityConfig, cgpa.currentCGPA]);
 
   const handleClearAll = () => {
     if (window.confirm('Are you sure you want to clear all data? This cannot be undone.')) {
@@ -128,19 +170,16 @@ export default function Home() {
           );
         })()}
 
-        {cgpa.semesters.length > 0 && onProbation && activeUniversityConfig && (
-          <Card className="p-6 shadow-lg border border-amber-300 bg-amber-50 mb-8">
+        {cgpa.semesters.length > 0 && standingAlert && activeUniversityConfig && (
+          <Card className={`p-6 shadow-lg border mb-8 ${standingAlert.cardClass}`}>
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-700 mt-0.5 shrink-0" />
+              <AlertTriangle className={`w-5 h-5 mt-0.5 shrink-0 ${standingAlert.iconClass}`} />
               <div>
-                <h3 className="text-lg font-bold text-amber-900">Standing: Probation</h3>
-                <p className="text-sm text-amber-800 mt-1">
-                  Your CGPA ({cgpa.currentCGPA.toFixed(2)}) is below{' '}
-                  {activeUniversityConfig.probation.minCGPA.toFixed(2)} for {activeUniversityConfig.shortName}.
-                </p>
+                <h3 className={`text-lg font-bold ${standingAlert.titleClass}`}>{standingAlert.title}</h3>
+                <p className={`text-sm mt-1 ${standingAlert.textClass}`}>{standingAlert.message}</p>
                 <a
                   href="/study-load-optimizer"
-                  className="inline-flex mt-2 text-sm font-semibold text-amber-900 underline underline-offset-2 hover:text-amber-700"
+                  className={`inline-flex mt-2 text-sm font-semibold underline underline-offset-2 ${standingAlert.linkClass}`}
                 >
                   Open Survival Guide
                 </a>

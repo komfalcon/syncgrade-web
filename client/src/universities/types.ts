@@ -45,6 +45,7 @@ export interface UniversityConfig {
   id: string;
   name: string;
   shortName: string;
+  type?: "university" | "polytechnic" | "college";
   country: string;
   location: string;
   gradingSystem: SessionGradingSystem[];
