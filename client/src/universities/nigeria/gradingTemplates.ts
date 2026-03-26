@@ -13,22 +13,20 @@ type Band = {
 };
 
 function buildTemplate(scale: number, bands: Band[]): GradeRange[] {
+  const gradePointsByLetter: Record<string, number> = {
+    A: scale,
+    B: scale - 1,
+    C: scale - 2,
+    D: scale - 3,
+    E: 1,
+    F: 0,
+  };
+
   return bands.map((band) => ({
     grade: band.letter,
     min: band.min,
     max: band.max,
-    points:
-      band.letter === "A"
-        ? scale
-        : band.letter === "B"
-          ? scale - 1
-          : band.letter === "C"
-            ? scale - 2
-            : band.letter === "D"
-              ? scale - 3
-              : band.letter === "E"
-                ? 1
-                : 0,
+    points: gradePointsByLetter[band.letter] ?? 0,
   }));
 }
 
