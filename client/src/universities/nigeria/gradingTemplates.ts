@@ -1,6 +1,10 @@
 import type { GradeRange } from "../types";
 
-export type GradingTemplateId = "standard-5.0" | "legacy-4.0" | "engineering-5.0";
+export type GradingTemplateId =
+  | "nuc_standard_5"
+  | "nuc_revised_5"
+  | "ui_legacy_4"
+  | "engineering-5.0";
 
 type Band = {
   letter: string;
@@ -9,11 +13,22 @@ type Band = {
 };
 
 function buildTemplate(scale: number, bands: Band[]): GradeRange[] {
-  return bands.map((band, index) => ({
+  return bands.map((band) => ({
     grade: band.letter,
     min: band.min,
     max: band.max,
-    points: Math.max(scale - index, 0),
+    points:
+      band.letter === "A"
+        ? scale
+        : band.letter === "B"
+          ? scale - 1
+          : band.letter === "C"
+            ? scale - 2
+            : band.letter === "D"
+              ? scale - 3
+              : band.letter === "E"
+                ? 1
+                : 0,
   }));
 }
 
@@ -44,11 +59,21 @@ const ENGINEERING_5_BANDS: Band[] = [
 ];
 
 export const gradingTemplates: Record<GradingTemplateId, { scale: number; grades: GradeRange[] }> = {
-  "standard-5.0": {
+  nuc_standard_5: {
     scale: 5,
     grades: buildTemplate(5, STANDARD_5_BANDS),
   },
-  "legacy-4.0": {
+  nuc_revised_5: {
+    scale: 5,
+    grades: [
+      { grade: "A", min: 70, max: 100, points: 5 },
+      { grade: "B", min: 60, max: 69, points: 4 },
+      { grade: "C", min: 50, max: 59, points: 3 },
+      { grade: "D", min: 45, max: 49, points: 2 },
+      { grade: "F", min: 0, max: 44, points: 0 },
+    ],
+  },
+  ui_legacy_4: {
     scale: 4,
     grades: buildTemplate(4, LEGACY_4_BANDS),
   },
@@ -67,4 +92,8 @@ export function resolveGradingTemplate(templateId: GradingTemplateId): {
     scale: template.scale,
     grades: template.grades.map((grade) => ({ ...grade })),
   };
+}
+
+export function isOnProbation(currentCGPA: number, probationCGPA: number): boolean {
+  return currentCGPA < probationCGPA;
 }
