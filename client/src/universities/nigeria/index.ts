@@ -2,9 +2,68 @@ import type { SessionGradingSystem, UniversityConfig } from "../types";
 import universityDb from "@/data/university_db.json";
 import { appDb, type CustomUniversityEntry } from "@/storage/db";
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from "../types";
+import {
+  resolveGradingTemplate,
+  type GradingTemplateId,
+} from "./gradingTemplates";
 
 /** All Nigerian university configurations */
-type UniversityDbEntry = (typeof universityDb.universities)[number];
+type UniversityDbSession = {
+  session_start: string;
+  session_end: string;
+  /**
+   * Preferred compact form for standardized grading setups.
+   * If present, grading values are resolved from gradingTemplates.ts.
+   * Inline scale/grades remain supported for legacy or custom rows.
+   */
+  templateId?: string;
+  scale?: number;
+  grades?: Array<{
+    letter: string;
+    points: number;
+    min: number;
+    max: number;
+  }>;
+};
+
+type UniversityDbEntry = {
+  id: string;
+  name: string;
+  shortName: string;
+  location: string;
+  gradingSystem: UniversityDbSession[];
+  repeatPolicy: string;
+  creditRules: {
+    maxUnitsPerSemester: number;
+    probationCGPA: number;
+  };
+};
+
+const universityEntries = universityDb.universities as UniversityDbEntry[];
+
+function toSessionGradingSystem(session: UniversityDbSession): SessionGradingSystem {
+  if (session.templateId) {
+    const template = resolveGradingTemplate(session.templateId as GradingTemplateId);
+    return {
+      session_start: session.session_start,
+      session_end: session.session_end,
+      scale: template.scale,
+      grades: template.grades,
+    };
+  }
+
+  return {
+    session_start: session.session_start,
+    session_end: session.session_end,
+    scale: session.scale ?? 5,
+    grades: (session.grades ?? []).map((grade) => ({
+      grade: grade.letter,
+      points: grade.points,
+      min: grade.min,
+      max: grade.max,
+    })),
+  };
+}
 
 export interface UniversityDbMeta {
   version: string;
@@ -85,17 +144,7 @@ function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
     shortName: entry.shortName,
     country: "Nigeria",
     location: entry.location,
-    gradingSystem: entry.gradingSystem.map((session) => ({
-      session_start: session.session_start,
-      session_end: session.session_end,
-      scale: session.scale,
-      grades: session.grades.map((grade) => ({
-        grade: grade.letter,
-        points: grade.points,
-        min: grade.min,
-        max: grade.max,
-      })),
-    })),
+    gradingSystem: entry.gradingSystem.map((session) => toSessionGradingSystem(session)),
     degreeClasses: DEFAULT_NIGERIAN_DEGREE_CLASSES.map((degreeClass) => ({ ...degreeClass })),
     creditRules: {
       minimumCredits: 15,
@@ -168,7 +217,7 @@ function fromCustomEntry(entry: CustomUniversityEntry): UniversityConfig {
   };
 }
 
-export const nigerianUniversities: UniversityConfig[] = universityDb.universities.map(toUniversityConfig);
+export const nigerianUniversities: UniversityConfig[] = universityEntries.map(toUniversityConfig);
 let mergedUniversities: UniversityConfig[] = [...nigerianUniversities];
 
 export async function getCustomUniversities(): Promise<UniversityConfig[]> {

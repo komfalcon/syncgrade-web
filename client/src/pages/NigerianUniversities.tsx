@@ -1,9 +1,19 @@
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ArrowLeft, GraduationCap, MapPin, Check, BookOpen, RefreshCw, FileText, Search } from 'lucide-react';
+import {
+  ArrowLeft,
+  GraduationCap,
+  MapPin,
+  Check,
+  BookOpen,
+  RefreshCw,
+  FileText,
+  Search,
+  Plus,
+} from 'lucide-react';
 import { useLocation } from 'wouter';
-import { getUniversityDbMeta, resolveUniversityGradingSystem } from '@/universities/nigeria';
+import { resolveUniversityGradingSystem } from '@/universities/nigeria';
 import type { UniversityConfig } from '@/universities/types';
 import { useCGPA } from '@/hooks/useCGPA';
 import { Input } from '@/components/ui/input';
@@ -17,14 +27,17 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import { appDb } from '@/storage/db';
+
+const ADMISSION_SESSION_REGEX = /^(\d{4})\/(\d{4})$/;
 
 export default function NigerianUniversities() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
-  const { universities } = useUniversities();
+  const { universities, meta } = useUniversities();
   const [selectedUni, setSelectedUni] = useState<UniversityConfig | null>(null);
+  const [selectedSession, setSelectedSession] = useState('');
   const [query, setQuery] = useState('');
-  const meta = getUniversityDbMeta();
 
   const normalizedQuery = query.trim().toLowerCase();
   const filteredUniversities = useMemo(() => {
@@ -35,27 +48,86 @@ export default function NigerianUniversities() {
       return (
         uni.name.toLowerCase().includes(normalizedQuery) ||
         uni.shortName.toLowerCase().includes(normalizedQuery) ||
-        uni.location.toLowerCase().includes(normalizedQuery) ||
         acronym.includes(normalizedQuery)
       );
     });
   }, [normalizedQuery, universities]);
 
-  const handleApply = (university: UniversityConfig) => {
-    const resolved = resolveUniversityGradingSystem(university, cgpa.settings.admissionSession);
+  const cardResolvedScales = useMemo(
+    () =>
+      Object.fromEntries(
+        filteredUniversities.map((uni) => [
+          uni.id,
+          resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession),
+        ]),
+      ),
+    [filteredUniversities, cgpa.settings.admissionSession],
+  );
+
+  const resolvedSelected = useMemo(() => {
+    if (!selectedUni) return null;
+    return resolveUniversityGradingSystem(
+      selectedUni,
+      selectedSession.trim() || cgpa.settings.admissionSession,
+    );
+  }, [selectedSession, selectedUni, cgpa.settings.admissionSession]);
+
+  const openSessionGate = (university: UniversityConfig) => {
+    const fallbackSession =
+      cgpa.settings.admissionSession ||
+      university.gradingSystem[university.gradingSystem.length - 1]?.session_start ||
+      '';
+    setSelectedSession(fallbackSession);
+    setSelectedUni(university);
+  };
+
+  const handleApply = async () => {
+    if (!selectedUni || !resolvedSelected) return;
+    const trimmedSession = selectedSession.trim();
+    const sessionMatch = trimmedSession.match(ADMISSION_SESSION_REGEX);
+    if (!sessionMatch || Number(sessionMatch[2]) !== Number(sessionMatch[1]) + 1) {
+      toast.error('Please enter session in YYYY/YYYY format (e.g., 2023/2024).');
+      return;
+    }
+    const now = new Date();
+    const currentAcademicStartYear =
+      now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1;
+    if (Number(sessionMatch[1]) > currentAcademicStartYear) {
+      toast.error('Admission session cannot be in the future.');
+      return;
+    }
+
+    const admissionSession =
+      trimmedSession ||
+      cgpa.settings.admissionSession ||
+      resolvedSelected.session_start;
+
     cgpa.updateSettings({
-      gpaScale: resolved.scale,
-      gradeRanges: resolved.grades,
-      activeUniversity: university.shortName,
-      admissionSession: cgpa.settings.admissionSession ?? resolved.session_start,
+      gpaScale: resolvedSelected.scale,
+      gradeRanges: resolvedSelected.grades,
+      activeUniversity: selectedUni.shortName,
+      admissionSession,
     });
+
+    await appDb.userProfile.put({
+      id: 'active-profile',
+      universityId: selectedUni.id,
+      universityShortName: selectedUni.shortName,
+      universityName: selectedUni.name,
+      admissionSession,
+      configuration: {
+        ...selectedUni,
+        gradingSystem: [resolvedSelected],
+      },
+      updatedAt: Date.now(),
+    });
+
     setSelectedUni(null);
-    toast.success(`✅ ${university.name} grading system applied!`);
+    toast.success(`✅ ${selectedUni.name} grading system applied!`);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-slate-50">
-      {/* Header */}
       <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 text-white py-12">
         <div className="container mx-auto px-4">
           <Button
@@ -71,7 +143,8 @@ export default function NigerianUniversities() {
             Select your university to apply its official grading system
           </p>
           <p className="text-xs text-green-200 mt-2">
-            Data Version: {meta.version} · Last updated: {new Date(meta.lastUpdated).toLocaleDateString()}
+            Data Version: {meta.version} · Last updated:{' '}
+            {new Date(meta.lastUpdated).toLocaleDateString()}
           </p>
           {cgpa.settings.activeUniversity && (
             <div className="mt-3 inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 text-sm">
@@ -82,7 +155,6 @@ export default function NigerianUniversities() {
         </div>
       </div>
 
-      {/* University List */}
       <div className="container mx-auto px-4 py-8">
         <Card className="mb-4 p-4 shadow-md border-0">
           <div className="relative">
@@ -90,34 +162,42 @@ export default function NigerianUniversities() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name, acronym, or location (e.g., ABU, UI)"
+              placeholder="Search by school name or acronym (e.g., UI, ABU)"
               className="pl-9"
             />
           </div>
         </Card>
 
-        {filteredUniversities.length === 0 && (
-          <Card className="p-6 shadow-md border-0 text-center">
-            <p className="text-slate-600 mb-4">No university matched your search.</p>
-            <Button
-              className="bg-gradient-to-r from-cyan-600 to-teal-600 text-white"
-              onClick={() => setLocation('/custom-university')}
-            >
-              Can't find your school? Create a Custom Profile
-            </Button>
-          </Card>
-        )}
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredUniversities.map(uni => {
+          <Card
+            className="p-6 shadow-md border-2 border-dashed border-cyan-300 cursor-pointer hover:shadow-xl transition-all bg-cyan-50/40"
+            onClick={() => setLocation('/custom-university')}
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl border-2 border-dashed border-cyan-400 bg-white flex items-center justify-center text-cyan-600 shrink-0">
+                <Plus className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-bold text-slate-900">Create Custom School</h3>
+                <p className="text-sm text-slate-600 mt-1">
+                  Can't find your institution? Build and save your own grading profile.
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          {filteredUniversities.map((uni) => {
             const isActive = cgpa.settings.activeUniversity === uni.shortName;
+            const resolved =
+              cardResolvedScales[uni.id] ??
+              resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession);
             return (
               <Card
                 key={uni.id}
                 className={`p-6 shadow-md border-0 cursor-pointer hover:shadow-xl transition-all ${
                   isActive ? 'ring-2 ring-green-400 bg-green-50/50' : ''
                 }`}
-                onClick={() => setSelectedUni(uni)}
+                onClick={() => openSessionGate(uni)}
               >
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shrink-0">
@@ -136,12 +216,14 @@ export default function NigerianUniversities() {
                       <span className="inline-flex items-center rounded-md bg-cyan-100 px-2 py-0.5 text-xs font-semibold text-cyan-700 border border-cyan-200">
                         {uni.shortName}
                       </span>
-                      <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold border ${
-resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.0
-                          ? 'bg-purple-100 text-purple-700 border-purple-200'
-                          : 'bg-blue-100 text-blue-700 border-blue-200'
-                      }`}>
-                        {resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale.toFixed(1)} Scale
+                      <span
+                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold border ${
+                          resolved.scale === 5
+                            ? 'bg-purple-100 text-purple-700 border-purple-200'
+                            : 'bg-blue-100 text-blue-700 border-blue-200'
+                        }`}
+                      >
+                        {resolved.scale.toFixed(1)} Scale
                       </span>
                       <span className="inline-flex items-center gap-1 text-xs text-slate-500">
                         <MapPin className="w-3 h-3" />
@@ -166,7 +248,20 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
           })}
         </div>
 
-        {/* Grade Ranges Info */}
+        {normalizedQuery && filteredUniversities.length === 0 && (
+          <Card className="mt-4 p-6 shadow-md border-0 text-center">
+            <p className="text-slate-600 mb-4">
+              Don't see your school? Click here to build it manually.
+            </p>
+            <Button
+              className="bg-gradient-to-r from-cyan-600 to-teal-600 text-white"
+              onClick={() => setLocation('/custom-university')}
+            >
+              Open Custom School Form
+            </Button>
+          </Card>
+        )}
+
         <Card className="mt-8 p-6 shadow-md border-0 bg-slate-50">
           <h3 className="text-lg font-bold text-slate-900 mb-4">Current Grading System</h3>
           <div className="flex items-center gap-2 mb-4">
@@ -186,11 +281,15 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                 </tr>
               </thead>
               <tbody>
-                {cgpa.settings.gradeRanges.map(range => (
+                {cgpa.settings.gradeRanges.map((range) => (
                   <tr key={range.grade} className="border-b border-slate-100">
                     <td className="py-2 pr-4 font-mono font-semibold text-slate-900">{range.grade}</td>
-                    <td className="py-2 pr-4 text-slate-600">{range.min} - {range.max}</td>
-                    <td className="py-2 font-mono font-semibold text-cyan-600">{range.points.toFixed(1)}</td>
+                    <td className="py-2 pr-4 text-slate-600">
+                      {range.min} - {range.max}
+                    </td>
+                    <td className="py-2 font-mono font-semibold text-cyan-600">
+                      {range.points.toFixed(1)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -199,35 +298,56 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
         </Card>
       </div>
 
-      {/* Detail Dialog */}
       <Dialog open={selectedUni !== null} onOpenChange={(open) => !open && setSelectedUni(null)}>
         <DialogContent className="sm:max-w-[550px] max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Apply {selectedUni?.name} Grading System?</DialogTitle>
+            <DialogTitle>Academic Session of Entry</DialogTitle>
             <DialogDescription>
-              This will update your GPA scale to {selectedUni ? resolveUniversityGradingSystem(selectedUni, cgpa.settings.admissionSession).scale.toFixed(1) : "0.0"} and grade ranges to match {selectedUni?.shortName}'s official system.
+              Enter your admission session (YYYY/YYYY) to load the correct grading configuration for{' '}
+              {selectedUni?.shortName}.
             </DialogDescription>
           </DialogHeader>
-          {selectedUni && (
+
+          {selectedUni && resolvedSelected && (
             <div className="py-4 space-y-5">
-              {/* Grading System */}
+              <div>
+                <label htmlFor="session-of-entry" className="text-sm font-semibold text-slate-700">
+                  Academic Session of Entry
+                </label>
+                <Input
+                  id="session-of-entry"
+                  value={selectedSession}
+                  onChange={(e) => setSelectedSession(e.target.value)}
+                  placeholder="e.g., 2023/2024"
+                  className="mt-2"
+                />
+              </div>
+
               <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Grading System ({resolveUniversityGradingSystem(selectedUni, cgpa.settings.admissionSession).scale.toFixed(1)} Scale)</p>
+                <p className="text-sm font-semibold text-slate-700 mb-2">
+                  Grading System ({resolvedSelected.scale.toFixed(1)} Scale)
+                </p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-slate-200">
                         <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">Grade</th>
-                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">Score Range</th>
+                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">
+                          Score Range
+                        </th>
                         <th className="text-left py-1.5 text-slate-500 font-medium text-xs">Points</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {resolveUniversityGradingSystem(selectedUni, cgpa.settings.admissionSession).grades.map(g => (
+                      {resolvedSelected.grades.map((g) => (
                         <tr key={g.grade} className="border-b border-slate-100">
                           <td className="py-1.5 pr-3 font-mono font-semibold text-slate-900">{g.grade}</td>
-                          <td className="py-1.5 pr-3 text-slate-600">{g.min} – {g.max}</td>
-                          <td className="py-1.5 font-mono font-semibold text-cyan-600">{g.points.toFixed(1)}</td>
+                          <td className="py-1.5 pr-3 text-slate-600">
+                            {g.min} – {g.max}
+                          </td>
+                          <td className="py-1.5 font-mono font-semibold text-cyan-600">
+                            {g.points.toFixed(1)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -235,7 +355,13 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                 </div>
               </div>
 
-              {/* Degree Classifications */}
+              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+                <p className="text-sm font-semibold text-slate-700 mb-2">Matched Session Rule</p>
+                <p className="text-sm text-slate-600">
+                  {resolvedSelected.session_start} to {resolvedSelected.session_end}
+                </p>
+              </div>
+
               <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
                 <p className="text-sm font-semibold text-slate-700 mb-2">Degree Classifications</p>
                 <div className="overflow-x-auto">
@@ -247,10 +373,12 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedUni.degreeClasses.map(dc => (
+                      {selectedUni.degreeClasses.map((dc) => (
                         <tr key={dc.name} className="border-b border-slate-100">
                           <td className="py-1.5 pr-3 font-semibold text-slate-900">{dc.name}</td>
-                          <td className="py-1.5 font-mono text-slate-600">{dc.minCGPA.toFixed(2)} – {dc.maxCGPA.toFixed(2)}</td>
+                          <td className="py-1.5 font-mono text-slate-600">
+                            {dc.minCGPA.toFixed(2)} – {dc.maxCGPA.toFixed(2)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -258,7 +386,6 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                 </div>
               </div>
 
-              {/* Credit Rules */}
               <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
                 <p className="text-sm font-semibold text-slate-700 mb-2">Credit Rules</p>
                 <div className="grid grid-cols-2 gap-2 text-sm">
@@ -268,11 +395,15 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                   </div>
                   <div>
                     <span className="text-slate-500 text-xs">Max / Semester</span>
-                    <p className="font-semibold text-slate-900">{selectedUni.creditRules.maximumPerSemester}</p>
+                    <p className="font-semibold text-slate-900">
+                      {selectedUni.creditRules.maximumPerSemester}
+                    </p>
                   </div>
                   <div>
                     <span className="text-slate-500 text-xs">Min / Semester</span>
-                    <p className="font-semibold text-slate-900">{selectedUni.creditRules.minimumPerSemester}</p>
+                    <p className="font-semibold text-slate-900">
+                      {selectedUni.creditRules.minimumPerSemester}
+                    </p>
                   </div>
                   <div>
                     <span className="text-slate-500 text-xs">Max Program Duration</span>
@@ -281,7 +412,6 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                 </div>
               </div>
 
-              {/* Repeat Policy */}
               <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
                 <div className="flex items-center gap-2 mb-1">
                   <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
@@ -293,12 +423,13 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                 <p className="text-sm text-slate-600">{selectedUni.repeatPolicy.description}</p>
               </div>
 
-              {/* Academic Standing */}
               <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
                 <p className="text-sm font-semibold text-slate-700 mb-2">Academic Standing</p>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <span className="text-slate-500 text-xs">Probation (below {selectedUni.probation.minCGPA.toFixed(2)} CGPA)</span>
+                    <span className="text-slate-500 text-xs">
+                      Probation (below {selectedUni.probation.minCGPA.toFixed(2)} CGPA)
+                    </span>
                     <p className="text-slate-600">{selectedUni.probation.description}</p>
                   </div>
                   <div>
@@ -308,7 +439,6 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
                 </div>
               </div>
 
-              {/* Source Documents */}
               {selectedUni.sourceDocuments.length > 0 && (
                 <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
                   <div className="flex items-center gap-2 mb-1">
@@ -324,13 +454,14 @@ resolveUniversityGradingSystem(uni, cgpa.settings.admissionSession).scale === 5.
               )}
             </div>
           )}
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setSelectedUni(null)}>
               Cancel
             </Button>
             <Button
               className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white"
-              onClick={() => selectedUni && handleApply(selectedUni)}
+              onClick={handleApply}
             >
               Apply
             </Button>

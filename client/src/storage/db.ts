@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import type { RepeatPolicy } from "@/universities/types";
+import type { RepeatPolicy, UniversityConfig } from "@/universities/types";
 
 export interface KvEntry {
   key: string;
@@ -32,9 +32,20 @@ export interface CustomUniversityEntry {
   updatedAt: number;
 }
 
+export interface UserProfileEntry {
+  id: string;
+  universityId: string;
+  universityShortName: string;
+  universityName: string;
+  admissionSession: string;
+  configuration: UniversityConfig;
+  updatedAt: number;
+}
+
 class AppDb extends Dexie {
   kv!: Table<KvEntry, string>;
   customUniversities!: Table<CustomUniversityEntry, string>;
+  userProfile!: Table<UserProfileEntry, string>;
 
   constructor() {
     super("cgpa_app_db");
@@ -44,6 +55,11 @@ class AppDb extends Dexie {
     this.version(2).stores({
       kv: "key,updatedAt",
       customUniversities: "id,shortName,updatedAt",
+    });
+    this.version(3).stores({
+      kv: "key,updatedAt",
+      customUniversities: "id,shortName,updatedAt",
+      userProfile: "id,updatedAt,universityShortName",
     });
   }
 }

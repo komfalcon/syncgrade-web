@@ -11,45 +11,7 @@
         {
           "session_start": "2000/2001",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "E",
-              "points": 1,
-              "min": 40,
-              "max": 44
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 39
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "both",
@@ -67,39 +29,7 @@
         {
           "session_start": "2000/2001",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 44
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "replace",
@@ -117,45 +47,7 @@
         {
           "session_start": "2000/2001",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "E",
-              "points": 1,
-              "min": 40,
-              "max": 44
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 39
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "both",
@@ -173,45 +65,7 @@
         {
           "session_start": "2000/2001",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "E",
-              "points": 1,
-              "min": 40,
-              "max": 44
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 39
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "both",
@@ -229,45 +83,7 @@
         {
           "session_start": "2000/2001",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "E",
-              "points": 1,
-              "min": 40,
-              "max": 44
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 39
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "both",
@@ -284,46 +100,13 @@
       "gradingSystem": [
         {
           "session_start": "2000/2001",
+          "session_end": "2023/2024",
+          "templateId": "legacy-4.0"
+        },
+        {
+          "session_start": "2024/2025",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "E",
-              "points": 1,
-              "min": 40,
-              "max": 44
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 39
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "both",
@@ -341,45 +124,7 @@
         {
           "session_start": "2000/2001",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "E",
-              "points": 1,
-              "min": 40,
-              "max": 44
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 39
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "both",
@@ -397,45 +142,7 @@
         {
           "session_start": "2000/2001",
           "session_end": "present",
-          "scale": 5,
-          "grades": [
-            {
-              "letter": "A",
-              "points": 5,
-              "min": 70,
-              "max": 100
-            },
-            {
-              "letter": "B",
-              "points": 4,
-              "min": 60,
-              "max": 69
-            },
-            {
-              "letter": "C",
-              "points": 3,
-              "min": 50,
-              "max": 59
-            },
-            {
-              "letter": "D",
-              "points": 2,
-              "min": 45,
-              "max": 49
-            },
-            {
-              "letter": "E",
-              "points": 1,
-              "min": 40,
-              "max": 44
-            },
-            {
-              "letter": "F",
-              "points": 0,
-              "min": 0,
-              "max": 39
-            }
-          ]
+          "templateId": "standard-5.0"
         }
       ],
       "repeatPolicy": "both",
