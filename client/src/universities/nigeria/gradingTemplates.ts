@@ -3,6 +3,8 @@ import type { GradeRange } from "../types";
 export type GradingTemplateId =
   | "nuc_standard_5"
   | "nuc_revised_5"
+  | "nbte_standard_4_0"
+  | "ncce_standard_5"
   | "ui_legacy_4"
   | "engineering-5.0";
 
@@ -56,6 +58,23 @@ const ENGINEERING_5_BANDS: Band[] = [
   { letter: "F", min: 0, max: 44 },
 ];
 
+const NBTE_STANDARD_4_BANDS: Band[] = [
+  { letter: "A", min: 70, max: 100 },
+  { letter: "B", min: 60, max: 69 },
+  { letter: "C", min: 50, max: 59 },
+  { letter: "D", min: 45, max: 49 },
+  { letter: "F", min: 0, max: 44 },
+];
+
+const NCCE_STANDARD_5_BANDS: Band[] = [
+  { letter: "A", min: 70, max: 100 },
+  { letter: "B", min: 60, max: 69 },
+  { letter: "C", min: 50, max: 59 },
+  { letter: "D", min: 45, max: 49 },
+  { letter: "E", min: 40, max: 44 },
+  { letter: "F", min: 0, max: 39 },
+];
+
 export const gradingTemplates: Record<GradingTemplateId, { scale: number; grades: GradeRange[] }> = {
   nuc_standard_5: {
     scale: 5,
@@ -70,6 +89,14 @@ export const gradingTemplates: Record<GradingTemplateId, { scale: number; grades
       { grade: "D", min: 45, max: 49, points: 2 },
       { grade: "F", min: 0, max: 44, points: 0 },
     ],
+  },
+  nbte_standard_4_0: {
+    scale: 4,
+    grades: buildTemplate(4, NBTE_STANDARD_4_BANDS),
+  },
+  ncce_standard_5: {
+    scale: 5,
+    grades: buildTemplate(5, NCCE_STANDARD_5_BANDS),
   },
   ui_legacy_4: {
     scale: 4,

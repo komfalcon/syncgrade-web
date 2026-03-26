@@ -31,6 +31,7 @@ type UniversityDbEntry = {
   name: string;
   acronym: string;
   location: string;
+  type?: "university" | "polytechnic" | "college";
   templateId?: string;
   configurations?: Array<{
     sessionRange: string;
@@ -172,6 +173,7 @@ function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
     id: entry.id,
     name: entry.name,
     shortName: entry.acronym,
+    type: entry.type,
     country: "Nigeria",
     location: entry.location,
     gradingSystem: buildDbSessions(entry).map((session) => toSessionGradingSystem(session)),
