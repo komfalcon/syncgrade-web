@@ -29,13 +29,17 @@ type UniversityDbSession = {
 type UniversityDbEntry = {
   id: string;
   name: string;
-  shortName: string;
+  acronym: string;
   location: string;
-  gradingSystem: UniversityDbSession[];
-  repeatPolicy: string;
-  creditRules: {
-    maxUnitsPerSemester: number;
-    probationCGPA: number;
+  templateId?: string;
+  configurations?: Array<{
+    sessionRange: string;
+    templateId: string;
+  }>;
+  academic_rules: {
+    max_credit_load: number;
+    probation_cgpa: number;
+    repeat_policy: string;
   };
 };
 
@@ -71,8 +75,9 @@ export interface UniversityDbMeta {
 }
 
 const baseMetadata: UniversityDbMeta = {
-  version: universityDb.version,
-  lastUpdated: universityDb.lastUpdated,
+  version: (universityDb as { version?: string }).version ?? "1.0.0",
+  lastUpdated:
+    (universityDb as { lastUpdated?: string }).lastUpdated ?? "2026-01-01T00:00:00.000Z",
 };
 
 
@@ -136,19 +141,44 @@ function normalizeRepeatPolicy(value: string): "replace" | "both" {
   return value === "both" ? "both" : "replace";
 }
 
+function parseSessionRange(sessionRange: string): UniversityDbSession {
+  const [startRaw, endRaw] = sessionRange.split("-").map((part) => part.trim());
+  return {
+    session_start: startRaw || "2000/2001",
+    session_end: (endRaw || "present").toLowerCase() === "present" ? "present" : endRaw,
+  };
+}
+
+function buildDbSessions(entry: UniversityDbEntry): UniversityDbSession[] {
+  if (entry.configurations?.length) {
+    return entry.configurations.map((configuration) => ({
+      ...parseSessionRange(configuration.sessionRange),
+      templateId: configuration.templateId,
+    }));
+  }
+
+  return [
+    {
+      session_start: "2000/2001",
+      session_end: "present",
+      templateId: entry.templateId,
+    },
+  ];
+}
+
 function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
-  const repeatPolicy = normalizeRepeatPolicy(entry.repeatPolicy);
+  const repeatPolicy = normalizeRepeatPolicy(entry.academic_rules.repeat_policy);
   return {
     id: entry.id,
     name: entry.name,
-    shortName: entry.shortName,
+    shortName: entry.acronym,
     country: "Nigeria",
     location: entry.location,
-    gradingSystem: entry.gradingSystem.map((session) => toSessionGradingSystem(session)),
+    gradingSystem: buildDbSessions(entry).map((session) => toSessionGradingSystem(session)),
     degreeClasses: DEFAULT_NIGERIAN_DEGREE_CLASSES.map((degreeClass) => ({ ...degreeClass })),
     creditRules: {
       minimumCredits: 15,
-      maximumPerSemester: entry.creditRules.maxUnitsPerSemester,
+      maximumPerSemester: entry.academic_rules.max_credit_load,
       minimumPerSemester: 15,
       graduationCredits: [],
     },
@@ -160,8 +190,8 @@ function toUniversityConfig(entry: UniversityDbEntry): UniversityConfig {
           : "Both attempts count toward total units/points.",
     },
     probation: {
-      minCGPA: entry.creditRules.probationCGPA,
-      description: `CGPA below ${entry.creditRules.probationCGPA.toFixed(2)} is probationary.`,
+      minCGPA: entry.academic_rules.probation_cgpa,
+      description: `CGPA below ${entry.academic_rules.probation_cgpa.toFixed(2)} is probationary.`,
     },
     dismissal: {
       description: "Refer to institutional regulations for dismissal thresholds.",

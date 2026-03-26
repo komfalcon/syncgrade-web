@@ -15,6 +15,7 @@ import { useLocation } from 'wouter';
 import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/engine/calculations';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
+import { isOnProbation } from '@/universities/nigeria/gradingTemplates';
 
 /**
  * Design Philosophy: Vibrant Data Dashboard
@@ -42,6 +43,17 @@ export default function Home() {
   }));
 
   const semesterNames = cgpa.semesters.map(s => s.name);
+  const activeUniversityConfig = useMemo(
+    () => universities.find((u) => u.shortName === cgpa.settings.activeUniversity),
+    [universities, cgpa.settings.activeUniversity],
+  );
+  const onProbation = useMemo(
+    () =>
+      activeUniversityConfig
+        ? isOnProbation(cgpa.currentCGPA, activeUniversityConfig.probation.minCGPA)
+        : false,
+    [activeUniversityConfig, cgpa.currentCGPA],
+  );
 
   const handleClearAll = () => {
     if (window.confirm('Are you sure you want to clear all data? This cannot be undone.')) {
@@ -76,8 +88,7 @@ export default function Home() {
 
         {/* Degree Risk Warning */}
         {cgpa.semesters.length > 0 && (() => {
-          const uniConfig = universities.find(u => u.shortName === cgpa.settings.activeUniversity);
-          const degreeClasses = uniConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES;
+          const degreeClasses = activeUniversityConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES;
           const risk = assessDegreeRisk(cgpa.currentCGPA, degreeClasses, cgpa.totalCredits, 150);
           const currentClass = getDegreeClass(cgpa.currentCGPA, degreeClasses);
           const riskColors = {
@@ -116,6 +127,27 @@ export default function Home() {
             </Card>
           );
         })()}
+
+        {cgpa.semesters.length > 0 && onProbation && activeUniversityConfig && (
+          <Card className="p-6 shadow-lg border border-amber-300 bg-amber-50 mb-8">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-700 mt-0.5 shrink-0" />
+              <div>
+                <h3 className="text-lg font-bold text-amber-900">Standing: Probation</h3>
+                <p className="text-sm text-amber-800 mt-1">
+                  Your CGPA ({cgpa.currentCGPA.toFixed(2)}) is below{' '}
+                  {activeUniversityConfig.probation.minCGPA.toFixed(2)} for {activeUniversityConfig.shortName}.
+                </p>
+                <a
+                  href="/study-load-optimizer"
+                  className="inline-flex mt-2 text-sm font-semibold text-amber-900 underline underline-offset-2 hover:text-amber-700"
+                >
+                  Open Survival Guide
+                </a>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
