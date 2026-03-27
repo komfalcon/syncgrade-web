@@ -4,7 +4,7 @@ An interactive web application that helps students calculate their Cumulative Gr
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) v18 or later
+- [Node.js](https://nodejs.org/) v22.16.0
 - npm (comes with Node.js)
 
 ## Quick Start
@@ -26,7 +26,7 @@ Then open **http://localhost:3000** in your browser.
 | `npm install --legacy-peer-deps` | Install all dependencies |
 | `npm run dev` | Start the development server (http://localhost:3000) |
 | `npm run build` | Build for production |
-| `npm start` | Run the production server (after building) |
+| `npm start` | Preview the production build |
 | `npm run test` | Run tests |
 | `npm run check` | TypeScript type-checking |
 | `npm run format` | Format code with Prettier |
@@ -34,17 +34,15 @@ Then open **http://localhost:3000** in your browser.
 ## Project Structure
 
 ```
-├── client/          # React/TypeScript frontend (Vite)
-│   ├── src/
-│   │   ├── components/  # UI components (Shadcn/Radix)
-│   │   ├── pages/       # Page components
-│   │   ├── hooks/       # Custom React hooks
-│   │   ├── engine/      # CGPA calculation logic
-│   │   └── universities/# University grading configs
-│   └── index.html
-├── server/          # Express.js production server
+├── src/
+│   ├── components/  # UI components (Shadcn/Radix)
+│   ├── pages/       # Page components
+│   ├── hooks/       # Custom React hooks
+│   ├── engine/      # CGPA calculation logic
+│   └── universities/# University grading configs
+├── public/          # Static and PWA assets
 ├── shared/          # Shared constants
-├── flutter_app/     # Flutter/Dart mobile app (separate)
+├── index.html
 ├── package.json
 ├── vite.config.ts
 └── tsconfig.json
@@ -53,6 +51,6 @@ Then open **http://localhost:3000** in your browser.
 ## Tech Stack
 
 - **Frontend:** React 19, TypeScript, Tailwind CSS, Shadcn/Radix UI
-- **Build:** Vite, esbuild
+- **Build:** Vite
 - **Routing:** wouter
 - **Testing:** Vitest

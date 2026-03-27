@@ -1,0 +1,5 @@
+name = "syncgrade-web"
+compatibility_date = "2026-03-27"
+
+[assets]
+directory = "dist"
