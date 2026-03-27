@@ -1,20 +1,20 @@
 # SyncGrade
 
-An interactive web application that helps students calculate their Cumulative Grade Point Average (CGPA) across multiple semesters with an intuitive interface.
+A standalone React PWA that helps students calculate their Cumulative Grade Point Average (CGPA) across multiple semesters with an intuitive interface.
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or later
-- npm (comes with Node.js)
+- pnpm (recommended) or npm
 
 ## Quick Start
 
 ```bash
 # 1. Install dependencies
-npm install --legacy-peer-deps
+pnpm install
 
 # 2. Start the development server
-npm run dev
+pnpm dev
 ```
 
 Then open **http://localhost:3000** in your browser.
@@ -23,13 +23,13 @@ Then open **http://localhost:3000** in your browser.
 
 | Command | Description |
 |---------|-------------|
-| `npm install --legacy-peer-deps` | Install all dependencies |
-| `npm run dev` | Start the development server (http://localhost:3000) |
-| `npm run build` | Build for production |
-| `npm start` | Run the production server (after building) |
-| `npm run test` | Run tests |
-| `npm run check` | TypeScript type-checking |
-| `npm run format` | Format code with Prettier |
+| `pnpm install` | Install all dependencies |
+| `pnpm dev` | Start the development server (http://localhost:3000) |
+| `pnpm build` | Build for production (outputs static assets to `dist/public`) |
+| `pnpm preview` | Preview the production build locally |
+| `pnpm test` | Run tests |
+| `pnpm check` | TypeScript type-checking |
+| `pnpm format` | Format code with Prettier |
 
 ## Project Structure
 
@@ -42,17 +42,36 @@ Then open **http://localhost:3000** in your browser.
 │   │   ├── engine/      # CGPA calculation logic
 │   │   └── universities/# University grading configs
 │   └── index.html
-├── server/          # Express.js production server
 ├── shared/          # Shared constants
-├── flutter_app/     # Flutter/Dart mobile app (separate)
 ├── package.json
 ├── vite.config.ts
+├── wrangler.toml    # Cloudflare Pages config
 └── tsconfig.json
 ```
 
 ## Tech Stack
 
 - **Frontend:** React 19, TypeScript, Tailwind CSS, Shadcn/Radix UI
-- **Build:** Vite, esbuild
+- **Build:** Vite + vite-plugin-pwa
 - **Routing:** wouter
 - **Testing:** Vitest
+
+## Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+- `VITE_OAUTH_PORTAL_URL`
+- `VITE_APP_ID`
+- `VITE_FRONTEND_FORGE_API_KEY`
+- `VITE_FRONTEND_FORGE_API_URL` (optional; defaults in code)
+- `VITE_ANALYTICS_ENDPOINT` (optional)
+- `VITE_ANALYTICS_WEBSITE_ID` (optional)
+
+## Deploy to Cloudflare Pages
+
+1. Build command: `pnpm build`
+2. Output directory: `dist/public`
+3. Framework preset: `None` (custom), since Vite handles build directly
+4. Configure the same `VITE_*` variables in Cloudflare Pages environment settings
+
+You can also deploy with Wrangler using the included `wrangler.toml`.
