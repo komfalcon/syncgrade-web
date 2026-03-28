@@ -1,7 +1,9 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
+import FirstTimeSetup from "@/components/FirstTimeSetup";
 import { Route, Switch } from "wouter";
+import { useEffect, useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -13,6 +15,7 @@ import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
 import UniversityComparison from "./pages/UniversityComparison";
 import BackupRestore from "./pages/BackupRestore";
 import CustomUniversityForm from "./pages/CustomUniversityForm";
+import { STORAGE_KEYS, getSyncgradeUserProfile } from "./storage/db";
 
 
 function Router() {
@@ -40,6 +43,26 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const localUserExists = typeof window !== "undefined" && localStorage.getItem(STORAGE_KEYS.syncgradeUser);
+      if (localUserExists) {
+        if (active) setShowFirstTimeSetup(false);
+        return;
+      }
+      const profile = await getSyncgradeUserProfile();
+      if (active) {
+        setShowFirstTimeSetup(!profile);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -48,6 +71,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
+          <FirstTimeSetup open={showFirstTimeSetup} onComplete={() => setShowFirstTimeSetup(false)} />
           <Router />
         </TooltipProvider>
       </ThemeProvider>
