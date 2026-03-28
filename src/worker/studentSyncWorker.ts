@@ -31,7 +31,10 @@ function jsonResponse(body: unknown, init: ResponseInit = {}) {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method !== "POST") {
-      return jsonResponse({ error: "Method not allowed" }, { status: 405 });
+      return jsonResponse(
+        { error: "Method not allowed" },
+        { status: 405, headers: { Allow: "POST" } },
+      );
     }
 
     let payload: StudentSyncPayload;
@@ -52,25 +55,29 @@ export default {
     const academicData = payload?.data?.academic_data ?? null;
     const lastSync = new Date().toISOString();
 
-    await env.DB.prepare(
-      `INSERT INTO students (uuid, name, department, university, last_sync, academic_data)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6)
-       ON CONFLICT(uuid) DO UPDATE SET
-         name = excluded.name,
-         department = excluded.department,
-         university = excluded.university,
-         last_sync = excluded.last_sync,
-         academic_data = excluded.academic_data`,
-    )
-      .bind(
-        uuid,
-        name,
-        department,
-        university,
-        lastSync,
-        JSON.stringify(academicData),
+    try {
+      await env.DB.prepare(
+        `INSERT INTO students (uuid, name, department, university, last_sync, academic_data)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+         ON CONFLICT(uuid) DO UPDATE SET
+           name = excluded.name,
+           department = excluded.department,
+           university = excluded.university,
+           last_sync = excluded.last_sync,
+           academic_data = excluded.academic_data`,
       )
-      .run();
+        .bind(
+          uuid,
+          name,
+          department,
+          university,
+          lastSync,
+          JSON.stringify(academicData),
+        )
+        .run();
+    } catch {
+      return jsonResponse({ error: "Database operation failed" }, { status: 500 });
+    }
 
     return jsonResponse({ success: true, uuid, last_sync: lastSync });
   },

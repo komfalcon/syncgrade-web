@@ -51,13 +51,7 @@ export interface SyncgradeUserProfileEntry {
   updatedAt: number;
 }
 
-export interface SyncgradeUserIdentity {
-  uuid: string;
-  name: string;
-  department: string;
-  university: string;
-  updatedAt: number;
-}
+export type SyncgradeUserIdentity = SyncgradeUserProfileEntry;
 
 class AppDb extends Dexie {
   kv!: Table<KvEntry, string>;
@@ -127,6 +121,7 @@ export function getSyncgradeUserFromLocalStorage(): SyncgradeUserIdentity | null
       updatedAt: parsed.updatedAt ?? Date.now(),
     };
   } catch {
+    localStorage.removeItem(STORAGE_KEYS.syncgradeUser);
     return null;
   }
 }
