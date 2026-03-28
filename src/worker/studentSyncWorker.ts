@@ -1,5 +1,9 @@
 export interface Env {
-  DB: D1Database;
+  DB: {
+    prepare(query: string): {
+      bind(...values: unknown[]): { run(): Promise<unknown> };
+    };
+  };
 }
 
 export interface StudentSyncPayload {
