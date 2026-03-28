@@ -51,8 +51,6 @@ export interface SyncgradeUserProfileEntry {
   updatedAt: number;
 }
 
-export type SyncgradeUserIdentity = SyncgradeUserProfileEntry;
-
 class AppDb extends Dexie {
   kv!: Table<KvEntry, string>;
   customUniversities!: Table<CustomUniversityEntry, string>;
@@ -104,12 +102,12 @@ export async function removeStoredValue(key: string): Promise<void> {
   await appDb.kv.delete(key);
 }
 
-export function getSyncgradeUserFromLocalStorage(): SyncgradeUserIdentity | null {
+export function getSyncgradeUserFromLocalStorage(): SyncgradeUserProfileEntry | null {
   if (typeof window === "undefined") return null;
   const raw = localStorage.getItem(STORAGE_KEYS.syncgradeUser);
   if (!raw) return null;
   try {
-    const parsed = JSON.parse(raw) as Partial<SyncgradeUserIdentity>;
+    const parsed = JSON.parse(raw) as Partial<SyncgradeUserProfileEntry>;
     if (!parsed.uuid || !parsed.name || !parsed.department || !parsed.university) {
       return null;
     }
@@ -127,9 +125,9 @@ export function getSyncgradeUserFromLocalStorage(): SyncgradeUserIdentity | null
 }
 
 export async function saveSyncgradeUserProfile(
-  profile: Omit<SyncgradeUserIdentity, "updatedAt">,
-): Promise<SyncgradeUserIdentity> {
-  const next: SyncgradeUserIdentity = {
+  profile: Omit<SyncgradeUserProfileEntry, "updatedAt">,
+): Promise<SyncgradeUserProfileEntry> {
+  const next: SyncgradeUserProfileEntry = {
     ...profile,
     updatedAt: Date.now(),
   };
@@ -140,14 +138,14 @@ export async function saveSyncgradeUserProfile(
   return next;
 }
 
-export async function getSyncgradeUserProfile(): Promise<SyncgradeUserIdentity | null> {
+export async function getSyncgradeUserProfile(): Promise<SyncgradeUserProfileEntry | null> {
   const local = getSyncgradeUserFromLocalStorage();
   if (local) return local;
 
   const latest = await appDb.user_profile.orderBy("updatedAt").last();
   if (!latest) return null;
 
-  const identity: SyncgradeUserIdentity = {
+  const identity: SyncgradeUserProfileEntry = {
     uuid: latest.uuid,
     name: latest.name,
     department: latest.department,

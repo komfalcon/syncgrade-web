@@ -12,8 +12,8 @@ export interface StudentSyncPayload {
     name: string;
   };
   data: {
-    department?: string;
-    university?: string;
+    department: string;
+    university: string;
     academic_data?: unknown;
   };
 }
@@ -46,12 +46,13 @@ export default {
 
     const uuid = payload?.user?.uuid?.trim();
     const name = payload?.user?.name?.trim();
-    if (!uuid || !name) {
+    const department = payload?.data?.department?.trim();
+    const university = payload?.data?.university?.trim();
+
+    if (!uuid || !name || !department || !university) {
       return jsonResponse({ error: "Missing required user identity fields" }, { status: 400 });
     }
 
-    const department = payload?.data?.department ?? null;
-    const university = payload?.data?.university ?? null;
     const academicData = payload?.data?.academic_data ?? null;
     const lastSync = new Date().toISOString();
 
@@ -72,10 +73,11 @@ export default {
           department,
           university,
           lastSync,
-          JSON.stringify(academicData),
+          academicData === null ? null : JSON.stringify(academicData),
         )
         .run();
-    } catch {
+    } catch (error) {
+      console.error("students upsert failed", error);
       return jsonResponse({ error: "Database operation failed" }, { status: 500 });
     }
 
