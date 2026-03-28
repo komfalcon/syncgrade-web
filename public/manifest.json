@@ -1,7 +1,9 @@
 {
   "name": "SyncGrade",
   "short_name": "SyncGrade",
+  "description": "SyncGrade – Academic Grade Sync Tool",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#1A237E",
   "theme_color": "#1A237E",

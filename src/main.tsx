@@ -1,3 +1,4 @@
+import { registerSW } from "virtual:pwa-register";
 import { createRoot } from "react-dom/client";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/500.css";
@@ -11,8 +12,4 @@ import "./index.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    void navigator.serviceWorker.register("/sw.js");
-  });
-}
+registerSW({ immediate: true });
