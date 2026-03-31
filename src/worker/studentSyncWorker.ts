@@ -1,3 +1,5 @@
+import type { AcademicData, UserIdentity } from "@/types/sync";
+
 export interface Env {
   DB: {
     prepare(query: string): {
@@ -8,13 +10,13 @@ export interface Env {
 
 export interface StudentSyncPayload {
   user: {
-    uuid: string;
-    name: string;
+    uuid: UserIdentity["uuid"];
+    name: UserIdentity["name"];
   };
   data: {
-    department: string;
-    university: string;
-    academic_data?: unknown;
+    department: UserIdentity["department"];
+    university: UserIdentity["university"];
+    academic_data?: AcademicData;
   };
 }
 

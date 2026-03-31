@@ -1,4 +1,5 @@
 import { getSyncgradeUserProfile } from "@/storage/db";
+import type { UserIdentity } from "@/types/sync";
 
 type JsonObject = Record<string, unknown>;
 
@@ -11,6 +12,12 @@ export interface SyncHeaderPayload {
 export interface SyncPayload<T extends JsonObject> {
   user: SyncHeaderPayload;
   data: T;
+}
+
+export interface CloudSyncData {
+  department: UserIdentity["department"];
+  university: UserIdentity["university"];
+  academic_data?: unknown;
 }
 
 export async function getSyncPayload<T extends JsonObject>(data: T): Promise<SyncPayload<T>> {
