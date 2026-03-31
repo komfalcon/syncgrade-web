@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS students (
   uuid TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  department TEXT NOT NULL,
-  university TEXT NOT NULL,
+  name TEXT,
+  department TEXT,
+  university TEXT,
   last_sync DATETIME,
   academic_data JSON
 );
