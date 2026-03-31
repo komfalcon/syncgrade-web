@@ -58,7 +58,7 @@ export default function UniversityGpLanding({ slug }: UniversityGpLandingProps) 
       canonicalTag.rel = "canonical";
       document.head.appendChild(canonicalTag);
     }
-    canonicalTag.href = `${window.location.origin}/calculate/gp-in-${slug}`;
+    canonicalTag.href = `${window.location.origin}/calculate/gp-in-${normalizedSlug}`;
 
     return () => {
       document.title = previousTitle;
@@ -71,7 +71,7 @@ export default function UniversityGpLanding({ slug }: UniversityGpLandingProps) 
         else canonicalTag.remove();
       }
     };
-  }, [normalizedSlug, scale, uni.name]);
+  }, [slug, normalizedSlug, scale, uni.name]);
 
   return (
     <article className="container mx-auto max-w-3xl space-y-6 px-4 py-10">
