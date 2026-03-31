@@ -9,17 +9,24 @@ export interface FeedbackEnv {
 }
 
 function jsonResponse(body: unknown, init: ResponseInit = {}) {
+  const responseHeaders = new Headers(init.headers);
+  responseHeaders.set("content-type", "application/json; charset=utf-8");
+  responseHeaders.set("access-control-allow-origin", "*");
+  responseHeaders.set("access-control-allow-methods", "POST, OPTIONS");
+  responseHeaders.set("access-control-allow-headers", "content-type");
+
   return new Response(JSON.stringify(body), {
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      ...(init.headers ?? {}),
-    },
+    headers: responseHeaders,
     status: init.status ?? 200,
   });
 }
 
 export default {
   async fetch(request: Request, env: FeedbackEnv): Promise<Response> {
+    if (request.method === "OPTIONS") {
+      return jsonResponse(null, { status: 204 });
+    }
+
     if (request.method !== "POST") {
       return jsonResponse({ error: "Method not allowed" }, { status: 405, headers: { Allow: "POST" } });
     }
@@ -41,7 +48,7 @@ export default {
 
     try {
       await env.DB.prepare(
-        `INSERT INTO feedback_messages (full_name, university, subject, context, created_at)
+        `INSERT INTO feedback_messages (name, university, subject, message, created_at)
          VALUES (?1, ?2, ?3, ?4, ?5)`,
       )
         .bind(fullName, university, subject, context, new Date().toISOString())

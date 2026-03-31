@@ -1,10 +1,4 @@
 import { Link } from "wouter";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   return (
@@ -16,20 +10,6 @@ export default function Navbar() {
         <Link href="/grade-converter">
           <span className="text-slate-700 hover:text-slate-900">Grade Converter</span>
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button type="button" className="text-slate-700 hover:text-slate-900">
-              University Tools
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem asChild>
-              <Link href="/calculate/gp-in-unilag">
-                <span>UNILAG GP Calculator</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </nav>
     </header>
   );
