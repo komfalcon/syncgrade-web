@@ -6,6 +6,6 @@ main = "src/worker/index.ts"
 directory = "dist"
 
 [[d1_databases]]
-binding = "DB"
+binding = "syncgrade"
 database_name = "syncgrade"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "2553de85-8780-4f67-b687-b90ae1b3e20e"
