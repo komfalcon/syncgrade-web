@@ -9,19 +9,34 @@ export interface FeedbackEnv {
 }
 
 function jsonResponse(body: unknown, init: ResponseInit = {}) {
+  const responseHeaders = new Headers(init.headers);
+  responseHeaders.set("content-type", "application/json; charset=utf-8");
+  responseHeaders.set("access-control-allow-origin", "*");
+  responseHeaders.set("access-control-allow-methods", "POST, OPTIONS");
+  responseHeaders.set("access-control-allow-headers", "content-type");
+
   return new Response(JSON.stringify(body), {
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      ...(init.headers ?? {}),
-    },
+    headers: responseHeaders,
     status: init.status ?? 200,
   });
 }
 
 export default {
   async fetch(request: Request, env: FeedbackEnv): Promise<Response> {
+    const { pathname } = new URL(request.url);
+    if (pathname !== "/api/feedback") {
+      return jsonResponse({ error: "Not found" }, { status: 404 });
+    }
+
+    if (request.method === "OPTIONS") {
+      return jsonResponse(null, { status: 204 });
+    }
+
     if (request.method !== "POST") {
-      return jsonResponse({ error: "Method not allowed" }, { status: 405, headers: { Allow: "POST" } });
+      return jsonResponse(
+        { error: "Method not allowed" },
+        { status: 405, headers: { Allow: "POST, OPTIONS" } },
+      );
     }
 
     let payload: FeedbackSubmission;
@@ -41,10 +56,10 @@ export default {
 
     try {
       await env.DB.prepare(
-        `INSERT INTO feedback_messages (full_name, university, subject, context, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5)`,
+        `INSERT INTO feedback_messages (name, university, subject, message)
+         VALUES (?1, ?2, ?3, ?4)`,
       )
-        .bind(fullName, university, subject, context, new Date().toISOString())
+        .bind(fullName, university, subject, context)
         .run();
       return jsonResponse({ success: true });
     } catch (error) {

@@ -54,3 +54,15 @@ Then open **http://localhost:3000** in your browser.
 - **Build:** Vite
 - **Routing:** wouter
 - **Testing:** Vitest
+
+## Feedback & Sync Worker Setup
+
+Deploy a dedicated Cloudflare Worker for backend APIs and configure the Pages frontend to call that Worker domain.
+
+1. Configure frontend environment variables in Cloudflare Pages:
+   - `VITE_STUDENT_SYNC_ENDPOINT=https://<your-worker-domain>/api/student-sync`
+   - `VITE_FEEDBACK_ENDPOINT=https://<your-worker-domain>/api/feedback`
+2. Ensure your D1 database uses the schema in `sql/schema.sql` so `feedback_messages` exists.
+3. Confirm `wrangler.toml` points to `src/worker/index.ts`, where:
+   - `POST /api/student-sync` maps to the student sync handler
+   - `POST /api/feedback` maps to the feedback insertion handler

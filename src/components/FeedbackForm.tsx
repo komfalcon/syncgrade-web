@@ -37,7 +37,8 @@ export default function FeedbackForm() {
         subject: "",
         context: "",
       });
-    } catch {
+    } catch (error) {
+      console.error("Feedback Error:", error);
       toast.error("Failed to send feedback. Please try again.");
     } finally {
       setSending(false);
