@@ -5,7 +5,12 @@ type WorkerEnv = FeedbackEnv & StudentSyncEnv;
 
 const notFoundResponse = new Response(JSON.stringify({ error: "Not found" }), {
   status: 404,
-  headers: { "content-type": "application/json; charset=utf-8" },
+  headers: {
+    "content-type": "application/json; charset=utf-8",
+    "access-control-allow-origin": "*",
+    "access-control-allow-methods": "POST, OPTIONS",
+    "access-control-allow-headers": "content-type",
+  },
 });
 
 export default {

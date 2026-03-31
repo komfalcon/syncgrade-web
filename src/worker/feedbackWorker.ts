@@ -33,7 +33,10 @@ export default {
     }
 
     if (request.method !== "POST") {
-      return jsonResponse({ error: "Method not allowed" }, { status: 405, headers: { Allow: "POST" } });
+      return jsonResponse(
+        { error: "Method not allowed" },
+        { status: 405, headers: { Allow: "POST, OPTIONS" } },
+      );
     }
 
     let payload: FeedbackSubmission;
@@ -52,19 +55,6 @@ export default {
     }
 
     try {
-      await env.DB.prepare(
-        `CREATE TABLE IF NOT EXISTS feedback_messages (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT,
-          university TEXT,
-          subject TEXT,
-          message TEXT,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )`,
-      )
-        .bind()
-        .run();
-
       await env.DB.prepare(
         `INSERT INTO feedback_messages (name, university, subject, message)
          VALUES (?1, ?2, ?3, ?4)`,

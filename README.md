@@ -57,7 +57,7 @@ Then open **http://localhost:3000** in your browser.
 
 ## Feedback & Sync Worker Setup
 
-Cloudflare Pages should call a Worker for backend APIs.
+Deploy a dedicated Cloudflare Worker for backend APIs and configure the Pages frontend to call that Worker domain.
 
 1. Configure frontend environment variables in Cloudflare Pages:
    - `VITE_STUDENT_SYNC_ENDPOINT=https://<your-worker-domain>/api/student-sync`
