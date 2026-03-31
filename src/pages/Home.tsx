@@ -130,7 +130,16 @@ export default function Home() {
         <CGPAOverview cgpa={cgpa} />
 
         <div className="mb-8">
-          <ShareCard cgpa={cgpa.currentCGPA} scale={scale} />
+          {cgpa.semesters.length > 0 ? (
+            <details>
+              <summary className="cursor-pointer list-none">
+                <Button type="button" className="mb-4">
+                  Share My Progress
+                </Button>
+              </summary>
+              <ShareCard cgpa={cgpa.currentCGPA} scale={scale} />
+            </details>
+          ) : null}
         </div>
 
         {/* Degree Risk Warning */}

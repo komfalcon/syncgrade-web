@@ -15,12 +15,13 @@ import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
 import UniversityComparison from "./pages/UniversityComparison";
 import BackupRestore from "./pages/BackupRestore";
 import CustomUniversityForm from "./pages/CustomUniversityForm";
-import { STORAGE_KEYS, getSyncgradeUserProfile } from "./storage/db";
+import { STORAGE_KEYS } from "./storage/db";
 import GradeConverter from "./pages/GradeConverter";
 import UniversityGpLanding from "./pages/UniversityGpLanding";
 import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/PwaInstallBanner";
 import { FIRST_SYNC_SUCCESS_EVENT, FIRST_SYNC_SUCCESS_KEY } from "./lib/cloudSync";
 import AppFooter from "./components/AppFooter";
+import Navbar from "./components/Navbar";
 
 
 function Router() {
@@ -36,7 +37,9 @@ function Router() {
       <Route path={"/backup-restore"} component={BackupRestore} />
       <Route path={"/custom-university"} component={CustomUniversityForm} />
       <Route path={"/grade-converter"} component={GradeConverter} />
-      <Route path={"/calculate/gp-in-:slug"} component={UniversityGpLanding} />
+      <Route path={"/calculate/gp-in-:slug"}>
+        {(params) => <UniversityGpLanding slug={params.slug} />}
+      </Route>
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -50,28 +53,18 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [setupCheckComplete, setSetupCheckComplete] = useState(false);
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
   const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [canShowInstallBanner, setCanShowInstallBanner] = useState(false);
 
   useEffect(() => {
-    let active = true;
-    (async () => {
-      const localUserExists = typeof window !== "undefined" && localStorage.getItem(STORAGE_KEYS.syncgradeUser);
-      if (localUserExists) {
-        if (active) setShowFirstTimeSetup(false);
-        return;
-      }
-      const profile = await getSyncgradeUserProfile();
-      if (active) {
-        setShowFirstTimeSetup(!profile);
-        setCanShowInstallBanner(localStorage.getItem(FIRST_SYNC_SUCCESS_KEY) === "1");
-      }
-    })();
-    return () => {
-      active = false;
-    };
+    if (typeof window === "undefined") return;
+    const localUserExists = localStorage.getItem(STORAGE_KEYS.syncgradeUser);
+    setShowFirstTimeSetup(!localUserExists);
+    setCanShowInstallBanner(localStorage.getItem(FIRST_SYNC_SUCCESS_KEY) === "1");
+    setSetupCheckComplete(true);
   }, []);
 
   useEffect(() => {
@@ -103,13 +96,18 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <FirstTimeSetup open={showFirstTimeSetup} onComplete={() => setShowFirstTimeSetup(false)} />
-          {showInstallBanner && canShowInstallBanner && (
-            <div className="container mx-auto px-4 pt-4">
-              <PwaInstallBanner event={installPromptEvent} />
-            </div>
+          {setupCheckComplete && !showFirstTimeSetup && (
+            <>
+              {showInstallBanner && canShowInstallBanner && (
+                <div className="container mx-auto px-4 pt-4">
+                  <PwaInstallBanner event={installPromptEvent} />
+                </div>
+              )}
+              <Navbar />
+              <Router />
+              <AppFooter />
+            </>
           )}
-          <Router />
-          <AppFooter />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
