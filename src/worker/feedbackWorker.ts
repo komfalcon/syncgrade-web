@@ -23,6 +23,11 @@ function jsonResponse(body: unknown, init: ResponseInit = {}) {
 
 export default {
   async fetch(request: Request, env: FeedbackEnv): Promise<Response> {
+    const { pathname } = new URL(request.url);
+    if (pathname !== "/api/feedback") {
+      return jsonResponse({ error: "Not found" }, { status: 404 });
+    }
+
     if (request.method === "OPTIONS") {
       return jsonResponse(null, { status: 204 });
     }
@@ -48,10 +53,23 @@ export default {
 
     try {
       await env.DB.prepare(
-        `INSERT INTO feedback_messages (name, university, subject, message, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5)`,
+        `CREATE TABLE IF NOT EXISTS feedback_messages (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT,
+          university TEXT,
+          subject TEXT,
+          message TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`,
       )
-        .bind(fullName, university, subject, context, new Date().toISOString())
+        .bind()
+        .run();
+
+      await env.DB.prepare(
+        `INSERT INTO feedback_messages (name, university, subject, message)
+         VALUES (?1, ?2, ?3, ?4)`,
+      )
+        .bind(fullName, university, subject, context)
         .run();
       return jsonResponse({ success: true });
     } catch (error) {
