@@ -15,6 +15,7 @@ import { useLocation } from 'wouter';
 import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/engine/calculations';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
+import ShareCard from '@/components/ShareCard';
 
 const POLYTECHNIC_CRITICAL_CGPA = 2.0;
 const UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA = 1.0;
@@ -127,6 +128,10 @@ export default function Home() {
       <div className="container mx-auto px-4 py-12">
         {/* Overview Cards */}
         <CGPAOverview cgpa={cgpa} />
+
+        <div className="mb-8">
+          <ShareCard cgpa={cgpa.currentCGPA} scale={scale} />
+        </div>
 
         {/* Degree Risk Warning */}
         {cgpa.semesters.length > 0 && (() => {

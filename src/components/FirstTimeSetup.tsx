@@ -12,6 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { saveSyncgradeUserProfile } from "@/storage/db";
+import { syncAcademicSnapshot } from "@/lib/cloudSync";
+import { toast } from "sonner";
 
 type UniversityDbRow = {
   id: string;
@@ -53,6 +55,10 @@ export default function FirstTimeSetup({ open, onComplete }: FirstTimeSetupProps
         department: department.trim(),
         university,
       });
+      const synced = await syncAcademicSnapshot();
+      if (!synced) {
+        toast.message("Profile saved locally. Cloud sync will retry later.");
+      }
       onComplete();
     } finally {
       setSubmitting(false);

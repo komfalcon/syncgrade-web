@@ -1,5 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import type { RepeatPolicy, UniversityConfig } from "@/universities/types";
+import type { UserIdentity } from "@/types/sync";
 
 export interface KvEntry {
   key: string;
@@ -43,11 +44,7 @@ export interface UserProfileEntry {
   updatedAt: number;
 }
 
-export interface SyncgradeUserProfileEntry {
-  uuid: string;
-  name: string;
-  department: string;
-  university: string;
+export interface SyncgradeUserProfileEntry extends UserIdentity {
   updatedAt: number;
 }
 

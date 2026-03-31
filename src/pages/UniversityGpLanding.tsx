@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import universityDb from "@/data/university_db.json";
 
@@ -17,7 +17,11 @@ function getScale(uni: UniversityRow): "4.0" | "5.0" {
 
 export default function UniversityGpLanding() {
   const [location] = useLocation();
-  const slug = location.replace("/calculate/gp-in-", "").trim().toLowerCase();
+  const slug = location
+    .replace(/^\/calculate\/gp-in-/, "")
+    .replace(/\/$/, "")
+    .trim()
+    .toLowerCase();
 
   const uni = useMemo(() => {
     const rows = universityDb.universities as UniversityRow[];
@@ -35,9 +39,27 @@ export default function UniversityGpLanding() {
   const scale = getScale(uni);
   const title = `How to calculate GP in ${uni.name} using the ${scale} system`;
 
-  if (typeof document !== "undefined") {
+  useEffect(() => {
     document.title = `${uni.name} Grading System | SyncGrade`;
-  }
+    const previousDescription = document
+      .querySelector('meta[name="description"]')
+      ?.getAttribute("content");
+    let descriptionTag = document.querySelector('meta[name="description"]');
+    if (!descriptionTag) {
+      descriptionTag = document.createElement("meta");
+      descriptionTag.setAttribute("name", "description");
+      document.head.appendChild(descriptionTag);
+    }
+    descriptionTag.setAttribute(
+      "content",
+      `How to calculate GP in ${uni.name} using the ${scale} grading system. Learn ${uni.name} grading rules and CGPA tips with SyncGrade.`,
+    );
+    return () => {
+      if (previousDescription) {
+        descriptionTag?.setAttribute("content", previousDescription);
+      }
+    };
+  }, [scale, uni.name]);
 
   return (
     <article className="container mx-auto max-w-3xl space-y-6 px-4 py-10">
