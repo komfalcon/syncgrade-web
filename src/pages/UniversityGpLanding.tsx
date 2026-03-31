@@ -58,7 +58,7 @@ export default function UniversityGpLanding({ slug }: UniversityGpLandingProps) 
       canonicalTag.rel = "canonical";
       document.head.appendChild(canonicalTag);
     }
-    canonicalTag.href = `${window.location.origin}/calculate/gp-in-${normalizedSlug}`;
+    canonicalTag.href = `${window.location.origin}/calculate/gp-in-${slug}`;
 
     return () => {
       document.title = previousTitle;
