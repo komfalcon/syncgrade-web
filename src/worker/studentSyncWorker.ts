@@ -16,7 +16,7 @@ export interface StudentSyncPayload {
   data: {
     department: UserIdentity["department"];
     university: UserIdentity["university"];
-    academic_data?: AcademicData | unknown;
+    academic_data?: AcademicData;
   };
 }
 

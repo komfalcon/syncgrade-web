@@ -17,7 +17,7 @@ export interface SyncPayload<T extends JsonObject> {
 export interface CloudSyncData {
   department: UserIdentity["department"];
   university: UserIdentity["university"];
-  academic_data?: JsonObject | unknown;
+  academic_data?: unknown;
 }
 
 export async function getSyncPayload<T extends JsonObject>(data: T): Promise<SyncPayload<T>> {
