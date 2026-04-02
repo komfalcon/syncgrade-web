@@ -6,12 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Scale, GraduationCap } from "lucide-react";
 import { useLocation } from "wouter";
-import { getDegreeClass } from "@/engine/calculations";
 import type { UniversityConfig } from "@/universities/types";
 import { toast } from "sonner";
 import { useUniversities } from "@/hooks/useUniversities";
 import { useCGPA } from "@/hooks/useCGPA";
 import { resolveUniversityGradingSystem } from "@/universities/nigeria";
+import { getClassification, normalizeToSupportedScale } from "@/utils/gpaLogic";
 
 const SCORE_SAMPLES = [95, 85, 75, 65, 55, 45, 40, 35, 20] as const;
 
@@ -355,10 +355,10 @@ export default function UniversityComparison() {
               {isGpaValid && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   {selectedUniversities.map((uni) => {
-                    const degreeClass = getDegreeClass(
-                      gpaValue,
-                      uni.degreeClasses,
+                    const activeScale = normalizeToSupportedScale(
+                      resolveUniversityGradingSystem(uni, settings.admissionSession).scale,
                     );
+                    const degreeClass = getClassification(gpaValue, activeScale).label;
                     return (
                       <div
                         key={uni.id}

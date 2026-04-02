@@ -12,10 +12,12 @@ import CGPAOverview from '@/components/CGPAOverview';
 import AddSemesterDialog from '@/components/AddSemesterDialog';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useLocation } from 'wouter';
-import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/engine/calculations';
+import { analyzePerformanceTrends, assessDegreeRisk } from '@/engine/calculations';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
-import ShareCard from '@/components/ShareCard';
+import ShareProgress from '@/components/ShareProgress';
+import { useGpaScale } from '@/contexts/GpaScaleContext';
+import { getClassification } from '@/utils/gpaLogic';
 
 const POLYTECHNIC_CRITICAL_CGPA = 2.0;
 const UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA = 1.0;
@@ -37,7 +39,7 @@ export default function Home() {
   const [expandedSemesterId, setExpandedSemesterId] = useState<string | null>(null);
   const [, setLocation] = useLocation();
   const { universities } = useUniversities();
-  const scale = cgpa.settings.gpaScale;
+  const scale = useGpaScale();
 
   // Prepare data for charts
   const chartData = cgpa.semesters.map(semester => ({
@@ -133,11 +135,10 @@ export default function Home() {
           {cgpa.semesters.length > 0 ? (
             <details>
               <summary className="cursor-pointer list-none">
-                <Button type="button" className="mb-4">
-                  Share My Progress
-                </Button>
+                <div className="mb-4">
+                  <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
+                </div>
               </summary>
-              <ShareCard cgpa={cgpa.currentCGPA} scale={scale} />
             </details>
           ) : null}
         </div>
@@ -146,7 +147,7 @@ export default function Home() {
         {cgpa.semesters.length > 0 && (() => {
           const degreeClasses = activeUniversityConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES;
           const risk = assessDegreeRisk(cgpa.currentCGPA, degreeClasses, cgpa.totalCredits, 150);
-          const currentClass = getDegreeClass(cgpa.currentCGPA, degreeClasses);
+           const currentClass = getClassification(cgpa.currentCGPA, scale).label;
           const riskColors = {
             safe: 'from-green-500 to-emerald-600',
             warning: 'from-yellow-500 to-amber-600',
@@ -202,181 +203,6 @@ export default function Home() {
           </Card>
         )}
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/nigerian-universities')}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shrink-0">
-                <GraduationCap className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">🇳🇬 Universities</h3>
-                <p className="text-xs text-slate-500">Apply grading systems</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/grade-predictor')}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white shrink-0">
-                <Target className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Grade Predictor</h3>
-                <p className="text-xs text-slate-500">Plan your target CGPA</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/analytics')}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white shrink-0">
-                <BarChart2 className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Analytics</h3>
-                <p className="text-xs text-slate-500">Performance insights</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/carryover-simulator')}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white shrink-0">
-                <RefreshCw className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Carryover Simulator</h3>
-                <p className="text-xs text-slate-500">Retake impact analysis</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/study-load-optimizer')}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white shrink-0">
-                <BookOpen className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Study Load</h3>
-                <p className="text-xs text-slate-500">Optimize your schedule</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/university-comparison')}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shrink-0">
-                <Scale className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Compare Unis</h3>
-                <p className="text-xs text-slate-500">Side-by-side comparison</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/backup-restore')}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-slate-500 to-gray-600 flex items-center justify-center text-white shrink-0">
-                <Download className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Backup & Restore</h3>
-                <p className="text-xs text-slate-500">Export/import data</p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Performance Timeline */}
-        {cgpa.semesters.length >= 2 && (() => {
-          const trendData = analyzePerformanceTrends(
-            cgpa.semesters.map(s => ({
-              name: s.name,
-              gpa: cgpa.semesterGPAs[s.id] || 0,
-              credits: s.courses.reduce((sum, c) => sum + c.credits, 0),
-            }))
-          );
-          return (
-            <Card className="p-6 shadow-lg border-0 mb-8">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-cyan-600" />
-                Performance Timeline
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {trendData.map((t, i) => (
-                  <div key={i} className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2">
-                    <div className="text-xs font-medium text-slate-500">{t.semester}</div>
-                    <div className="font-bold text-slate-900">{t.gpa.toFixed(2)}</div>
-                    {t.trend === 'improving' && <TrendingUp className="w-4 h-4 text-green-500" />}
-                    {t.trend === 'declining' && <TrendingDown className="w-4 h-4 text-red-500" />}
-                    {t.trend === 'stable' && <Minus className="w-4 h-4 text-slate-400" />}
-                    {t.improvementMarker && (
-                      <span className="text-xs text-green-600 font-medium">{t.improvementMarker}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </Card>
-          );
-        })()}
-
-        {/* Charts Section */}
-        {chartData.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-            {/* GPA Trend Chart */}
-            <Card className="p-6 shadow-lg border-0">
-              <div className="flex items-center gap-2 mb-4">
-                <BarChart3 className="w-5 h-5 text-cyan-600" />
-                <h3 className="text-lg font-semibold text-slate-900">Semester GPA Comparison</h3>
-              </div>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="name" stroke="#64748b" />
-                  <YAxis domain={[0, scale]} stroke="#64748b" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#ffffff',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '0.5rem',
-                    }}
-                  />
-                  <Bar dataKey="gpa" fill="#06b6d4" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </Card>
-
-            {/* GPA Trend Line */}
-            <Card className="p-6 shadow-lg border-0">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">GPA Progression</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="name" stroke="#64748b" />
-                  <YAxis domain={[0, scale]} stroke="#64748b" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#ffffff',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '0.5rem',
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="gpa"
-                    stroke="#0891b2"
-                    strokeWidth={3}
-                    dot={{ fill: '#06b6d4', r: 6 }}
-                    activeDot={{ r: 8 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </Card>
-          </div>
-        )}
-
         {/* Semesters Section */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
@@ -430,6 +256,198 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        {/* Primary Trend Graph */}
+        {chartData.length > 0 && (
+          <Card className="p-6 shadow-lg border-0 mb-12">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Primary Trend: GPA Progression</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="name" stroke="#64748b" />
+                <YAxis domain={[0, scale]} stroke="#64748b" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '0.5rem',
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="gpa"
+                  stroke="#0891b2"
+                  strokeWidth={3}
+                  dot={{ fill: '#06b6d4', r: 6 }}
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Card>
+        )}
+
+        {/* Tools & Insights */}
+        <Card className="p-6 shadow-lg border mb-12 bg-background/95">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Tools & Insights</h2>
+
+          <div className="space-y-8">
+            <section>
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Prediction Tools</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Card className="p-5 min-h-12 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/grade-predictor')}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white shrink-0">
+                      <Target className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Grade Predictor</h4>
+                      <p className="text-xs text-slate-500">Plan your target CGPA</p>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="p-5 min-h-12 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/carryover-simulator')}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white shrink-0">
+                      <RefreshCw className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Carryover Simulator</h4>
+                      <p className="text-xs text-slate-500">Retake impact analysis</p>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="p-5 min-h-12 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/study-load-optimizer')}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white shrink-0">
+                      <BookOpen className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Study Load</h4>
+                      <p className="text-xs text-slate-500">Optimize your schedule</p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </section>
+
+            <section>
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Comparison Tools</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Card className="p-5 min-h-12 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/nigerian-universities')}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shrink-0">
+                      <GraduationCap className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">🇳🇬 Universities</h4>
+                      <p className="text-xs text-slate-500">Apply grading systems</p>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="p-5 min-h-12 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/university-comparison')}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shrink-0">
+                      <Scale className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Compare Unis</h4>
+                      <p className="text-xs text-slate-500">Side-by-side comparison</p>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="p-5 min-h-12 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/analytics')}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white shrink-0">
+                      <BarChart2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Analytics</h4>
+                      <p className="text-xs text-slate-500">Performance insights</p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </section>
+
+            <section>
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Backup/Export</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Card className="p-5 min-h-12 shadow-lg border-0 cursor-pointer hover:shadow-xl transition-all group" onClick={() => setLocation('/backup-restore')}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-slate-500 to-gray-600 flex items-center justify-center text-white shrink-0">
+                      <Download className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Backup & Restore</h4>
+                      <p className="text-xs text-slate-500">Export/import data</p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </section>
+
+            <section>
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Secondary Graphs</h3>
+              <div className="space-y-6">
+                {cgpa.semesters.length >= 2 && (() => {
+                  const trendData = analyzePerformanceTrends(
+                    cgpa.semesters.map(s => ({
+                      name: s.name,
+                      gpa: cgpa.semesterGPAs[s.id] || 0,
+                      credits: s.courses.reduce((sum, c) => sum + c.credits, 0),
+                    }))
+                  );
+                  return (
+                    <Card className="p-6 shadow-lg border-0">
+                      <h4 className="text-base font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                        <BarChart3 className="w-5 h-5 text-cyan-600" />
+                        Performance Timeline
+                      </h4>
+                      <div className="flex flex-wrap gap-3">
+                        {trendData.map((t, i) => (
+                          <div key={i} className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2">
+                            <div className="text-xs font-medium text-slate-500">{t.semester}</div>
+                            <div className="font-bold text-slate-900">{t.gpa.toFixed(2)}</div>
+                            {t.trend === 'improving' && <TrendingUp className="w-4 h-4 text-green-500" />}
+                            {t.trend === 'declining' && <TrendingDown className="w-4 h-4 text-red-500" />}
+                            {t.trend === 'stable' && <Minus className="w-4 h-4 text-slate-400" />}
+                            {t.improvementMarker && (
+                              <span className="text-xs text-green-600 font-medium">{t.improvementMarker}</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </Card>
+                  );
+                })()}
+
+                {chartData.length > 0 && (
+                  <Card className="p-6 shadow-lg border-0">
+                    <h4 className="text-base font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-cyan-600" />
+                      Semester GPA Comparison
+                    </h4>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis dataKey="name" stroke="#64748b" />
+                        <YAxis domain={[0, scale]} stroke="#64748b" />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#ffffff',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '0.5rem',
+                          }}
+                        />
+                        <Bar dataKey="gpa" fill="#06b6d4" radius={[8, 8, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </Card>
+                )}
+              </div>
+            </section>
+          </div>
+        </Card>
 
         {/* Action Buttons */}
         {cgpa.semesters.length > 0 && (

@@ -4,6 +4,8 @@ import { DEFAULT_NIGERIAN_GRADES } from '@/universities/types';
 import { calculateCGPA as calculateEngineCGPA } from '@/engine/calculations';
 import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 import { useUniversities } from '@/hooks/useUniversities';
+import { normalizeToSupportedScale } from '@/utils/gpaLogic';
+import { incrementInteractionCount } from '@/hooks/useFeedbackTrigger';
 
 export interface Course {
   id: string;
@@ -40,6 +42,7 @@ interface CGPAData {
 
 const SETTINGS_KEY = 'cgpa-calculator-settings';
 const DATA_KEY = 'cgpa-calculator-data';
+export const GPA_SCALE_UPDATED_EVENT = 'syncgrade:gpa-scale-updated';
 
 const getDefaultSettings = (): AppSettings => ({
   gpaScale: 5.0,
@@ -183,6 +186,7 @@ export function useCGPA() {
         totalGradePoints,
       };
     });
+    incrementInteractionCount();
   }, [data.semesters.length, calculateProgramSummary]);
 
   const removeSemester = useCallback((semesterId: string) => {
@@ -200,6 +204,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
+    incrementInteractionCount();
   }, [calculateProgramSummary]);
 
   const addCourse = useCallback((semesterId: string, course: Omit<Course, 'id'>) => {
@@ -230,6 +235,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
+    incrementInteractionCount();
   }, [calculateProgramSummary]);
 
   const updateCourse = useCallback((semesterId: string, courseId: string, updates: Partial<Course>) => {
@@ -262,6 +268,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
+    incrementInteractionCount();
   }, [calculateProgramSummary]);
 
   const removeCourse = useCallback((semesterId: string, courseId: string) => {
@@ -301,6 +308,13 @@ export function useCGPA() {
   const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
     setData(prevData => {
       const mergedSettings = { ...prevData.settings, ...newSettings };
+      if (typeof window !== 'undefined' && typeof newSettings.gpaScale === 'number') {
+        window.dispatchEvent(
+          new CustomEvent(GPA_SCALE_UPDATED_EVENT, {
+            detail: { scale: normalizeToSupportedScale(newSettings.gpaScale) },
+          }),
+        );
+      }
       const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(
         prevData.semesters,
         mergedSettings,

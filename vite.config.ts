@@ -159,7 +159,7 @@ const plugins = [
   vitePluginManusDebugCollector(),
   VitePWA({
     registerType: "autoUpdate",
-    includeAssets: ["favicon.png", "icons/*.png", "icons/syncgrade-icon.svg", "assets/*.svg"],
+    includeManifestIcons: false,
     manifestFilename: "manifest.json",
     manifest: {
       name: "SyncGrade",
@@ -183,7 +183,7 @@ const plugins = [
     },
     workbox: {
       cleanupOutdatedCaches: true,
-      globPatterns: ["**/*.{js,css,html,json,svg,png,webp,woff2}"],
+      globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
       runtimeCaching: [
         {
           urlPattern: ({ request }) => request.destination === "document",
@@ -194,12 +194,10 @@ const plugins = [
           },
         },
         {
-          urlPattern: ({ request }) =>
-            ["style", "script", "font", "image"].includes(request.destination),
+          urlPattern: /\.(?:js|css|png|svg|woff2)$/,
           handler: "CacheFirst",
           options: {
             cacheName: "static-assets",
-            expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
           },
         },
       ],

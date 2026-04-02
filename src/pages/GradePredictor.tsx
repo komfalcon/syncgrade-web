@@ -13,6 +13,7 @@ import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { DEFAULT_MAX_SEMESTER_UNITS } from '@shared/const';
 import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 import { useUniversities } from '@/hooks/useUniversities';
+import { useGpaScale } from '@/contexts/GpaScaleContext';
 
 const MAX_WHAT_IF_COURSES = 20;
 
@@ -46,7 +47,7 @@ export default function GradePredictor() {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
   const { universities } = useUniversities();
-  const scale = cgpa.settings.gpaScale;
+  const scale = useGpaScale();
   const universityConfig = useMemo(
     () =>
       universities.find(
