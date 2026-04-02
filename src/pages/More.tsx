@@ -15,8 +15,7 @@ const MORE_ITEMS = [
 
 export default function More() {
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
-      <main className="container mx-auto space-y-6 px-4 py-6">
+    <div className="space-y-6">
         <header className="space-y-2">
           <h1 className="text-2xl font-bold text-foreground">More</h1>
           <p className="text-sm text-muted-foreground">Manage data, feedback, and app preferences.</p>
@@ -56,7 +55,6 @@ export default function More() {
             <p className="text-sm text-muted-foreground">Settings are managed in active tool screens and university setup.</p>
           </Card>
         </section>
-      </main>
     </div>
   );
 }
