@@ -25,6 +25,7 @@ import Navbar from "./components/Navbar";
 import { GpaScaleProvider, type SupportedGpaScale } from "./contexts/GpaScaleContext";
 import { GPA_SCALE_UPDATED_EVENT } from "./hooks/useCGPA";
 import { normalizeToSupportedScale } from "./utils/gpaLogic";
+import FeedbackForm from "./components/FeedbackForm";
 
 
 function Router() {
@@ -132,6 +133,9 @@ function App() {
                 )}
                 <Navbar />
                 <Router />
+                <div className="container mx-auto px-4">
+                  <FeedbackForm />
+                </div>
                 <AppFooter />
               </>
             )}
