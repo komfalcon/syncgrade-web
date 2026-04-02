@@ -1,33 +1,12 @@
 import { useMemo, useState } from "react";
-import universityDb from "@/data/university_db.json";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { saveSyncgradeUserProfile } from "@/storage/db";
 import { syncAcademicSnapshot } from "@/lib/cloudSync";
 import { toast } from "sonner";
-
-type UniversityDbRow = {
-  id: string;
-  name: string;
-  acronym: string;
-};
-
-const universities = (universityDb.universities as UniversityDbRow[])
-  .map((uni) => ({
-    id: uni.id,
-    label: `${uni.name} (${uni.acronym})`,
-    name: uni.name,
-  }))
-  .sort((a, b) => a.label.localeCompare(b.label));
+import UniversitySelector from "@/components/UniversitySelector";
 
 interface FirstTimeSetupProps {
   open: boolean;
@@ -104,19 +83,11 @@ export default function FirstTimeSetup({ open, onComplete }: FirstTimeSetupProps
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="setup-university">University</Label>
-            <Select value={university} onValueChange={setUniversity}>
-              <SelectTrigger id="setup-university" className="w-full">
-                <SelectValue placeholder="Select your university" />
-              </SelectTrigger>
-              <SelectContent>
-                {universities.map((uni) => (
-                  <SelectItem key={uni.id} value={uni.name}>
-                    {uni.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <UniversitySelector
+              label="University"
+              selectedName={university}
+              onSelectedNameChange={setUniversity}
+            />
           </div>
 
           <Button
