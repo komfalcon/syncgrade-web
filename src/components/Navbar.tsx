@@ -1,15 +1,43 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { cn } from "@/lib/utils";
+
+const NAV_ITEMS = [
+  { href: "/", label: "Home" },
+  { href: "/analytics", label: "Analytics" },
+  { href: "/tools", label: "Tools" },
+  { href: "/more", label: "More" },
+] as const;
 
 export default function Navbar() {
+  const [location] = useLocation();
+
+  const isActive = (href: string) => {
+    if (href === "/") return location === "/";
+    return location === href || location.startsWith(`${href}/`);
+  };
+
   return (
-    <header className="border-b bg-white/90 backdrop-blur">
-      <nav className="container mx-auto flex flex-wrap items-center gap-4 px-4 py-3 text-sm">
+    <header className="hidden border-b border-border bg-background/95 backdrop-blur md:block">
+      <nav className="container mx-auto flex min-h-16 items-center justify-between gap-4 px-4 py-3 text-sm">
         <Link href="/">
-          <span className="font-semibold text-slate-900">SyncGrade</span>
+          <span className="text-base font-semibold text-foreground">SyncGrade</span>
         </Link>
-        <Link href="/grade-converter">
-          <span className="text-slate-700 hover:text-slate-900">Grade Converter</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          {NAV_ITEMS.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <span
+                className={cn(
+                  "inline-flex min-h-12 items-center rounded-md px-3 font-medium transition-colors",
+                  isActive(item.href)
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                {item.label}
+              </span>
+            </Link>
+          ))}
+        </div>
       </nav>
     </header>
   );
