@@ -81,6 +81,8 @@ const TIER_THEME: Record<number, TrophyTheme> = {
 
 const cornerBase =
   "pointer-events-none absolute h-6 w-6 border-border-strong opacity-90 sm:h-8 sm:w-8";
+const SEAL_CLIP_PATH =
+  "polygon(50% 0%,58% 8%,68% 4%,72% 14%,82% 12%,82% 22%,92% 24%,88% 34%,96% 42%,88% 50%,96% 58%,88% 66%,92% 76%,82% 78%,82% 88%,72% 86%,68% 96%,58% 92%,50% 100%,42% 92%,32% 96%,28% 86%,18% 88%,18% 78%,8% 76%,12% 66%,4% 58%,12% 50%,4% 42%,12% 34%,8% 24%,18% 22%,18% 12%,28% 14%,32% 4%,42% 8%)";
 
 export default function ShareProgress({ cgpa, totalCredits }: ShareProgressProps) {
   const scale = useGpaScale();
@@ -189,8 +191,7 @@ Build your future at: https://syncgrade.aurikrex.tech`,
             <div
               className={`absolute bottom-4 right-4 h-20 w-20 border ${theme.sealBg} p-1`}
               style={{
-                clipPath:
-                  "polygon(50% 0%,58% 8%,68% 4%,72% 14%,82% 12%,82% 22%,92% 24%,88% 34%,96% 42%,88% 50%,96% 58%,88% 66%,92% 76%,82% 78%,82% 88%,72% 86%,68% 96%,58% 92%,50% 100%,42% 92%,32% 96%,28% 86%,18% 88%,18% 78%,8% 76%,12% 66%,4% 58%,12% 50%,4% 42%,12% 34%,8% 24%,18% 22%,18% 12%,28% 14%,32% 4%,42% 8%)",
+                clipPath: SEAL_CLIP_PATH,
               }}
               aria-hidden="true"
             >
