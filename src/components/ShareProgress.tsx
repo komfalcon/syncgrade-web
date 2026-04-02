@@ -14,29 +14,29 @@ export default function ShareProgress({ cgpa, totalCredits }: ShareProgressProps
       title: "My SyncGrade Progress",
       text: shareText,
     };
+    const copyToClipboard = async (): Promise<boolean> => {
+      if (!navigator.clipboard?.writeText) return false;
+      await navigator.clipboard.writeText(shareText);
+      toast.success("Copied to clipboard!");
+      return true;
+    };
 
     try {
-      if (typeof window !== "undefined" && typeof navigator.share === "function") {
+      if (typeof navigator.share === "function") {
         await navigator.share(sharePayload);
         return;
       }
 
-      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(shareText);
-        toast.success("Copied to clipboard!");
-      }
+      await copyToClipboard();
     } catch (err: unknown) {
       const error = err instanceof Error ? err : null;
       if (error?.name === "AbortError") return;
 
-      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-        try {
-          await navigator.clipboard.writeText(shareText);
-          toast.success("Copied to clipboard!");
-          return;
-        } catch (clipboardError: unknown) {
-          console.error("Share fallback failed:", clipboardError);
-        }
+      try {
+        const copied = await copyToClipboard();
+        if (copied) return;
+      } catch (clipboardError: unknown) {
+        console.error("Share fallback failed:", clipboardError);
       }
 
       console.error("Share failed:", err);
