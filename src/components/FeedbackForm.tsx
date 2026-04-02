@@ -49,7 +49,7 @@ export default function FeedbackForm() {
 
   return (
     shouldShowFeedback && (
-    <Card className="p-4 sm:p-6">
+    <Card className="p-4 sm:p-6 bg-background">
       <h3 className="text-lg font-semibold">Feedback</h3>
       <p className="mt-1 text-sm text-slate-600">Help us improve SyncGrade for your campus.</p>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
