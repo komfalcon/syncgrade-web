@@ -15,7 +15,7 @@ const CLASSIFICATION_STYLES: Record<string, string> = {
   "Second Class Upper": "border-cyan-500/30 bg-cyan-500/10 text-primary dark:text-cyan-300",
   "Second Class Lower": "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
   "Third Class": "border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-300",
-  Pass: "border-slate-500/30 bg-surface-elevated0/10 text-foreground-muted dark:text-slate-300",
+  Pass: "border-border-strong bg-surface-elevated text-foreground-muted",
 };
 
 function getClassificationBadgeClass(label: string): string {
