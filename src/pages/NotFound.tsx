@@ -11,8 +11,8 @@ export default function NotFound() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+    <div className="flex w-full items-center justify-center py-8">
+      <Card className="mx-4 w-full max-w-lg border-border bg-surface shadow-lg">
         <CardContent className="pt-8 pb-8 text-center">
           <div className="flex justify-center mb-6">
             <div className="relative">
@@ -36,7 +36,7 @@ export default function NotFound() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
               onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+              className="rounded-lg px-6 py-2.5 transition-colors duration-150 shadow-md hover:shadow-lg"
             >
               <Home className="w-4 h-4 mr-2" />
               Go Home

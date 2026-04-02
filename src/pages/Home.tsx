@@ -12,10 +12,10 @@ import { getClassification } from "@/utils/gpaLogic";
 
 const CLASSIFICATION_STYLES: Record<string, string> = {
   "First Class": "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  "Second Class Upper": "border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
+  "Second Class Upper": "border-cyan-500/30 bg-cyan-500/10 text-primary dark:text-cyan-300",
   "Second Class Lower": "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
   "Third Class": "border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-300",
-  Pass: "border-slate-500/30 bg-slate-500/10 text-slate-700 dark:text-slate-300",
+  Pass: "border-border-strong bg-surface-elevated text-foreground-muted",
 };
 
 function getClassificationBadgeClass(label: string): string {
@@ -53,8 +53,7 @@ export default function Home() {
   const classification = useMemo(() => getClassification(cgpa.currentCGPA, scale), [cgpa.currentCGPA, scale]);
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
-      <main className="container mx-auto space-y-8 px-4 py-6">
+    <div className="space-y-8">
         <Card className="border-border bg-card p-6 shadow-md md:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
@@ -139,8 +138,6 @@ export default function Home() {
             </ResponsiveContainer>
           </Card>
         ) : null}
-      </main>
-
       <AddSemesterDialog
         open={showAddSemester}
         onOpenChange={setShowAddSemester}

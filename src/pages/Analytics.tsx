@@ -171,13 +171,13 @@ export default function Analytics() {
   const hasSemesters = semesters.length > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-slate-50">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-violet-600 to-purple-500 text-white py-12">
+      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"
-            className="text-white hover:bg-white/20 mb-4"
+            className="mb-4"
             onClick={() => setLocation('/')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -189,7 +189,7 @@ export default function Analytics() {
               <h1 className="text-3xl md:text-4xl font-bold">
                 Academic Analytics
               </h1>
-              <p className="text-purple-100 mt-1">
+              <p className="mt-1 text-foreground-muted">
                 Deep insights into your academic performance
               </p>
             </div>

@@ -20,14 +20,12 @@ import GradeConverter from "./pages/GradeConverter";
 import UniversityGpLanding from "./pages/UniversityGpLanding";
 import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/PwaInstallBanner";
 import { FIRST_SYNC_SUCCESS_EVENT, FIRST_SYNC_SUCCESS_KEY } from "./lib/cloudSync";
-import AppFooter from "./components/AppFooter";
-import Navbar from "./components/Navbar";
 import { GpaScaleProvider, type SupportedGpaScale } from "./contexts/GpaScaleContext";
 import { GPA_SCALE_UPDATED_EVENT } from "./hooks/useCGPA";
 import { normalizeToSupportedScale } from "./utils/gpaLogic";
-import BottomNav from "./components/BottomNav";
 import Tools from "./pages/Tools";
 import More from "./pages/More";
+import Layout from "./components/Layout";
 
 
 function Router() {
@@ -129,19 +127,15 @@ function App() {
             <Toaster />
             <FirstTimeSetup open={showFirstTimeSetup} onComplete={() => setShowFirstTimeSetup(false)} />
             {setupCheckComplete && !showFirstTimeSetup && (
-              <>
-                {showInstallBanner && canShowInstallBanner && (
-                  <div className="container mx-auto px-4 pt-4">
+              <Layout
+                topContent={
+                  showInstallBanner && canShowInstallBanner ? (
                     <PwaInstallBanner event={installPromptEvent} />
-                  </div>
-                )}
-                <Navbar />
-                <main className="pb-16 md:pb-0">
-                  <Router />
-                </main>
-                <BottomNav />
-                <AppFooter />
-              </>
+                  ) : null
+                }
+              >
+                <Router />
+              </Layout>
             )}
           </TooltipProvider>
         </GpaScaleProvider>

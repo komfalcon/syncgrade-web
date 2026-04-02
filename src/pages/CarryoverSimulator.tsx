@@ -135,22 +135,22 @@ export default function CarryoverSimulator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+    <div className="space-y-6">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
-        <div className="rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 p-6 text-white shadow-lg">
+        <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20"
+              className=""
               onClick={() => setLocation('/')}
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
               <h1 className="text-2xl font-bold md:text-3xl">🔄 Carryover Impact Simulator</h1>
-              <p className="mt-1 text-sm text-orange-100">
+              <p className="mt-1 text-sm text-foreground-muted">
                 See how retaking failed courses affects your CGPA
               </p>
             </div>
@@ -169,11 +169,11 @@ export default function CarryoverSimulator() {
             </div>
             <div className="rounded-lg bg-cyan-50 p-4 text-center">
               <p className="text-sm text-gray-500">Total Credits</p>
-              <p className="text-2xl font-bold text-cyan-700">{totalCredits}</p>
+              <p className="text-2xl font-bold text-primary">{totalCredits}</p>
             </div>
-            <div className="rounded-lg bg-slate-50 p-4 text-center">
+            <div className="rounded-lg bg-surface-elevated p-4 text-center">
               <p className="text-sm text-gray-500">Max Semester Units</p>
-              <p className="text-2xl font-bold text-slate-700">{maxSemesterUnits}</p>
+              <p className="text-2xl font-bold text-foreground-muted">{maxSemesterUnits}</p>
             </div>
             <div className="rounded-lg bg-orange-50 p-4 text-center">
               <p className="text-sm text-gray-500">Repeat Policy</p>
@@ -196,7 +196,7 @@ export default function CarryoverSimulator() {
             {courses.map((course, index) => (
               <div
                 key={index}
-                className="rounded-lg border border-gray-200 bg-gray-50/50 p-4"
+                className="rounded-lg border border-border bg-surface-elevated/50 p-4"
               >
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
                   <div className="lg:col-span-1">
@@ -276,7 +276,7 @@ export default function CarryoverSimulator() {
           <Button className="mt-6 w-full" onClick={handleSimulate}>
             <RefreshCw className="mr-2 h-4 w-4" /> Simulate Impact
           </Button>
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-foreground-subtle">
             Total input load must not exceed {maxSemesterUnits} units.
           </p>
         </Card>
@@ -287,7 +287,7 @@ export default function CarryoverSimulator() {
             <h2 className="mb-4 text-lg font-semibold">📈 Simulation Results</h2>
 
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="rounded-lg bg-gray-50 p-4 text-center">
+              <div className="rounded-lg bg-surface-elevated p-4 text-center">
                 <p className="text-sm text-gray-500">Current CGPA</p>
                 <p className="text-2xl font-bold text-gray-700">
                   {result.currentCGPA.toFixed(2)}
@@ -311,7 +311,7 @@ export default function CarryoverSimulator() {
                     ? 'bg-green-50'
                     : result.cgpaChange < 0
                       ? 'bg-red-50'
-                      : 'bg-gray-50'
+                      : 'bg-surface-elevated'
                 }`}
               >
                 <p className="text-sm text-gray-500">CGPA Change</p>

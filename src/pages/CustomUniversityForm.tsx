@@ -128,19 +128,19 @@ export default function CustomUniversityForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-slate-50 p-4 md:p-8">
+    <div className="space-y-6">
       <div className="mx-auto max-w-5xl space-y-6">
-        <div className="rounded-2xl bg-gradient-to-r from-cyan-600 via-teal-600 to-cyan-500 p-6 text-white shadow-lg">
+        <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
           <Button
             variant="ghost"
-            className="mb-3 text-white hover:bg-white/20"
+            className="mb-3"
             onClick={() => setLocation("/nigerian-universities")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to University Selection
           </Button>
           <h1 className="text-2xl font-bold md:text-3xl">Custom University Profile</h1>
-          <p className="mt-1 text-cyan-100">Define grading rules that match your school handbook.</p>
+          <p className="mt-1 text-foreground-muted">Define grading rules that match your school handbook.</p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -174,18 +174,18 @@ export default function CustomUniversityForm() {
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold">Grading System</h2>
               <div className="flex items-center gap-3 rounded-lg border px-3 py-2">
-                <span className={`text-sm ${scale === 4 ? "font-semibold text-cyan-700" : "text-slate-500"}`}>4.0</span>
+                <span className={`text-sm ${scale === 4 ? "font-semibold text-primary" : "text-foreground-subtle"}`}>4.0</span>
                 <Switch
                   checked={scale === 5}
                   onCheckedChange={(checked) => setValue("scale", checked ? 5 : 4, { shouldValidate: true })}
                 />
-                <span className={`text-sm ${scale === 5 ? "font-semibold text-cyan-700" : "text-slate-500"}`}>5.0</span>
+                <span className={`text-sm ${scale === 5 ? "font-semibold text-primary" : "text-foreground-subtle"}`}>5.0</span>
               </div>
             </div>
 
             <div className="space-y-3">
               {fields.map((field, index) => (
-                <div key={field.id} className="grid grid-cols-1 gap-3 rounded-lg border bg-slate-50 p-3 md:grid-cols-10">
+                <div key={field.id} className="grid grid-cols-1 gap-3 rounded-lg border bg-surface-elevated p-3 md:grid-cols-10">
                   <div className="md:col-span-2">
                     <Label>Letter Grade</Label>
                     <Input {...register(`grades.${index}.letter`)} />
@@ -227,7 +227,7 @@ export default function CustomUniversityForm() {
               <h2 className="text-lg font-semibold">Repeat Policy</h2>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button type="button" className="rounded-full text-slate-500 hover:text-slate-700">
+                  <button type="button" className="rounded-full text-foreground-subtle hover:text-foreground-muted">
                     <Info className="h-4 w-4" />
                   </button>
                 </TooltipTrigger>
@@ -246,7 +246,7 @@ export default function CustomUniversityForm() {
                   <RadioGroupItem value="replace" id="replace" />
                   <div>
                     <p className="font-medium">Replace</p>
-                    <p className="text-xs text-slate-500">New grade overwrites the old one in CGPA.</p>
+                    <p className="text-xs text-foreground-subtle">New grade overwrites the old one in CGPA.</p>
                   </div>
                 </div>
               </label>
@@ -255,7 +255,7 @@ export default function CustomUniversityForm() {
                   <RadioGroupItem value="both" id="both" />
                   <div>
                     <p className="font-medium">Both</p>
-                    <p className="text-xs text-slate-500">Both attempts count toward total units/points.</p>
+                    <p className="text-xs text-foreground-subtle">Both attempts count toward total units/points.</p>
                   </div>
                 </div>
               </label>
@@ -283,7 +283,7 @@ export default function CustomUniversityForm() {
           </Card>
 
           <div className="flex justify-end">
-            <Button type="submit" className="bg-gradient-to-r from-cyan-600 to-teal-600 text-white">
+            <Button type="submit" className="">
               <Save className="mr-2 h-4 w-4" />
               Save Custom Profile
             </Button>

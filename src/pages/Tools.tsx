@@ -38,8 +38,7 @@ const TOOL_ITEMS = [
 
 export default function Tools() {
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
-      <main className="container mx-auto space-y-6 px-4 py-6">
+    <div className="space-y-6">
         <header className="space-y-2">
           <h1 className="text-2xl font-bold text-foreground">Tools</h1>
           <p className="text-sm text-muted-foreground">Open any tool to continue your workflow.</p>
@@ -62,7 +61,6 @@ export default function Tools() {
             </Card>
           ))}
         </section>
-      </main>
     </div>
   );
 }

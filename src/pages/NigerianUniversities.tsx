@@ -58,7 +58,7 @@ function getInstitutionBadge(type?: UniversityConfig['type']) {
   return {
     label: 'Community Added',
     className:
-      'bg-slate-100 text-slate-700 border-slate-200',
+      'bg-surface-elevated text-foreground-muted border-border',
   };
 }
 
@@ -173,27 +173,27 @@ export default function NigerianUniversities() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-slate-50">
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 text-white py-12">
+    <div className="space-y-8">
+      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"
-            className="text-white hover:bg-white/20 mb-4"
+            className="mb-4"
             onClick={() => setLocation('/')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Button>
           <h1 className="text-3xl md:text-4xl font-bold">🇳🇬 Nigerian Universities</h1>
-          <p className="text-green-100 mt-2">
+          <p className="mt-2 text-foreground-muted">
             Select your university to apply its official grading system
           </p>
-          <p className="text-xs text-green-200 mt-2">
+          <p className="mt-2 text-xs text-foreground-subtle">
             Data Version: {meta.version} · Last updated:{' '}
             {new Date(meta.lastUpdated).toLocaleDateString()}
           </p>
           {cgpa.settings.activeUniversity && (
-            <div className="mt-3 inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 text-sm">
+            <div className="mt-3 inline-flex items-center gap-2 bg-surface/20 rounded-full px-4 py-1.5 text-sm">
               <Check className="w-4 h-4" />
               Active: {cgpa.settings.activeUniversity} ({cgpa.settings.gpaScale.toFixed(1)} Scale)
             </div>
@@ -202,7 +202,7 @@ export default function NigerianUniversities() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <Card className="sticky top-3 z-10 mb-4 p-4 shadow-md border-0 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+        <Card className="sticky top-3 z-10 mb-4 p-4 shadow-md border-0 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
             <Input
@@ -223,12 +223,12 @@ export default function NigerianUniversities() {
             onClick={() => setLocation('/custom-university')}
           >
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl border-2 border-dashed border-cyan-400 bg-white flex items-center justify-center text-cyan-600 shrink-0">
+              <div className="w-12 h-12 rounded-xl border-2 border-dashed border-cyan-400 bg-surface flex items-center justify-center text-primary shrink-0">
                 <Plus className="w-6 h-6" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-bold text-slate-900">Create Custom School</h3>
-                <p className="text-sm text-slate-600 mt-1">
+                <p className="text-sm text-foreground-muted mt-1">
                   Can't find your institution? Build and save your own grading profile.
                 </p>
               </div>
@@ -250,7 +250,7 @@ export default function NigerianUniversities() {
                 onClick={() => openSessionGate(uni)}
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-foreground shrink-0">
                     <GraduationCap className="w-6 h-6" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -269,7 +269,7 @@ export default function NigerianUniversities() {
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-2 flex-wrap">
-                      <span className="inline-flex items-center rounded-md bg-cyan-100 px-2 py-0.5 text-xs font-semibold text-cyan-700 border border-cyan-200">
+                      <span className="inline-flex items-center rounded-md bg-cyan-100 px-2 py-0.5 text-xs font-semibold text-primary border border-cyan-200">
                         {uni.shortName}
                       </span>
                       <span
@@ -281,12 +281,12 @@ export default function NigerianUniversities() {
                       >
                         {resolved.scale.toFixed(1)} Scale
                       </span>
-                      <span className="inline-flex items-center gap-1 text-xs text-slate-500">
+                      <span className="inline-flex items-center gap-1 text-xs text-foreground-subtle">
                         <MapPin className="w-3 h-3" />
                         {uni.location}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-2 flex-wrap text-xs text-slate-500">
+                    <div className="flex items-center gap-2 mt-2 flex-wrap text-xs text-foreground-subtle">
                       <span className="inline-flex items-center gap-1">
                         <BookOpen className="w-3 h-3" />
                         {uni.degreeClasses.length} degree classes
@@ -306,11 +306,11 @@ export default function NigerianUniversities() {
 
         {normalizedQuery && filteredUniversities.length === 0 && (
           <Card className="mt-4 p-6 shadow-md border-0 text-center">
-            <p className="text-slate-600 mb-4">
+            <p className="text-foreground-muted mb-4">
               Don't see your school? Click here to build it manually.
             </p>
             <Button
-              className="bg-gradient-to-r from-cyan-600 to-teal-600 text-white"
+              className="bg-primary text-foreground"
               onClick={() => setLocation('/custom-university')}
             >
               Open Custom School Form
@@ -329,32 +329,32 @@ export default function NigerianUniversities() {
           </div>
         )}
 
-        <Card className="mt-8 p-6 shadow-md border-0 bg-slate-50">
+        <Card className="mt-8 p-6 shadow-md border-0 bg-surface-elevated">
           <h3 className="text-lg font-bold text-slate-900 mb-4">Current Grading System</h3>
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-slate-600">Scale:</span>
-            <span className="font-bold text-cyan-600">{cgpa.settings.gpaScale.toFixed(1)}</span>
+            <span className="text-sm text-foreground-muted">Scale:</span>
+            <span className="font-bold text-primary">{cgpa.settings.gpaScale.toFixed(1)}</span>
             {cgpa.settings.activeUniversity && (
-              <span className="text-sm text-slate-500">({cgpa.settings.activeUniversity})</span>
+              <span className="text-sm text-foreground-subtle">({cgpa.settings.activeUniversity})</span>
             )}
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200">
-                  <th className="text-left py-2 pr-4 text-slate-600 font-semibold">Grade</th>
-                  <th className="text-left py-2 pr-4 text-slate-600 font-semibold">Score Range</th>
-                  <th className="text-left py-2 text-slate-600 font-semibold">Grade Point</th>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Grade</th>
+                  <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Score Range</th>
+                  <th className="text-left py-2 text-foreground-muted font-semibold">Grade Point</th>
                 </tr>
               </thead>
               <tbody>
                 {cgpa.settings.gradeRanges.map((range) => (
                   <tr key={range.grade} className="border-b border-slate-100">
                     <td className="py-2 pr-4 font-mono font-semibold text-slate-900">{range.grade}</td>
-                    <td className="py-2 pr-4 text-slate-600">
+                    <td className="py-2 pr-4 text-foreground-muted">
                       {range.min} - {range.max}
                     </td>
-                    <td className="py-2 font-mono font-semibold text-cyan-600">
+                    <td className="py-2 font-mono font-semibold text-primary">
                       {range.points.toFixed(1)}
                     </td>
                   </tr>
@@ -378,7 +378,7 @@ export default function NigerianUniversities() {
           {selectedUni && resolvedSelected && (
             <div className="py-4 space-y-5">
               <div>
-                <label htmlFor="session-of-entry" className="text-sm font-semibold text-slate-700">
+                <label htmlFor="session-of-entry" className="text-sm font-semibold text-foreground-muted">
                   Academic Session of Entry
                 </label>
                 <Input
@@ -390,29 +390,29 @@ export default function NigerianUniversities() {
                 />
               </div>
 
-              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">
+              <div className="rounded-lg border border-border p-4 bg-surface-elevated">
+                <p className="text-sm font-semibold text-foreground-muted mb-2">
                   Grading System ({resolvedSelected.scale.toFixed(1)} Scale)
                 </p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-slate-200">
-                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">Grade</th>
-                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">
+                      <tr className="border-b border-border">
+                        <th className="text-left py-1.5 pr-3 text-foreground-subtle font-medium text-xs">Grade</th>
+                        <th className="text-left py-1.5 pr-3 text-foreground-subtle font-medium text-xs">
                           Score Range
                         </th>
-                        <th className="text-left py-1.5 text-slate-500 font-medium text-xs">Points</th>
+                        <th className="text-left py-1.5 text-foreground-subtle font-medium text-xs">Points</th>
                       </tr>
                     </thead>
                     <tbody>
                       {resolvedSelected.grades.map((g) => (
                         <tr key={g.grade} className="border-b border-slate-100">
                           <td className="py-1.5 pr-3 font-mono font-semibold text-slate-900">{g.grade}</td>
-                          <td className="py-1.5 pr-3 text-slate-600">
+                          <td className="py-1.5 pr-3 text-foreground-muted">
                             {g.min} – {g.max}
                           </td>
-                          <td className="py-1.5 font-mono font-semibold text-cyan-600">
+                          <td className="py-1.5 font-mono font-semibold text-primary">
                             {g.points.toFixed(1)}
                           </td>
                         </tr>
@@ -422,28 +422,28 @@ export default function NigerianUniversities() {
                 </div>
               </div>
 
-              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Matched Session Rule</p>
-                <p className="text-sm text-slate-600">
+              <div className="rounded-lg border border-border p-4 bg-surface-elevated">
+                <p className="text-sm font-semibold text-foreground-muted mb-2">Matched Session Rule</p>
+                <p className="text-sm text-foreground-muted">
                   {resolvedSelected.session_start} to {resolvedSelected.session_end}
                 </p>
               </div>
 
-              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Degree Classifications</p>
+              <div className="rounded-lg border border-border p-4 bg-surface-elevated">
+                <p className="text-sm font-semibold text-foreground-muted mb-2">Degree Classifications</p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-slate-200">
-                        <th className="text-left py-1.5 pr-3 text-slate-500 font-medium text-xs">Class</th>
-                        <th className="text-left py-1.5 text-slate-500 font-medium text-xs">CGPA Range</th>
+                      <tr className="border-b border-border">
+                        <th className="text-left py-1.5 pr-3 text-foreground-subtle font-medium text-xs">Class</th>
+                        <th className="text-left py-1.5 text-foreground-subtle font-medium text-xs">CGPA Range</th>
                       </tr>
                     </thead>
                     <tbody>
                       {selectedUni.degreeClasses.map((dc) => (
                         <tr key={dc.name} className="border-b border-slate-100">
                           <td className="py-1.5 pr-3 font-semibold text-slate-900">{dc.name}</td>
-                          <td className="py-1.5 font-mono text-slate-600">
+                          <td className="py-1.5 font-mono text-foreground-muted">
                             {dc.minCGPA.toFixed(2)} – {dc.maxCGPA.toFixed(2)}
                           </td>
                         </tr>
@@ -453,66 +453,66 @@ export default function NigerianUniversities() {
                 </div>
               </div>
 
-              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Credit Rules</p>
+              <div className="rounded-lg border border-border p-4 bg-surface-elevated">
+                <p className="text-sm font-semibold text-foreground-muted mb-2">Credit Rules</p>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <span className="text-slate-500 text-xs">Min Credits</span>
+                    <span className="text-foreground-subtle text-xs">Min Credits</span>
                     <p className="font-semibold text-slate-900">{selectedUni.creditRules.minimumCredits}</p>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-xs">Max / Semester</span>
+                    <span className="text-foreground-subtle text-xs">Max / Semester</span>
                     <p className="font-semibold text-slate-900">
                       {selectedUni.creditRules.maximumPerSemester}
                     </p>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-xs">Min / Semester</span>
+                    <span className="text-foreground-subtle text-xs">Min / Semester</span>
                     <p className="font-semibold text-slate-900">
                       {selectedUni.creditRules.minimumPerSemester}
                     </p>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-xs">Max Program Duration</span>
+                    <span className="text-foreground-subtle text-xs">Max Program Duration</span>
                     <p className="font-semibold text-slate-900">{selectedUni.maxProgramDuration}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+              <div className="rounded-lg border border-border p-4 bg-surface-elevated">
                 <div className="flex items-center gap-2 mb-1">
-                  <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
-                  <p className="text-sm font-semibold text-slate-700">Repeat Policy</p>
+                  <RefreshCw className="w-3.5 h-3.5 text-foreground-subtle" />
+                  <p className="text-sm font-semibold text-foreground-muted">Repeat Policy</p>
                 </div>
                 <span className="inline-flex items-center rounded-md bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 border border-amber-200 mb-1">
                   {selectedUni.repeatPolicy.method}
                 </span>
-                <p className="text-sm text-slate-600">{selectedUni.repeatPolicy.description}</p>
+                <p className="text-sm text-foreground-muted">{selectedUni.repeatPolicy.description}</p>
               </div>
 
-              <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                <p className="text-sm font-semibold text-slate-700 mb-2">Academic Standing</p>
+              <div className="rounded-lg border border-border p-4 bg-surface-elevated">
+                <p className="text-sm font-semibold text-foreground-muted mb-2">Academic Standing</p>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <span className="text-slate-500 text-xs">
+                    <span className="text-foreground-subtle text-xs">
                       Probation (below {selectedUni.probation.minCGPA.toFixed(2)} CGPA)
                     </span>
-                    <p className="text-slate-600">{selectedUni.probation.description}</p>
+                    <p className="text-foreground-muted">{selectedUni.probation.description}</p>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-xs">Dismissal</span>
-                    <p className="text-slate-600">{selectedUni.dismissal.description}</p>
+                    <span className="text-foreground-subtle text-xs">Dismissal</span>
+                    <p className="text-foreground-muted">{selectedUni.dismissal.description}</p>
                   </div>
                 </div>
               </div>
 
               {selectedUni.sourceDocuments.length > 0 && (
-                <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
+                <div className="rounded-lg border border-border p-4 bg-surface-elevated">
                   <div className="flex items-center gap-2 mb-1">
-                    <FileText className="w-3.5 h-3.5 text-slate-500" />
-                    <p className="text-sm font-semibold text-slate-700">Source Documents</p>
+                    <FileText className="w-3.5 h-3.5 text-foreground-subtle" />
+                    <p className="text-sm font-semibold text-foreground-muted">Source Documents</p>
                   </div>
-                  <ul className="text-sm text-slate-600 space-y-1 list-disc list-inside">
+                  <ul className="text-sm text-foreground-muted space-y-1 list-disc list-inside">
                     {selectedUni.sourceDocuments.map((doc, i) => (
                       <li key={i}>{doc}</li>
                     ))}
@@ -527,7 +527,7 @@ export default function NigerianUniversities() {
               Cancel
             </Button>
             <Button
-              className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white"
+              className="bg-primary hover:bg-primary-hover text-foreground"
               onClick={handleApply}
             >
               Apply

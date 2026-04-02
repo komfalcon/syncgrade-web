@@ -64,14 +64,14 @@ export default function StudyLoadOptimizer() {
   // No university selected
   if (!universityConfig) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+      <div className="space-y-6">
         <div className="mx-auto max-w-4xl space-y-6">
-          <div className="rounded-2xl bg-gradient-to-r from-indigo-500 to-indigo-700 p-6 text-white shadow-lg">
+          <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-white hover:bg-white/20"
+                className=""
                 onClick={() => setLocation('/')}
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -104,15 +104,15 @@ export default function StudyLoadOptimizer() {
   const { creditRules } = universityConfig;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+    <div className="space-y-6">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
-        <div className="rounded-2xl bg-gradient-to-r from-indigo-500 to-indigo-700 p-6 text-white shadow-lg">
+        <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20"
+              className=""
               onClick={() => setLocation('/')}
             >
               <ArrowLeft className="h-5 w-5" />
@@ -121,7 +121,7 @@ export default function StudyLoadOptimizer() {
               <h1 className="text-2xl font-bold md:text-3xl">
                 📚 Study Load Optimizer
               </h1>
-              <p className="mt-1 text-sm text-indigo-200">
+              <p className="mt-1 text-sm text-foreground-muted">
                 Get personalized credit load recommendations for your next
                 semester
               </p>
@@ -141,7 +141,7 @@ export default function StudyLoadOptimizer() {
             </div>
             <div className="rounded-lg bg-cyan-50 p-4 text-center">
               <p className="text-sm text-gray-500">Completed Credits</p>
-              <p className="text-2xl font-bold text-cyan-700">{totalCredits}</p>
+              <p className="text-2xl font-bold text-primary">{totalCredits}</p>
             </div>
             <div className="rounded-lg bg-violet-50 p-4 text-center">
               <p className="text-sm text-gray-500">University</p>
@@ -258,13 +258,13 @@ export default function StudyLoadOptimizer() {
             {universityConfig.shortName} Credit Rules
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-lg bg-gray-50 p-4">
+            <div className="rounded-lg bg-surface-elevated p-4">
               <p className="text-sm text-gray-500">Minimum Credits / Semester</p>
               <p className="text-xl font-bold text-gray-700">
                 {creditRules.minimumPerSemester}
               </p>
             </div>
-            <div className="rounded-lg bg-gray-50 p-4">
+            <div className="rounded-lg bg-surface-elevated p-4">
               <p className="text-sm text-gray-500">Maximum Credits / Semester</p>
               <p className="text-xl font-bold text-gray-700">
                 {creditRules.maximumPerSemester}
