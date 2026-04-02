@@ -15,7 +15,7 @@ import { useLocation } from 'wouter';
 import { analyzePerformanceTrends, assessDegreeRisk } from '@/engine/calculations';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
-import ShareCard from '@/components/ShareCard';
+import ShareProgress from '@/components/ShareProgress';
 import { useGpaScale } from '@/contexts/GpaScaleContext';
 import { getClassification } from '@/utils/gpaLogic';
 
@@ -135,11 +135,10 @@ export default function Home() {
           {cgpa.semesters.length > 0 ? (
             <details>
               <summary className="cursor-pointer list-none">
-                <Button type="button" className="mb-4">
-                  Share My Progress
-                </Button>
+                <div className="mb-4">
+                  <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
+                </div>
               </summary>
-              <ShareCard cgpa={cgpa.currentCGPA} scale={scale} />
             </details>
           ) : null}
         </div>
