@@ -12,10 +12,12 @@ import CGPAOverview from '@/components/CGPAOverview';
 import AddSemesterDialog from '@/components/AddSemesterDialog';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useLocation } from 'wouter';
-import { analyzePerformanceTrends, assessDegreeRisk, getDegreeClass } from '@/engine/calculations';
+import { analyzePerformanceTrends, assessDegreeRisk } from '@/engine/calculations';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
 import ShareCard from '@/components/ShareCard';
+import { useGpaScale } from '@/contexts/GpaScaleContext';
+import { getClassification } from '@/utils/gpaLogic';
 
 const POLYTECHNIC_CRITICAL_CGPA = 2.0;
 const UNIVERSITY_OR_COLLEGE_WITHDRAWAL_CGPA = 1.0;
@@ -37,7 +39,7 @@ export default function Home() {
   const [expandedSemesterId, setExpandedSemesterId] = useState<string | null>(null);
   const [, setLocation] = useLocation();
   const { universities } = useUniversities();
-  const scale = cgpa.settings.gpaScale;
+  const scale = useGpaScale();
 
   // Prepare data for charts
   const chartData = cgpa.semesters.map(semester => ({
@@ -146,7 +148,7 @@ export default function Home() {
         {cgpa.semesters.length > 0 && (() => {
           const degreeClasses = activeUniversityConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES;
           const risk = assessDegreeRisk(cgpa.currentCGPA, degreeClasses, cgpa.totalCredits, 150);
-          const currentClass = getDegreeClass(cgpa.currentCGPA, degreeClasses);
+           const currentClass = getClassification(cgpa.currentCGPA, scale).label;
           const riskColors = {
             safe: 'from-green-500 to-emerald-600',
             warning: 'from-yellow-500 to-amber-600',

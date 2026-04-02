@@ -31,6 +31,7 @@ import {
 } from '@/engine/calculations';
 import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
+import { useGpaScale } from '@/contexts/GpaScaleContext';
 
 export default function Analytics() {
   const { semesters, currentCGPA, totalCredits, semesterGPAs, settings } =
@@ -39,7 +40,7 @@ export default function Analytics() {
   const [remainingCredits, setRemainingCredits] = useState(60);
   const { universities } = useUniversities();
 
-  const scale = settings.gpaScale;
+  const scale = useGpaScale();
 
   // Resolve degree classes from the active university or use defaults
   const degreeClasses = useMemo(() => {

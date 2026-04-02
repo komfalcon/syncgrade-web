@@ -2,6 +2,7 @@ import { Card } from '@/components/ui/card';
 import { useCGPA } from '@/hooks/useCGPA';
 import { TrendingUp, RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { normalizeToSupportedScale, getClassification } from '@/utils/gpaLogic';
 
 interface CGPAOverviewProps {
   cgpa: ReturnType<typeof useCGPA>;
@@ -10,7 +11,7 @@ interface CGPAOverviewProps {
 export default function CGPAOverview({ cgpa }: CGPAOverviewProps) {
   const [displayCGPA, setDisplayCGPA] = useState(0);
   const [displayCredits, setDisplayCredits] = useState(0);
-  const scale = cgpa.settings.gpaScale;
+  const scale = normalizeToSupportedScale(cgpa.settings.gpaScale);
 
   // Animate numbers on change
   useEffect(() => {
@@ -50,10 +51,24 @@ export default function CGPAOverview({ cgpa }: CGPAOverviewProps) {
   };
 
   const getGPALabel = (gpa: number) => {
-    if (gpa >= scale * 0.74) return 'Excellent';
-    if (gpa >= scale * 0.66) return 'Very Good';
-    if (gpa >= scale * 0.6) return 'Good';
-    if (gpa > 0) return 'Fair';
+    if (gpa <= 0) return 'No Data';
+    return getClassification(gpa, scale).label;
+  };
+
+  const getClassificationColor = (gpa: number) => {
+    if (gpa <= 0) return 'text-slate-500';
+    return getClassification(gpa, scale).color;
+  };
+
+  const getClassificationTierLabel = (gpa: number) => {
+    if (gpa <= 0) return '';
+    const classification = getClassification(gpa, scale);
+    return `Tier ${classification.tier}`;
+  };
+
+  const getSafeScaleLabel = () => {
+    if (scale === 4.0) return '4.0';
+    if (scale === 5.0) return '5.0';
     return 'No Data';
   };
 
@@ -73,7 +88,10 @@ export default function CGPAOverview({ cgpa }: CGPAOverviewProps) {
             <p className={`text-sm font-medium mt-2 ${getGPAColor(cgpa.currentCGPA)}`}>
               {getGPALabel(cgpa.currentCGPA)}
             </p>
-            <p className="text-xs text-slate-500 mt-1">{scale.toFixed(1)} Scale</p>
+            <p className={`text-xs mt-1 ${getClassificationColor(cgpa.currentCGPA)}`}>
+              {getClassificationTierLabel(cgpa.currentCGPA)}
+            </p>
+            <p className="text-xs text-slate-500 mt-1">{getSafeScaleLabel()} Scale</p>
           </div>
         </Card>
 

@@ -22,6 +22,9 @@ import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/Pw
 import { FIRST_SYNC_SUCCESS_EVENT, FIRST_SYNC_SUCCESS_KEY } from "./lib/cloudSync";
 import AppFooter from "./components/AppFooter";
 import Navbar from "./components/Navbar";
+import { GpaScaleProvider, type SupportedGpaScale } from "./contexts/GpaScaleContext";
+import { GPA_SCALE_UPDATED_EVENT } from "./hooks/useCGPA";
+import { normalizeToSupportedScale } from "./utils/gpaLogic";
 
 
 function Router() {
@@ -58,13 +61,36 @@ function App() {
   const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [canShowInstallBanner, setCanShowInstallBanner] = useState(false);
+  const [gpaScale, setGpaScale] = useState<SupportedGpaScale>(5.0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const localUserExists = localStorage.getItem(STORAGE_KEYS.syncgradeUser);
     setShowFirstTimeSetup(!localUserExists);
     setCanShowInstallBanner(localStorage.getItem(FIRST_SYNC_SUCCESS_KEY) === "1");
+    try {
+      const settingsRaw = localStorage.getItem(STORAGE_KEYS.settings);
+      if (settingsRaw) {
+        const parsed = JSON.parse(settingsRaw) as { gpaScale?: number };
+        if (typeof parsed.gpaScale === "number") {
+          setGpaScale(normalizeToSupportedScale(parsed.gpaScale));
+        }
+      }
+    } catch {
+      setGpaScale(5.0);
+    }
     setSetupCheckComplete(true);
+  }, []);
+
+  useEffect(() => {
+    const onScaleUpdated = (event: Event) => {
+      const customEvent = event as CustomEvent<{ scale?: number }>;
+      if (typeof customEvent.detail?.scale === "number") {
+        setGpaScale(normalizeToSupportedScale(customEvent.detail.scale));
+      }
+    };
+    window.addEventListener(GPA_SCALE_UPDATED_EVENT, onScaleUpdated);
+    return () => window.removeEventListener(GPA_SCALE_UPDATED_EVENT, onScaleUpdated);
   }, []);
 
   useEffect(() => {
@@ -93,22 +119,24 @@ function App() {
         defaultTheme="light"
         // switchable
       >
-        <TooltipProvider>
-          <Toaster />
-          <FirstTimeSetup open={showFirstTimeSetup} onComplete={() => setShowFirstTimeSetup(false)} />
-          {setupCheckComplete && !showFirstTimeSetup && (
-            <>
-              {showInstallBanner && canShowInstallBanner && (
-                <div className="container mx-auto px-4 pt-4">
-                  <PwaInstallBanner event={installPromptEvent} />
-                </div>
-              )}
-              <Navbar />
-              <Router />
-              <AppFooter />
-            </>
-          )}
-        </TooltipProvider>
+        <GpaScaleProvider value={gpaScale}>
+          <TooltipProvider>
+            <Toaster />
+            <FirstTimeSetup open={showFirstTimeSetup} onComplete={() => setShowFirstTimeSetup(false)} />
+            {setupCheckComplete && !showFirstTimeSetup && (
+              <>
+                {showInstallBanner && canShowInstallBanner && (
+                  <div className="container mx-auto px-4 pt-4">
+                    <PwaInstallBanner event={installPromptEvent} />
+                  </div>
+                )}
+                <Navbar />
+                <Router />
+                <AppFooter />
+              </>
+            )}
+          </TooltipProvider>
+        </GpaScaleProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

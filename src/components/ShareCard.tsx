@@ -3,6 +3,7 @@ import { toPng } from "html-to-image";
 import { Share2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getClassification, normalizeToSupportedScale } from "@/utils/gpaLogic";
 
 interface ShareCardProps {
   cgpa: number;
@@ -12,19 +13,11 @@ interface ShareCardProps {
 const WHATSAPP_MESSAGE =
   "Yo, I just checked my CGPA on SyncGrade. It's way faster than manual calculation. Check yours here: https://syncgrade.aurikrex.tech";
 
-function getLevel(cgpa: number, scale: number): string {
-  const normalized = scale === 0 ? 0 : cgpa / scale;
-  if (normalized >= 0.74) return "First Class";
-  if (normalized >= 0.6) return "2:1";
-  if (normalized >= 0.5) return "2:2";
-  if (normalized > 0) return "Third Class";
-  return "Starter";
-}
-
 export default function ShareCard({ cgpa, scale }: ShareCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
-  const level = useMemo(() => getLevel(cgpa, scale), [cgpa, scale]);
+  const normalizedScale = normalizeToSupportedScale(scale);
+  const level = useMemo(() => getClassification(cgpa, normalizedScale).label, [cgpa, normalizedScale]);
 
   const shareToWhatsApp = () => {
     const url = `whatsapp://send?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
