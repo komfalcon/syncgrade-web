@@ -49,47 +49,43 @@ export default function FeedbackForm() {
 
   return (
     shouldShowFeedback && (
-    <Card className="bg-background p-4 text-foreground sm:p-6">
-      <h3 className="text-lg font-semibold text-foreground">Feedback</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Help us improve SyncGrade for your campus.</p>
+    <Card className="p-4 sm:p-6 bg-background">
+      <h3 className="text-lg font-semibold">Feedback</h3>
+      <p className="mt-1 text-sm text-slate-600">Help us improve SyncGrade for your campus.</p>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="feedback-fullname" className="text-foreground">Full Name</Label>
+          <Label htmlFor="feedback-fullname">Full Name</Label>
           <Input
             id="feedback-fullname"
             value={form.fullName}
             onChange={(e) => setForm((prev) => ({ ...prev, fullName: e.target.value }))}
-            className="min-h-12 border-border bg-background text-foreground"
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="feedback-university" className="text-foreground">University</Label>
+          <Label htmlFor="feedback-university">University</Label>
           <Input
             id="feedback-university"
             value={form.university}
             onChange={(e) => setForm((prev) => ({ ...prev, university: e.target.value }))}
-            className="min-h-12 border-border bg-background text-foreground"
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="feedback-subject" className="text-foreground">Subject</Label>
+          <Label htmlFor="feedback-subject">Subject</Label>
           <Input
             id="feedback-subject"
             value={form.subject}
             onChange={(e) => setForm((prev) => ({ ...prev, subject: e.target.value }))}
-            className="min-h-12 border-border bg-background text-foreground"
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="feedback-context" className="text-foreground">Context</Label>
+          <Label htmlFor="feedback-context">Context</Label>
           <Textarea
             id="feedback-context"
             value={form.context}
             onChange={(e) => setForm((prev) => ({ ...prev, context: e.target.value }))}
-            className="min-h-24 border-border bg-background text-foreground"
             required
             rows={4}
           />

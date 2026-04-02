@@ -33,15 +33,6 @@ import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
 import { useUniversities } from '@/hooks/useUniversities';
 import { useGpaScale } from '@/contexts/GpaScaleContext';
 
-const CHART_THEME = {
-  axis: 'hsl(var(--muted-foreground))',
-  grid: 'hsl(var(--border))',
-  tooltipBg: 'hsl(var(--card))',
-  tooltipText: 'hsl(var(--card-foreground))',
-  semesterLine: 'hsl(var(--chart-3))',
-  cumulativeLine: 'hsl(var(--chart-1))',
-};
-
 export default function Analytics() {
   const { semesters, currentCGPA, totalCredits, semesterGPAs, settings } =
     useCGPA();
@@ -235,35 +226,28 @@ export default function Analytics() {
               {trends.length > 0 ? (
                 <ResponsiveContainer width="100%" height={320}>
                   <LineChart data={trends}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
-                    <XAxis dataKey="semester" fontSize={12} stroke={CHART_THEME.axis} />
-                    <YAxis domain={[0, scale]} fontSize={12} stroke={CHART_THEME.axis} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: CHART_THEME.tooltipBg,
-                        color: CHART_THEME.tooltipText,
-                        border: `1px solid ${CHART_THEME.grid}`,
-                        borderRadius: '0.5rem',
-                      }}
-                    />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="semester" fontSize={12} />
+                    <YAxis domain={[0, scale]} fontSize={12} />
+                    <Tooltip />
                     <Legend />
                     <Line
                       type="monotone"
                       dataKey="gpa"
                       name="Semester GPA"
-                      stroke={CHART_THEME.semesterLine}
+                      stroke="#8b5cf6"
                       strokeWidth={2}
-                      dot={{ r: 4, fill: CHART_THEME.semesterLine }}
-                      activeDot={{ r: 6, fill: CHART_THEME.semesterLine }}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
                     />
                     <Line
                       type="monotone"
                       dataKey="cgpa"
                       name="Cumulative CGPA"
-                      stroke={CHART_THEME.cumulativeLine}
+                      stroke="#06b6d4"
                       strokeWidth={2}
-                      dot={{ r: 4, fill: CHART_THEME.cumulativeLine }}
-                      activeDot={{ r: 6, fill: CHART_THEME.cumulativeLine }}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
