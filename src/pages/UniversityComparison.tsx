@@ -50,13 +50,13 @@ export default function UniversityComparison() {
   const isGpaValid = !Number.isNaN(gpaValue) && gpaValue >= 0 && gpaValue <= 5;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-slate-50">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 text-white py-12">
+      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"
-            className="text-white hover:bg-white/20 mb-4"
+            className="mb-4"
             onClick={() => setLocation("/")}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -65,7 +65,7 @@ export default function UniversityComparison() {
           <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3">
             🏫 University Comparison
           </h1>
-          <p className="text-green-100 mt-2 max-w-2xl">
+          <p className="mt-2 max-w-2xl text-foreground-muted">
             Compare grading systems, degree classifications, and academic
             policies across Nigerian universities side-by-side.
           </p>

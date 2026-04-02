@@ -128,19 +128,19 @@ export default function CustomUniversityForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-slate-50 p-4 md:p-8">
+    <div className="space-y-6">
       <div className="mx-auto max-w-5xl space-y-6">
-        <div className="rounded-2xl bg-gradient-to-r from-cyan-600 via-teal-600 to-cyan-500 p-6 text-white shadow-lg">
+        <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
           <Button
             variant="ghost"
-            className="mb-3 text-white hover:bg-white/20"
+            className="mb-3"
             onClick={() => setLocation("/nigerian-universities")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to University Selection
           </Button>
           <h1 className="text-2xl font-bold md:text-3xl">Custom University Profile</h1>
-          <p className="mt-1 text-cyan-100">Define grading rules that match your school handbook.</p>
+          <p className="mt-1 text-foreground-muted">Define grading rules that match your school handbook.</p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -283,7 +283,7 @@ export default function CustomUniversityForm() {
           </Card>
 
           <div className="flex justify-end">
-            <Button type="submit" className="bg-gradient-to-r from-cyan-600 to-teal-600 text-white">
+            <Button type="submit" className="">
               <Save className="mr-2 h-4 w-4" />
               Save Custom Profile
             </Button>

@@ -143,15 +143,15 @@ export default function BackupRestore() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+    <div className="space-y-6">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
-        <div className="rounded-2xl bg-gradient-to-r from-slate-600 to-slate-800 p-6 text-white shadow-lg">
+        <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20"
+              className=""
               onClick={() => setLocation('/')}
             >
               <ArrowLeft className="h-5 w-5" />
@@ -160,7 +160,7 @@ export default function BackupRestore() {
               <h1 className="text-2xl font-bold md:text-3xl">
                 💾 Backup &amp; Restore
               </h1>
-              <p className="mt-1 text-slate-200">
+              <p className="mt-1 text-foreground-muted">
                 Export your data or restore from a previous backup
               </p>
             </div>

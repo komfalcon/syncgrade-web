@@ -298,13 +298,13 @@ export default function GradePredictor() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-slate-50">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-cyan-600 via-teal-600 to-cyan-500 text-white py-12">
+      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"
-            className="text-white hover:bg-white/20 mb-4"
+            className="mb-4"
             onClick={() => setLocation('/')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -314,7 +314,7 @@ export default function GradePredictor() {
             <Target className="w-8 h-8" />
             <div>
               <h1 className="text-3xl md:text-4xl font-bold">Grade Predictor</h1>
-              <p className="text-cyan-100 mt-1">Plan your target CGPA</p>
+              <p className="mt-1 text-foreground-muted">Plan your target CGPA</p>
             </div>
           </div>
         </div>
@@ -383,7 +383,7 @@ export default function GradePredictor() {
 
         {/* Section 2: Calculate Button */}
         <Button
-          className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white text-lg py-6 mb-6"
+          className="mb-6 w-full text-lg py-6"
           onClick={handleCalculate}
         >
           Calculate Required GPA

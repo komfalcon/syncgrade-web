@@ -173,22 +173,22 @@ export default function NigerianUniversities() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-slate-50">
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 text-white py-12">
+    <div className="space-y-8">
+      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"
-            className="text-white hover:bg-white/20 mb-4"
+            className="mb-4"
             onClick={() => setLocation('/')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Button>
           <h1 className="text-3xl md:text-4xl font-bold">🇳🇬 Nigerian Universities</h1>
-          <p className="text-green-100 mt-2">
+          <p className="mt-2 text-foreground-muted">
             Select your university to apply its official grading system
           </p>
-          <p className="text-xs text-green-200 mt-2">
+          <p className="mt-2 text-xs text-foreground-subtle">
             Data Version: {meta.version} · Last updated:{' '}
             {new Date(meta.lastUpdated).toLocaleDateString()}
           </p>
