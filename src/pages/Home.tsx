@@ -40,6 +40,18 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const { universities } = useUniversities();
   const scale = useGpaScale();
+  const chartTheme = useMemo(
+    () => ({
+      axis: "hsl(var(--muted-foreground))",
+      grid: "hsl(var(--border))",
+      tooltipBg: "hsl(var(--card))",
+      tooltipText: "hsl(var(--card-foreground))",
+      line: "hsl(var(--chart-2))",
+      bar: "hsl(var(--chart-1))",
+      dot: "hsl(var(--chart-1))",
+    }),
+    [],
+  );
 
   // Prepare data for charts
   const chartData = cgpa.semesters.map(semester => ({
@@ -263,23 +275,24 @@ export default function Home() {
             <h3 className="text-lg font-semibold text-slate-900 mb-4">Primary Trend: GPA Progression</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" stroke="#64748b" />
-                <YAxis domain={[0, scale]} stroke="#64748b" />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                <XAxis dataKey="name" stroke={chartTheme.axis} />
+                <YAxis domain={[0, scale]} stroke={chartTheme.axis} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #e2e8f0',
+                    backgroundColor: chartTheme.tooltipBg,
+                    color: chartTheme.tooltipText,
+                    border: `1px solid ${chartTheme.grid}`,
                     borderRadius: '0.5rem',
                   }}
                 />
                 <Line
                   type="monotone"
                   dataKey="gpa"
-                  stroke="#0891b2"
+                  stroke={chartTheme.line}
                   strokeWidth={3}
-                  dot={{ fill: '#06b6d4', r: 6 }}
-                  activeDot={{ r: 8 }}
+                  dot={{ fill: chartTheme.dot, r: 6 }}
+                  activeDot={{ r: 8, fill: chartTheme.line }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -429,17 +442,18 @@ export default function Home() {
                     </h4>
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis dataKey="name" stroke="#64748b" />
-                        <YAxis domain={[0, scale]} stroke="#64748b" />
+                        <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                        <XAxis dataKey="name" stroke={chartTheme.axis} />
+                        <YAxis domain={[0, scale]} stroke={chartTheme.axis} />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: '#ffffff',
-                            border: '1px solid #e2e8f0',
+                            backgroundColor: chartTheme.tooltipBg,
+                            color: chartTheme.tooltipText,
+                            border: `1px solid ${chartTheme.grid}`,
                             borderRadius: '0.5rem',
                           }}
                         />
-                        <Bar dataKey="gpa" fill="#06b6d4" radius={[8, 8, 0, 0]} />
+                        <Bar dataKey="gpa" fill={chartTheme.bar} radius={[8, 8, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </Card>
