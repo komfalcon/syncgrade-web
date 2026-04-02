@@ -16,4 +16,3 @@ export function GpaScaleProvider({ value, children }: GpaScaleProviderProps) {
 export function useGpaScale(): SupportedGpaScale {
   return useContext(GpaScaleContext);
 }
-

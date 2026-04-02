@@ -43,4 +43,3 @@ export function useFeedbackTrigger(): { shouldShowFeedback: boolean } {
 
   return { shouldShowFeedback };
 }
-
