@@ -10,13 +10,12 @@ interface LayoutProps {
 
 export default function Layout({ children, topContent }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
       {topContent ? <div className="container mx-auto px-4 pt-4">{topContent}</div> : null}
-      <main className="container mx-auto px-4 py-6 pb-24 md:pb-8">{children}</main>
+      <main className="container mx-auto flex-1 px-4 py-6 pb-28 md:pb-12">{children}</main>
       <BottomNav />
       <AppFooter />
     </div>
   );
 }
-

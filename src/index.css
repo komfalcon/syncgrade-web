@@ -51,7 +51,8 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 1rem;
+  --space-grid: 0.5rem;
 
   /* Backgrounds */
   --background: #f4f7fb;
@@ -197,6 +198,10 @@
 }
 
 @layer components {
+  .glass-panel {
+    @apply rounded-xl border border-border bg-surface/70 backdrop-blur-xl;
+  }
+
   /**
    * Custom container utility that centers content and adds responsive padding.
    *

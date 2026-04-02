@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useGpaScale } from "@/contexts/GpaScaleContext";
 import { getClassification } from "@/utils/gpaLogic";
 import { getSyncgradeUserFromLocalStorage } from "@/storage/db";
+import { useCGPA } from "@/hooks/useCGPA";
+import { useUniversities } from "@/hooks/useUniversities";
 
 interface ShareProgressProps {
   cgpa: number;
@@ -14,6 +16,7 @@ interface ShareProgressProps {
 type TrophyTheme = {
   outerFrame: string;
   insetFrame: string;
+  innerGlow: string;
   spotlight: string;
   sealBg: string;
   glowShadow: string;
@@ -24,6 +27,7 @@ const TIER_THEME: Record<number, TrophyTheme> = {
   1: {
     outerFrame: "border-border-strong",
     insetFrame: "border-warning/80",
+    innerGlow: "shadow-[inset_0_0_32px_color-mix(in_oklab,var(--warning)_38%,transparent)]",
     spotlight: "bg-warning/20",
     sealBg: "bg-warning/20 border-warning/70",
     glowShadow: "shadow-[0_0_32px_color-mix(in_oklab,var(--warning)_65%,transparent)]",
@@ -32,6 +36,8 @@ const TIER_THEME: Record<number, TrophyTheme> = {
   2: {
     outerFrame: "border-border-strong",
     insetFrame: "border-foreground-muted/80",
+    innerGlow:
+      "shadow-[inset_0_0_32px_color-mix(in_oklab,var(--foreground-muted)_38%,transparent)]",
     spotlight: "bg-foreground-muted/20",
     sealBg: "bg-foreground-muted/20 border-foreground-muted/70",
     glowShadow:
@@ -41,6 +47,8 @@ const TIER_THEME: Record<number, TrophyTheme> = {
   3: {
     outerFrame: "border-border-strong",
     insetFrame: "border-destructive/75",
+    innerGlow:
+      "shadow-[inset_0_0_32px_color-mix(in_oklab,var(--destructive)_38%,transparent)]",
     spotlight: "bg-destructive/15",
     sealBg: "bg-destructive/15 border-destructive/60",
     glowShadow:
@@ -50,6 +58,8 @@ const TIER_THEME: Record<number, TrophyTheme> = {
   4: {
     outerFrame: "border-border-strong",
     insetFrame: "border-primary/80",
+    innerGlow:
+      "shadow-[inset_0_0_32px_color-mix(in_oklab,var(--primary)_38%,transparent)]",
     spotlight: "bg-primary/20",
     sealBg: "bg-primary/20 border-primary/70",
     glowShadow:
@@ -59,6 +69,8 @@ const TIER_THEME: Record<number, TrophyTheme> = {
   5: {
     outerFrame: "border-border-strong",
     insetFrame: "border-accent/80",
+    innerGlow:
+      "shadow-[inset_0_0_32px_color-mix(in_oklab,var(--accent)_38%,transparent)]",
     spotlight: "bg-accent/20",
     sealBg: "bg-accent/20 border-accent/70",
     glowShadow:
@@ -69,29 +81,41 @@ const TIER_THEME: Record<number, TrophyTheme> = {
 
 const cornerBase =
   "pointer-events-none absolute h-6 w-6 border-border-strong opacity-90 sm:h-8 sm:w-8";
+const SEAL_CLIP_PATH =
+  "polygon(50% 0%,58% 8%,68% 4%,72% 14%,82% 12%,82% 22%,92% 24%,88% 34%,96% 42%,88% 50%,96% 58%,88% 66%,92% 76%,82% 78%,82% 88%,72% 86%,68% 96%,58% 92%,50% 100%,42% 92%,32% 96%,28% 86%,18% 88%,18% 78%,8% 76%,12% 66%,4% 58%,12% 50%,4% 42%,12% 34%,8% 24%,18% 22%,18% 12%,28% 14%,32% 4%,42% 8%)";
 
 export default function ShareProgress({ cgpa, totalCredits }: ShareProgressProps) {
   const scale = useGpaScale();
+  const { settings } = useCGPA();
+  const { universities } = useUniversities();
   const classification = useMemo(() => getClassification(cgpa, scale), [cgpa, scale]);
   const theme = TIER_THEME[classification.tier] ?? TIER_THEME[5];
-  const [universityName, setUniversityName] = useState("Not Specified");
+  const [identityUniversityName, setIdentityUniversityName] = useState<string | null>(null);
 
   useEffect(() => {
     const identity = getSyncgradeUserFromLocalStorage();
     if (identity?.university?.trim()) {
-      setUniversityName(identity.university.trim());
+      setIdentityUniversityName(identity.university.trim());
     }
   }, []);
 
+  const selectedUniversityName = useMemo(() => {
+    if (settings.activeUniversity) {
+      const selected = universities.find((uni) => uni.shortName === settings.activeUniversity);
+      if (selected?.name) return selected.name;
+    }
+    return identityUniversityName ?? "Institution Not Selected";
+  }, [identityUniversityName, settings.activeUniversity, universities]);
+
   const shareCopy = useMemo(
     () => `📜 SyncGrade Academic Report
-🎓 Institution: ${universityName}
+🎓 Institution: ${selectedUniversityName}
 💎 Status: ${classification.label}
 📈 Current CGPA: ${cgpa.toFixed(2)}
 
 Verified via SyncGrade
 Build your future at: https://syncgrade.aurikrex.tech`,
-    [cgpa, classification.label, universityName],
+    [cgpa, classification.label, selectedUniversityName],
   );
 
   const handleShare = async (): Promise<void> => {
@@ -122,7 +146,7 @@ Build your future at: https://syncgrade.aurikrex.tech`,
     <div className="group">
       <div className="mx-auto w-full max-w-full overflow-hidden rounded-xl border-2 p-2 shadow-xl backdrop-blur-xl transition-transform duration-150 group-hover:scale-[1.02] group-hover:rotate-1 sm:p-3">
         <article
-          className={`relative overflow-hidden rounded-lg border-4 border-double ${theme.outerFrame} bg-background/80`}
+          className={`relative overflow-hidden rounded-lg border-4 border-double ${theme.outerFrame} ${theme.innerGlow} bg-background/80`}
         >
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-background via-surface-elevated to-background" />
           <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] [background-size:24px_24px]" />
@@ -146,7 +170,7 @@ Build your future at: https://syncgrade.aurikrex.tech`,
                 OFFICIAL ACADEMIC PROGRESS REPORT
               </p>
               <h3 className="mt-2 text-base font-semibold text-foreground sm:text-lg">
-                {universityName}
+                {selectedUniversityName}
               </h3>
             </header>
 
@@ -165,10 +189,13 @@ Build your future at: https://syncgrade.aurikrex.tech`,
             </section>
 
             <div
-              className={`absolute bottom-4 right-4 h-20 w-20 rounded-full border border-dashed ${theme.sealBg} p-1`}
+              className={`absolute bottom-4 right-4 h-20 w-20 border ${theme.sealBg} p-1`}
+              style={{
+                clipPath: SEAL_CLIP_PATH,
+              }}
               aria-hidden="true"
             >
-              <div className="flex h-full w-full items-center justify-center rounded-full border border-border bg-surface/60 text-center text-[10px] font-bold leading-tight text-foreground">
+              <div className="flex h-full w-full items-center justify-center rounded-full border border-border bg-surface/80 text-center text-[10px] font-bold leading-tight text-foreground">
                 {classification.tier}
                 {classification.tier === 1
                   ? "st"

@@ -17,7 +17,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="hidden border-b border-border bg-background/95 backdrop-blur md:block">
+    <header className="hidden glass-panel border-b md:block">
       <nav className="container mx-auto flex min-h-16 items-center justify-between gap-4 px-4 py-3 text-sm">
         <Link href="/">
           <span className="text-base font-semibold text-foreground">SyncGrade</span>

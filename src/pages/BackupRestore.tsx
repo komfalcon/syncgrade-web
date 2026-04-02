@@ -203,10 +203,10 @@ export default function BackupRestore() {
             </div>
             {lastModified && (
               <div className="rounded-lg bg-surface-elevated p-3 text-center">
-                <p className="text-2xl font-bold text-gray-700">
+                <p className="text-2xl font-bold text-foreground">
                   {lastModified}
                 </p>
-                <p className="text-sm text-gray-600">Last Modified</p>
+                <p className="text-sm text-foreground-muted">Last Modified</p>
               </div>
             )}
           </div>

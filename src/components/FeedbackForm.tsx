@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,11 +7,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { FeedbackSubmission } from "@/types/sync";
 import { useFeedbackTrigger } from "@/hooks/useFeedbackTrigger";
+import { useCGPA } from "@/hooks/useCGPA";
+import { useUniversities } from "@/hooks/useUniversities";
 
 const DEFAULT_FEEDBACK_ENDPOINT = "/api/feedback";
 
 export default function FeedbackForm() {
   const { shouldShowFeedback } = useFeedbackTrigger();
+  const { settings } = useCGPA();
+  const { universities } = useUniversities();
   const [form, setForm] = useState<FeedbackSubmission>({
     fullName: "",
     university: "",
@@ -19,6 +23,14 @@ export default function FeedbackForm() {
     context: "",
   });
   const [sending, setSending] = useState(false);
+
+  const activeUniversityName =
+    universities.find((uni) => uni.shortName === settings.activeUniversity)?.name ?? "";
+
+  useEffect(() => {
+    if (!activeUniversityName) return;
+    setForm((prev) => (prev.university ? prev : { ...prev, university: activeUniversityName }));
+  }, [activeUniversityName]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
