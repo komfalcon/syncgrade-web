@@ -17,6 +17,19 @@ export default function ShareProgress({ cgpa, totalCredits }: ShareProgressProps
     const shareCopy =
       "Just calculated my CGPA in seconds. Try yours:\nhttps://syncgrade.aurikrex.tech";
     const classification = getClassification(cgpa, scale).label;
+    const canUseWebShare =
+      typeof window !== "undefined" &&
+      typeof navigator !== "undefined" &&
+      typeof navigator.share === "function";
+
+    const copyFallbackLink = async (showSuccessToast: boolean): Promise<void> => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareCopy);
+      }
+      if (showSuccessToast) {
+        toast.success("Image downloaded & link copied!");
+      }
+    };
 
     try {
       let imageFile: File | null = null;
@@ -24,17 +37,13 @@ export default function ShareProgress({ cgpa, totalCredits }: ShareProgressProps
       try {
         imageFile = await generateShareCard(cgpa, classification, totalCredits);
       } catch {
-        if (navigator.clipboard?.writeText) {
-          await navigator.clipboard.writeText(shareCopy);
-          toast.success("Link copied!");
-          return;
-        }
+        await copyFallbackLink(false);
+        return;
       }
 
       if (
         imageFile &&
-        typeof navigator !== "undefined" &&
-        typeof navigator.share === "function" &&
+        canUseWebShare &&
         typeof navigator.canShare === "function" &&
         navigator.canShare({ files: [imageFile] })
       ) {
@@ -57,10 +66,7 @@ export default function ShareProgress({ cgpa, totalCredits }: ShareProgressProps
         URL.revokeObjectURL(url);
       }
 
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(shareCopy);
-      }
-      toast.success("Image downloaded & link copied!");
+      await copyFallbackLink(true);
     } catch (err: unknown) {
       const error = err instanceof Error ? err : null;
       if (error?.name === "AbortError") return;

@@ -136,7 +136,9 @@ function App() {
                   </div>
                 )}
                 <Navbar />
-                <Router />
+                <main className="pb-16 md:pb-0">
+                  <Router />
+                </main>
                 <BottomNav />
                 <AppFooter />
               </>
