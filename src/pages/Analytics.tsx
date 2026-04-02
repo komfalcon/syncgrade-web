@@ -17,6 +17,8 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -40,6 +42,7 @@ const CHART_THEME = {
   tooltipText: 'hsl(var(--card-foreground))',
   semesterLine: 'hsl(var(--chart-3))',
   cumulativeLine: 'hsl(var(--chart-1))',
+  comparisonBar: 'hsl(var(--chart-2))',
 };
 
 export default function Analytics() {
@@ -75,6 +78,14 @@ export default function Analytics() {
 
   const trends = useMemo(
     () => analyzePerformanceTrends(semesterData),
+    [semesterData],
+  );
+  const semesterComparisonData = useMemo(
+    () =>
+      semesterData.map((semester) => ({
+        semester: semester.name,
+        gpa: semester.gpa,
+      })),
     [semesterData],
   );
 
@@ -151,7 +162,7 @@ export default function Analytics() {
     ) : overallTrend === 'declining' ? (
       <TrendingDown className="w-5 h-5 text-red-600" />
     ) : (
-      <Minus className="w-5 h-5 text-slate-500" />
+      <Minus className="w-5 h-5 text-foreground-muted" />
     );
 
   const trendLabel =
@@ -166,7 +177,7 @@ export default function Analytics() {
       ? 'text-green-600'
       : overallTrend === 'declining'
         ? 'text-red-600'
-        : 'text-slate-600';
+        : 'text-foreground-muted';
 
   const hasSemesters = semesters.length > 0;
 
@@ -200,7 +211,7 @@ export default function Analytics() {
       <div className="container mx-auto px-4 py-12 space-y-8">
         {!hasSemesters ? (
           <Card className="p-12 text-center shadow-lg border-0">
-            <p className="text-slate-500 text-lg">
+            <p className="text-foreground-muted text-lg">
               Add semesters and courses on the dashboard to see your analytics.
             </p>
             <Button
@@ -229,7 +240,7 @@ export default function Analytics() {
 
             {/* Performance Trends Chart */}
             <Card className="p-6 shadow-lg border-0">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">
+              <h2 className="mb-4 text-xl font-bold text-foreground">
                 Performance Trends
               </h2>
               {trends.length > 0 ? (
@@ -268,16 +279,42 @@ export default function Analytics() {
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-slate-500 text-center py-8">
+                <p className="py-8 text-center text-foreground-muted">
                   Not enough data for trends yet.
                 </p>
+              )}
+            </Card>
+            <Card className="p-6 shadow-lg border-0">
+              <h2 className="mb-4 text-xl font-bold text-foreground">
+                Semester Comparison
+              </h2>
+              {semesterComparisonData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={semesterComparisonData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
+                    <XAxis dataKey="semester" fontSize={12} stroke={CHART_THEME.axis} />
+                    <YAxis domain={[0, scale]} fontSize={12} stroke={CHART_THEME.axis} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: CHART_THEME.tooltipBg,
+                        color: CHART_THEME.tooltipText,
+                        border: `1px solid ${CHART_THEME.grid}`,
+                        borderRadius: '0.5rem',
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="gpa" name="Semester GPA" fill={CHART_THEME.comparisonBar} radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="py-8 text-center text-foreground-muted">Not enough semester data yet.</p>
               )}
             </Card>
 
             {/* Degree Risk Assessment */}
             {riskAssessment && (
               <Card className="p-6 shadow-lg border-0">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">
+                <h2 className="mb-4 text-xl font-bold text-foreground">
                   Degree Risk Assessment
                 </h2>
                 <div
@@ -302,7 +339,7 @@ export default function Analytics() {
 
             {/* Best / Worst Case Projection */}
             <Card className="p-6 shadow-lg border-0">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">
+              <h2 className="mb-4 text-xl font-bold text-foreground">
                 Best / Worst Case Projection
               </h2>
               <div className="mb-6 max-w-xs">
@@ -320,7 +357,7 @@ export default function Analytics() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Best Case */}
-                <div className="rounded-lg border border-green-300 bg-green-50 p-4 text-center">
+                <div className="rounded-lg border border-success/40 bg-success/10 p-4 text-center">
                   <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-2" />
                   <p className="text-sm text-green-700 font-medium">
                     Best Case
@@ -334,7 +371,7 @@ export default function Analytics() {
                 </div>
 
                 {/* Current Case */}
-                <div className="rounded-lg border border-purple-300 bg-purple-50 p-4 text-center">
+                <div className="rounded-lg border border-primary/40 bg-primary/10 p-4 text-center">
                   <Target className="w-6 h-6 text-purple-600 mx-auto mb-2" />
                   <p className="text-sm text-purple-700 font-medium">
                     Current
@@ -348,7 +385,7 @@ export default function Analytics() {
                 </div>
 
                 {/* Worst Case */}
-                <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-center">
+                <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-center">
                   <TrendingDown className="w-6 h-6 text-red-600 mx-auto mb-2" />
                   <p className="text-sm text-red-700 font-medium">
                     Worst Case
@@ -365,11 +402,11 @@ export default function Analytics() {
 
             {/* Performance Summary Stats */}
             <Card className="p-6 shadow-lg border-0">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">
+              <h2 className="mb-4 text-xl font-bold text-foreground">
                 Performance Summary
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="rounded-lg bg-purple-50 p-4 text-center">
+                <div className="rounded-lg bg-primary/10 p-4 text-center">
                   <p className="text-sm text-purple-600 font-medium">
                     Highest GPA
                   </p>
@@ -377,7 +414,7 @@ export default function Analytics() {
                     {stats.highest.toFixed(2)}
                   </p>
                 </div>
-                <div className="rounded-lg bg-red-50 p-4 text-center">
+                <div className="rounded-lg bg-destructive/10 p-4 text-center">
                   <p className="text-sm text-red-600 font-medium">
                     Lowest GPA
                   </p>
@@ -385,7 +422,7 @@ export default function Analytics() {
                     {stats.lowest.toFixed(2)}
                   </p>
                 </div>
-                <div className="rounded-lg bg-cyan-50 p-4 text-center">
+                <div className="rounded-lg bg-accent/10 p-4 text-center">
                   <p className="text-sm text-cyan-600 font-medium">
                     Average GPA
                   </p>
@@ -393,7 +430,7 @@ export default function Analytics() {
                     {stats.average.toFixed(2)}
                   </p>
                 </div>
-                <div className="rounded-lg bg-amber-50 p-4 text-center">
+                <div className="rounded-lg bg-warning/10 p-4 text-center">
                   <p className="text-sm text-amber-600 font-medium">
                     Total Courses
                   </p>
@@ -401,7 +438,7 @@ export default function Analytics() {
                     {stats.totalCourses}
                   </p>
                 </div>
-                <div className="rounded-lg bg-emerald-50 p-4 text-center">
+                <div className="rounded-lg bg-success/10 p-4 text-center">
                   <p className="text-sm text-emerald-600 font-medium">
                     Credits Completed
                   </p>
@@ -409,7 +446,7 @@ export default function Analytics() {
                     {stats.totalCredits}
                   </p>
                 </div>
-                <div className="rounded-lg bg-violet-50 p-4 text-center">
+                <div className="rounded-lg bg-surface-elevated p-4 text-center">
                   <p className="text-sm text-violet-600 font-medium">
                     Semesters
                   </p>
@@ -423,7 +460,7 @@ export default function Analytics() {
             {/* Per-semester Trend Details */}
             {trends.length > 1 && (
               <Card className="p-6 shadow-lg border-0">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">
+                <h2 className="mb-4 text-xl font-bold text-foreground">
                   Semester-by-Semester Trends
                 </h2>
                 <div className="space-y-3">
@@ -438,17 +475,17 @@ export default function Analytics() {
                         ) : t.trend === 'declining' ? (
                           <TrendingDown className="w-4 h-4 text-red-600" />
                         ) : (
-                          <Minus className="w-4 h-4 text-slate-400" />
+                          <Minus className="w-4 h-4 text-foreground-subtle" />
                         )}
-                        <span className="font-medium text-slate-900">
+                        <span className="font-medium text-foreground">
                           {t.semester}
                         </span>
                       </div>
                       <div className="flex items-center gap-4 text-sm">
-                        <span className="text-slate-600">
+                        <span className="text-foreground-muted">
                           GPA: <strong>{t.gpa.toFixed(2)}</strong>
                         </span>
-                        <span className="text-slate-600">
+                        <span className="text-foreground-muted">
                           CGPA: <strong>{t.cgpa.toFixed(2)}</strong>
                         </span>
                         {t.improvementMarker && (

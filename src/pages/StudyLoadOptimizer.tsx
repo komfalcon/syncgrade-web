@@ -89,7 +89,7 @@ export default function StudyLoadOptimizer() {
             <h2 className="mb-2 text-lg font-semibold">
               No University Selected
             </h2>
-            <p className="mb-4 text-sm text-gray-500">
+            <p className="mb-4 text-sm text-foreground-muted">
               Please select a university to use the Study Load Optimizer.
             </p>
             <Button onClick={() => setLocation('/nigerian-universities')}>
@@ -134,17 +134,17 @@ export default function StudyLoadOptimizer() {
           <h2 className="mb-4 text-lg font-semibold">📊 Current Status</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-lg bg-indigo-50 p-4 text-center">
-              <p className="text-sm text-gray-500">Current CGPA</p>
+              <p className="text-sm text-foreground-muted">Current CGPA</p>
               <p className="text-2xl font-bold text-indigo-700">
                 {totalCredits > 0 ? currentCGPA.toFixed(2) : '—'}
               </p>
             </div>
             <div className="rounded-lg bg-cyan-50 p-4 text-center">
-              <p className="text-sm text-gray-500">Completed Credits</p>
+              <p className="text-sm text-foreground-muted">Completed Credits</p>
               <p className="text-2xl font-bold text-primary">{totalCredits}</p>
             </div>
             <div className="rounded-lg bg-violet-50 p-4 text-center">
-              <p className="text-sm text-gray-500">University</p>
+              <p className="text-sm text-foreground-muted">University</p>
               <p className="text-lg font-semibold text-violet-700">
                 {universityConfig.shortName}
               </p>
@@ -170,7 +170,7 @@ export default function StudyLoadOptimizer() {
                 value={targetCGPA}
                 onChange={(e) => setTargetCGPA(parseFloat(e.target.value) || 0)}
               />
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-foreground-subtle">
                 Scale: 0 – {scale}
               </p>
             </div>
@@ -189,19 +189,19 @@ export default function StudyLoadOptimizer() {
 
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-lg bg-indigo-50 p-4 text-center">
-                <p className="text-sm text-gray-500">Recommended Credits</p>
+                <p className="text-sm text-foreground-muted">Recommended Credits</p>
                 <p className="text-2xl font-bold text-indigo-700">
                   {result.recommendedCredits}
                 </p>
               </div>
               <div className="rounded-lg bg-emerald-50 p-4 text-center">
-                <p className="text-sm text-gray-500">Target GPA This Semester</p>
+                <p className="text-sm text-foreground-muted">Target GPA This Semester</p>
                 <p className="text-2xl font-bold text-emerald-700">
                   {result.targetGPA.toFixed(2)}
                 </p>
               </div>
               <div className="rounded-lg bg-amber-50 p-4 text-center">
-                <p className="text-sm text-gray-500">Number of Courses</p>
+                <p className="text-sm text-foreground-muted">Number of Courses</p>
                 <p className="text-2xl font-bold text-amber-700">
                   {result.courses.length}
                 </p>
@@ -211,13 +211,13 @@ export default function StudyLoadOptimizer() {
             {/* Course Plan Breakdown */}
             {result.courses.length > 0 && (
               <div className="mb-6">
-                <h3 className="mb-3 text-sm font-semibold text-gray-600">
+                <h3 className="mb-3 text-sm font-semibold text-foreground-muted">
                   Course Plan Breakdown
                 </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b text-gray-500">
+                      <tr className="border-b text-foreground-muted">
                         <th className="pb-2 pr-4">Course #</th>
                         <th className="pb-2 pr-4">Credits</th>
                         <th className="pb-2">Minimum Grade Needed</th>
@@ -245,7 +245,7 @@ export default function StudyLoadOptimizer() {
             <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-4">
               <div className="flex items-start gap-2">
                 <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" />
-                <p className="text-sm text-gray-700">{result.reason}</p>
+                <p className="text-sm text-foreground">{result.reason}</p>
               </div>
             </div>
           </Card>
@@ -259,14 +259,14 @@ export default function StudyLoadOptimizer() {
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="rounded-lg bg-surface-elevated p-4">
-              <p className="text-sm text-gray-500">Minimum Credits / Semester</p>
-              <p className="text-xl font-bold text-gray-700">
+              <p className="text-sm text-foreground-muted">Minimum Credits / Semester</p>
+              <p className="text-xl font-bold text-foreground">
                 {creditRules.minimumPerSemester}
               </p>
             </div>
             <div className="rounded-lg bg-surface-elevated p-4">
-              <p className="text-sm text-gray-500">Maximum Credits / Semester</p>
-              <p className="text-xl font-bold text-gray-700">
+              <p className="text-sm text-foreground-muted">Maximum Credits / Semester</p>
+              <p className="text-xl font-bold text-foreground">
                 {creditRules.maximumPerSemester}
               </p>
             </div>

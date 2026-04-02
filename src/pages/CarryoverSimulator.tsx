@@ -162,23 +162,23 @@ export default function CarryoverSimulator() {
           <h2 className="mb-4 text-lg font-semibold">📊 Current Status</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-lg bg-teal-50 p-4 text-center">
-              <p className="text-sm text-gray-500">Current CGPA</p>
+              <p className="text-sm text-foreground-muted">Current CGPA</p>
               <p className="text-2xl font-bold text-teal-700">
                 {totalCredits > 0 ? currentCGPA.toFixed(2) : '—'}
               </p>
             </div>
             <div className="rounded-lg bg-cyan-50 p-4 text-center">
-              <p className="text-sm text-gray-500">Total Credits</p>
+              <p className="text-sm text-foreground-muted">Total Credits</p>
               <p className="text-2xl font-bold text-primary">{totalCredits}</p>
             </div>
             <div className="rounded-lg bg-surface-elevated p-4 text-center">
-              <p className="text-sm text-gray-500">Max Semester Units</p>
+              <p className="text-sm text-foreground-muted">Max Semester Units</p>
               <p className="text-2xl font-bold text-foreground-muted">{maxSemesterUnits}</p>
             </div>
             <div className="rounded-lg bg-orange-50 p-4 text-center">
-              <p className="text-sm text-gray-500">Repeat Policy</p>
+              <p className="text-sm text-foreground-muted">Repeat Policy</p>
               <p className="text-lg font-semibold capitalize text-orange-700">{repeatPolicy}</p>
-              <p className="mt-1 text-xs text-gray-500">{policyLabel[repeatPolicy]}</p>
+              <p className="mt-1 text-xs text-foreground-subtle">{policyLabel[repeatPolicy]}</p>
             </div>
           </div>
         </Card>
@@ -288,20 +288,20 @@ export default function CarryoverSimulator() {
 
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-lg bg-surface-elevated p-4 text-center">
-                <p className="text-sm text-gray-500">Current CGPA</p>
-                <p className="text-2xl font-bold text-gray-700">
+                <p className="text-sm text-foreground-muted">Current CGPA</p>
+                <p className="text-2xl font-bold text-foreground">
                   {result.currentCGPA.toFixed(2)}
                 </p>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-foreground-subtle">
                   {getDegreeClass(result.currentCGPA, degreeClasses)}
                 </p>
               </div>
               <div className="rounded-lg bg-teal-50 p-4 text-center">
-                <p className="text-sm text-gray-500">Projected CGPA</p>
+                <p className="text-sm text-foreground-muted">Projected CGPA</p>
                 <p className="text-2xl font-bold text-teal-700">
                   {result.projectedCGPA.toFixed(2)}
                 </p>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-foreground-subtle">
                   {getDegreeClass(result.projectedCGPA, degreeClasses)}
                 </p>
               </div>
@@ -314,14 +314,14 @@ export default function CarryoverSimulator() {
                       : 'bg-surface-elevated'
                 }`}
               >
-                <p className="text-sm text-gray-500">CGPA Change</p>
+                <p className="text-sm text-foreground-muted">CGPA Change</p>
                 <p
                   className={`text-2xl font-bold ${
                     result.cgpaChange > 0
                       ? 'text-green-600'
                       : result.cgpaChange < 0
                         ? 'text-red-600'
-                        : 'text-gray-600'
+                        : 'text-foreground-muted'
                   }`}
                 >
                   {result.cgpaChange > 0 ? '+' : ''}
@@ -332,7 +332,7 @@ export default function CarryoverSimulator() {
 
             {/* New Degree Class */}
             <div className="mb-6 rounded-lg border border-teal-200 bg-teal-50/50 p-4 text-center">
-              <p className="text-sm text-gray-500">New Projected Degree Class</p>
+              <p className="text-sm text-foreground-muted">New Projected Degree Class</p>
               <p className="text-xl font-bold text-teal-700">
                 {getDegreeClass(result.projectedCGPA, degreeClasses)}
               </p>
@@ -343,7 +343,7 @@ export default function CarryoverSimulator() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b text-gray-500">
+                    <tr className="border-b text-foreground-muted">
                       <th className="pb-2 pr-4">Course</th>
                       <th className="pb-2 pr-4">Credits</th>
                       <th className="pb-2 pr-4">Original</th>
@@ -358,11 +358,11 @@ export default function CarryoverSimulator() {
                         <td className="py-2 pr-4">{c.credits}</td>
                         <td className="py-2 pr-4">
                           {c.originalGrade}{' '}
-                          <span className="text-gray-400">({c.originalPoints.toFixed(1)})</span>
+                          <span className="text-foreground-subtle">({c.originalPoints.toFixed(1)})</span>
                         </td>
                         <td className="py-2 pr-4">
                           {c.newGrade}{' '}
-                          <span className="text-gray-400">({c.newPoints.toFixed(1)})</span>
+                          <span className="text-foreground-subtle">({c.newPoints.toFixed(1)})</span>
                         </td>
                         <td
                           className={`py-2 font-semibold ${
@@ -370,7 +370,7 @@ export default function CarryoverSimulator() {
                               ? 'text-green-600'
                               : c.creditImpact < 0
                                 ? 'text-red-600'
-                                : 'text-gray-500'
+                                : 'text-foreground-muted'
                           }`}
                         >
                           {c.creditImpact > 0 ? '+' : ''}
