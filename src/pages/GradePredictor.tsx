@@ -257,7 +257,7 @@ export default function GradePredictor() {
   }, [currentCGPAInput, completedCredits, whatIfCourses, cgpa.settings.gradeRanges, universityConfig, maxSemesterUnits]);
 
   const getCGPAColor = (gpa: number | null) => {
-    if (gpa === null) return 'text-slate-600';
+    if (gpa === null) return 'text-foreground-muted';
     if (gpa >= scale * 0.74) return 'text-emerald-600';
     if (gpa >= scale * 0.6) return 'text-amber-600';
     return 'text-red-600';
@@ -374,7 +374,7 @@ export default function GradePredictor() {
                 value={remainingCredits}
                 onChange={e => setRemainingCredits(e.target.value)}
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-foreground-subtle">
                 Max per semester: {maxSemesterUnits} units
               </p>
             </div>
@@ -402,15 +402,15 @@ export default function GradePredictor() {
               {/* View 1: Summary */}
               <TabsContent value="summary">
                 <div className="space-y-4">
-                  <div className="rounded-lg border border-slate-200 p-6 bg-slate-50">
-                    <p className="text-slate-600 mb-1">
-                      To achieve a CGPA of <span className="font-bold text-cyan-600">{targetCGPA}</span>:
+                  <div className="rounded-lg border border-border p-6 bg-surface-elevated">
+                    <p className="text-foreground-muted mb-1">
+                      To achieve a CGPA of <span className="font-bold text-primary">{targetCGPA}</span>:
                     </p>
                     <p className="text-2xl font-bold text-slate-900 mb-2">
                       You need an average GPA of:{' '}
-                      <span className="font-mono text-cyan-600">{result.requiredGPA.toFixed(2)}</span>
+                      <span className="font-mono text-primary">{result.requiredGPA.toFixed(2)}</span>
                     </p>
-                    <p className="text-slate-600 mb-4">
+                    <p className="text-foreground-muted mb-4">
                       That's approximately: <span className="font-bold">{result.letterGrade}</span> in all remaining courses
                     </p>
                     <div
@@ -421,7 +421,7 @@ export default function GradePredictor() {
                             ? 'bg-amber-100 text-amber-700'
                             : result.verdict === 'Very Difficult'
                               ? 'bg-red-100 text-red-700'
-                              : 'bg-slate-100 text-slate-700'
+                              : 'bg-surface-elevated text-foreground-muted'
                       }`}
                     >
                       {result.verdictIcon} {result.verdict}
@@ -447,17 +447,17 @@ export default function GradePredictor() {
               {/* View 2: Uniform Distribution */}
               <TabsContent value="uniform">
                 <div>
-                  <p className="text-sm text-slate-600 mb-4">
+                  <p className="text-sm text-foreground-muted mb-4">
                     If you score uniformly across all remaining courses:
                   </p>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-slate-200">
-                          <th className="text-left py-2 pr-4 text-slate-600 font-semibold">Target CGPA</th>
-                          <th className="text-left py-2 pr-4 text-slate-600 font-semibold">Required GPA</th>
-                          <th className="text-left py-2 pr-4 text-slate-600 font-semibold">Grade</th>
-                          <th className="text-left py-2 text-slate-600 font-semibold">Verdict</th>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Target CGPA</th>
+                          <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Required GPA</th>
+                          <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Grade</th>
+                          <th className="text-left py-2 text-foreground-muted font-semibold">Verdict</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -467,7 +467,7 @@ export default function GradePredictor() {
                             className={`border-b border-slate-100 ${row.isTarget ? 'bg-cyan-50 font-semibold' : ''}`}
                           >
                             <td className="py-2 pr-4 font-mono">{row.target}</td>
-                            <td className="py-2 pr-4 font-mono text-cyan-600">{row.requiredGPA}</td>
+                            <td className="py-2 pr-4 font-mono text-primary">{row.requiredGPA}</td>
                             <td className="py-2 pr-4 font-mono">{row.grade}</td>
                             <td className="py-2">{row.verdict}</td>
                           </tr>
@@ -482,14 +482,14 @@ export default function GradePredictor() {
               <TabsContent value="whatif">
                 <div>
                   {/* Live predicted CGPA */}
-                  <div className="rounded-lg border border-slate-200 p-4 bg-slate-50 mb-4">
+                  <div className="rounded-lg border border-border p-4 bg-surface-elevated mb-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-slate-600">Predicted Final CGPA:</p>
+                      <p className="text-sm font-semibold text-foreground-muted">Predicted Final CGPA:</p>
                       <span className={`gpa-value ${getCGPAColor(predictedCGPA)}`}>
                         {predictedCGPA !== null ? predictedCGPA.toFixed(2) : '—'}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-foreground-subtle">
                       Load cap: {maxSemesterUnits} units
                     </p>
                   </div>
@@ -499,7 +499,7 @@ export default function GradePredictor() {
                     {whatIfCourses.map(course => (
                       <div
                         key={course.id}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white"
+                        className="flex items-center gap-3 p-3 rounded-lg border border-border bg-surface"
                       >
                         <Input
                           className="flex-1 min-w-0"
@@ -564,25 +564,25 @@ export default function GradePredictor() {
         {savedPredictions.length > 0 && (
           <Card className="p-6 shadow-lg border-0">
             <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-5 h-5 text-cyan-600" />
+              <Clock className="w-5 h-5 text-primary" />
               <h2 className="text-xl font-bold text-slate-900">Prediction History</h2>
             </div>
             <div className="space-y-3">
               {savedPredictions.map(prediction => (
                 <div
                   key={prediction.id}
-                  className="flex items-center justify-between p-4 rounded-lg border border-slate-200 bg-slate-50"
+                  className="flex items-center justify-between p-4 rounded-lg border border-border bg-surface-elevated"
                 >
                   <div>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-foreground-subtle">
                       {new Date(prediction.timestamp).toLocaleDateString()} at{' '}
                       {new Date(prediction.timestamp).toLocaleTimeString()}
                     </p>
                     <p className="font-semibold text-slate-900">
                       Target: {prediction.targetCGPA.toFixed(2)} → Required GPA:{' '}
-                      <span className="font-mono text-cyan-600">{prediction.requiredGPA.toFixed(2)}</span>
+                      <span className="font-mono text-primary">{prediction.requiredGPA.toFixed(2)}</span>
                     </p>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-foreground-muted">
                       Current: {prediction.currentCGPA.toFixed(2)} | Completed: {prediction.completedCredits} |
                       Remaining: {prediction.remainingCredits} | {prediction.verdict}
                     </p>

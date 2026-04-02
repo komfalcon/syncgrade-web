@@ -31,7 +31,7 @@ export default function ShareCard({ cgpa, scale }: ShareCardProps) {
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
-        backgroundColor: "#020617",
+        backgroundColor: "hsl(var(--background))",
       });
       const link = document.createElement("a");
       link.download = "syncgrade-semester-summary.png";
@@ -49,7 +49,7 @@ export default function ShareCard({ cgpa, scale }: ShareCardProps) {
         className="rounded-xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 p-6"
       >
         <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">Semester Summary</p>
-        <h3 className="mt-2 text-3xl font-extrabold text-white">{cgpa.toFixed(2)}</h3>
+        <h3 className="mt-2 text-3xl font-extrabold text-foreground">{cgpa.toFixed(2)}</h3>
         <p className="text-sm text-slate-300">CGPA on a {scale.toFixed(1)} scale</p>
         <div className="mt-5 inline-flex rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-200">
           Level Up: {level}

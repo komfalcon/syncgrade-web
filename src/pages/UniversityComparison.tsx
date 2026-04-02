@@ -91,7 +91,7 @@ export default function UniversityComparison() {
                   className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-all ${
                     checked
                       ? "ring-2 ring-emerald-400 bg-emerald-50/60 border-emerald-300"
-                      : "hover:bg-slate-50 border-slate-200"
+                      : "hover:bg-surface-elevated border-border"
                   }`}
                 >
                   <Checkbox
@@ -150,7 +150,7 @@ export default function UniversityComparison() {
                   </thead>
                   <tbody className="divide-y">
                     {/* GPA Scale */}
-                    <tr className="hover:bg-slate-50/60">
+                    <tr className="hover:bg-surface-elevated/60">
                       <td className="py-3 pr-4 font-medium text-muted-foreground">
                         GPA Scale
                       </td>
@@ -162,7 +162,7 @@ export default function UniversityComparison() {
                     </tr>
 
                     {/* Grade Letters */}
-                    <tr className="hover:bg-slate-50/60">
+                    <tr className="hover:bg-surface-elevated/60">
                       <td className="py-3 pr-4 font-medium text-muted-foreground">
                         Grade Letters
                       </td>
@@ -178,7 +178,7 @@ export default function UniversityComparison() {
                     </tr>
 
                     {/* Degree Classifications */}
-                    <tr className="hover:bg-slate-50/60">
+                    <tr className="hover:bg-surface-elevated/60">
                       <td className="py-3 pr-4 font-medium text-muted-foreground align-top">
                         Degree Classifications
                       </td>
@@ -199,7 +199,7 @@ export default function UniversityComparison() {
                     </tr>
 
                     {/* Credits per Semester */}
-                    <tr className="hover:bg-slate-50/60">
+                    <tr className="hover:bg-surface-elevated/60">
                       <td className="py-3 pr-4 font-medium text-muted-foreground">
                         Credits / Semester
                       </td>
@@ -212,13 +212,13 @@ export default function UniversityComparison() {
                     </tr>
 
                     {/* Repeat Policy */}
-                    <tr className="hover:bg-slate-50/60">
+                    <tr className="hover:bg-surface-elevated/60">
                       <td className="py-3 pr-4 font-medium text-muted-foreground align-top">
                         Repeat Policy
                       </td>
                       {selectedUniversities.map((uni) => (
                         <td key={uni.id} className="py-3 px-3">
-                          <span className="inline-flex items-center rounded-full bg-cyan-100 px-2 py-0.5 text-xs font-medium text-cyan-700 border border-cyan-200 mb-1">
+                          <span className="inline-flex items-center rounded-full bg-cyan-100 px-2 py-0.5 text-xs font-medium text-primary border border-cyan-200 mb-1">
                             {uni.repeatPolicy.method}
                           </span>
                           <p className="text-xs text-muted-foreground">
@@ -229,7 +229,7 @@ export default function UniversityComparison() {
                     </tr>
 
                     {/* Probation Threshold */}
-                    <tr className="hover:bg-slate-50/60">
+                    <tr className="hover:bg-surface-elevated/60">
                       <td className="py-3 pr-4 font-medium text-muted-foreground align-top">
                         Probation Threshold
                       </td>
@@ -246,7 +246,7 @@ export default function UniversityComparison() {
                     </tr>
 
                     {/* Max Program Duration */}
-                    <tr className="hover:bg-slate-50/60">
+                    <tr className="hover:bg-surface-elevated/60">
                       <td className="py-3 pr-4 font-medium text-muted-foreground">
                         Max Program Duration
                       </td>
@@ -292,7 +292,7 @@ export default function UniversityComparison() {
                   </thead>
                   <tbody className="divide-y">
                     {SCORE_SAMPLES.map((score) => (
-                      <tr key={score} className="hover:bg-slate-50/60">
+                      <tr key={score} className="hover:bg-surface-elevated/60">
                         <td className="py-2.5 pr-4 font-medium">{score}%</td>
                         {selectedUniversities.map((uni) => {
                           const match = getGradeForScore(score, uni, settings.admissionSession);

@@ -63,7 +63,7 @@ export default function AddSemesterDialog({ open, onOpenChange, onAdd }: AddSeme
             </Button>
             <Button
               type="submit"
-              className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white"
+              className="bg-primary hover:bg-primary-hover text-foreground"
               disabled={!semesterName.trim()}
             >
               Add Semester

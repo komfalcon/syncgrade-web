@@ -94,12 +94,12 @@ export default function AddCourseDialog({ open, onOpenChange, onAdd, gpaScale = 
                 />
               </div>
             </div>
-            <div className="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+            <div className="flex items-center justify-between rounded-lg border border-border p-3">
               <div>
                 <Label htmlFor="carryover-toggle" className="text-sm font-medium">
                   🔄 Carryover Course
                 </Label>
-                <p className="text-xs text-slate-500 mt-0.5">Mark if this is a repeated course</p>
+                <p className="text-xs text-foreground-subtle mt-0.5">Mark if this is a repeated course</p>
               </div>
               <Switch
                 id="carryover-toggle"
@@ -141,7 +141,7 @@ export default function AddCourseDialog({ open, onOpenChange, onAdd, gpaScale = 
             </Button>
             <Button
               type="submit"
-              className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white"
+              className="bg-primary hover:bg-primary-hover text-foreground"
               disabled={!courseName.trim() || !credits || !gradePoint}
             >
               Add Course

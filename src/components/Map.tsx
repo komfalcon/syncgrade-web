@@ -160,13 +160,13 @@ export function MapView({
     return (
       <div
         className={cn(
-          "w-full h-[500px] rounded-md border border-slate-200 bg-slate-50 flex items-center justify-center p-6 text-center",
+          "w-full h-[500px] rounded-md border border-border bg-surface-elevated flex items-center justify-center p-6 text-center",
           className,
         )}
       >
         <div>
           <p className="font-semibold text-slate-800">Map unavailable offline</p>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-foreground-muted">
             Reconnect to load interactive maps.
           </p>
         </div>

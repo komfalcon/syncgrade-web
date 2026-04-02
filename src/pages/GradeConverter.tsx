@@ -31,7 +31,7 @@ export default function GradeConverter() {
     <div className="container mx-auto px-4 py-10">
       <Card className="mx-auto max-w-xl space-y-5 p-6">
         <h1 className="text-2xl font-bold">Cross-Scale Grade Converter</h1>
-        <p className="text-sm text-slate-600">Convert between 4.0, 5.0, and 7.0 GPA systems.</p>
+        <p className="text-sm text-foreground-muted">Convert between 4.0, 5.0, and 7.0 GPA systems.</p>
         <div className="space-y-2">
           <Label htmlFor="source-gp">Current GP</Label>
           <Input id="source-gp" type="number" value={value} onChange={(e) => setValue(e.target.value)} />
@@ -68,10 +68,10 @@ export default function GradeConverter() {
             </Select>
           </div>
         </div>
-        <div className="rounded-lg border bg-slate-50 p-4">
-          <p className="text-sm text-slate-500">Result</p>
-          <p className="text-3xl font-bold text-cyan-700">{result.toFixed(2)}</p>
-          <p className="text-xs text-slate-500">NewGP = (OldGP / OldMax) × NewMax</p>
+        <div className="rounded-lg border bg-surface-elevated p-4">
+          <p className="text-sm text-foreground-subtle">Result</p>
+          <p className="text-3xl font-bold text-primary">{result.toFixed(2)}</p>
+          <p className="text-xs text-foreground-subtle">NewGP = (OldGP / OldMax) × NewMax</p>
         </div>
       </Card>
     </div>

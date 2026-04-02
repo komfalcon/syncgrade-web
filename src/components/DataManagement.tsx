@@ -88,7 +88,7 @@ export default function DataManagement() {
         </div>
         <div>
           <h2 className="text-lg font-semibold text-slate-900">Danger Zone · Data Management</h2>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-foreground-muted">
             Export your full local database or restore from a backup file.
           </p>
         </div>
@@ -105,9 +105,9 @@ export default function DataManagement() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-3 rounded-lg border bg-white p-4">
+        <div className="space-y-3 rounded-lg border bg-surface p-4">
           <h3 className="font-medium text-slate-900">Export Data</h3>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-foreground-muted">
             Download a complete JSON backup of your local SyncGrade database.
           </p>
           <Button onClick={handleExport} disabled={busy !== null} className="gap-2">
@@ -116,7 +116,7 @@ export default function DataManagement() {
           </Button>
         </div>
 
-        <div className="space-y-3 rounded-lg border bg-white p-4">
+        <div className="space-y-3 rounded-lg border bg-surface p-4">
           <h3 className="font-medium text-slate-900">Import Data</h3>
           <Label htmlFor="backup-json">Select backup file (.json)</Label>
           <Input

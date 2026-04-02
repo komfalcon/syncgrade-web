@@ -202,7 +202,7 @@ export default function BackupRestore() {
               <p className="text-sm text-rose-600">Total Credits</p>
             </div>
             {lastModified && (
-              <div className="rounded-lg bg-gray-50 p-3 text-center">
+              <div className="rounded-lg bg-surface-elevated p-3 text-center">
                 <p className="text-2xl font-bold text-gray-700">
                   {lastModified}
                 </p>

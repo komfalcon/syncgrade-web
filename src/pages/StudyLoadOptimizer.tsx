@@ -141,7 +141,7 @@ export default function StudyLoadOptimizer() {
             </div>
             <div className="rounded-lg bg-cyan-50 p-4 text-center">
               <p className="text-sm text-gray-500">Completed Credits</p>
-              <p className="text-2xl font-bold text-cyan-700">{totalCredits}</p>
+              <p className="text-2xl font-bold text-primary">{totalCredits}</p>
             </div>
             <div className="rounded-lg bg-violet-50 p-4 text-center">
               <p className="text-sm text-gray-500">University</p>
@@ -258,13 +258,13 @@ export default function StudyLoadOptimizer() {
             {universityConfig.shortName} Credit Rules
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-lg bg-gray-50 p-4">
+            <div className="rounded-lg bg-surface-elevated p-4">
               <p className="text-sm text-gray-500">Minimum Credits / Semester</p>
               <p className="text-xl font-bold text-gray-700">
                 {creditRules.minimumPerSemester}
               </p>
             </div>
-            <div className="rounded-lg bg-gray-50 p-4">
+            <div className="rounded-lg bg-surface-elevated p-4">
               <p className="text-sm text-gray-500">Maximum Credits / Semester</p>
               <p className="text-xl font-bold text-gray-700">
                 {creditRules.maximumPerSemester}
