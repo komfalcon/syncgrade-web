@@ -25,7 +25,9 @@ import Navbar from "./components/Navbar";
 import { GpaScaleProvider, type SupportedGpaScale } from "./contexts/GpaScaleContext";
 import { GPA_SCALE_UPDATED_EVENT } from "./hooks/useCGPA";
 import { normalizeToSupportedScale } from "./utils/gpaLogic";
-import FeedbackForm from "./components/FeedbackForm";
+import BottomNav from "./components/BottomNav";
+import Tools from "./pages/Tools";
+import More from "./pages/More";
 
 
 function Router() {
@@ -35,6 +37,8 @@ function Router() {
       <Route path={"/nigerian-universities"} component={NigerianUniversities} />
       <Route path={"/grade-predictor"} component={GradePredictor} />
       <Route path={"/analytics"} component={Analytics} />
+      <Route path={"/tools"} component={Tools} />
+      <Route path={"/more"} component={More} />
       <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
       <Route path={"/study-load-optimizer"} component={StudyLoadOptimizer} />
       <Route path={"/university-comparison"} component={UniversityComparison} />
@@ -132,10 +136,10 @@ function App() {
                   </div>
                 )}
                 <Navbar />
-                <Router />
-                <div className="container mx-auto px-4">
-                  <FeedbackForm />
-                </div>
+                <main className="pb-16 md:pb-0">
+                  <Router />
+                </main>
+                <BottomNav />
                 <AppFooter />
               </>
             )}
