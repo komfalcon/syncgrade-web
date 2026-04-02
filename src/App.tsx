@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import FirstTimeSetup from "@/components/FirstTimeSetup";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -29,6 +29,34 @@ import Layout from "./components/Layout";
 
 
 function Router() {
+  const [location, setLocation] = useLocation();
+  const [checkedOnboardingGate, setCheckedOnboardingGate] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const rawSettings = localStorage.getItem(STORAGE_KEYS.settings);
+    let hasSelectedUniversity = false;
+    if (rawSettings) {
+      try {
+        const parsed = JSON.parse(rawSettings) as { activeUniversity?: unknown };
+        hasSelectedUniversity =
+          typeof parsed.activeUniversity === "string" && parsed.activeUniversity.trim().length > 0;
+      } catch {
+        hasSelectedUniversity = false;
+      }
+    }
+
+    const onboardingRoute = "/nigerian-universities";
+    const bypassRoutes = [onboardingRoute, "/custom-university", "/404"];
+    if (!hasSelectedUniversity && !bypassRoutes.includes(location)) {
+      setLocation(onboardingRoute);
+      return;
+    }
+    setCheckedOnboardingGate(true);
+  }, [location, setLocation]);
+
+  if (!checkedOnboardingGate) return null;
+
   return (
     <Switch>
       <Route path={"/"} component={Home} />

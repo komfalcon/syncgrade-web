@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useGpaScale } from "@/contexts/GpaScaleContext";
 import { getClassification } from "@/utils/gpaLogic";
 import { getSyncgradeUserFromLocalStorage } from "@/storage/db";
+import { useCGPA } from "@/hooks/useCGPA";
+import { useUniversities } from "@/hooks/useUniversities";
 
 interface ShareProgressProps {
   cgpa: number;
@@ -72,26 +74,36 @@ const cornerBase =
 
 export default function ShareProgress({ cgpa, totalCredits }: ShareProgressProps) {
   const scale = useGpaScale();
+  const { settings } = useCGPA();
+  const { universities } = useUniversities();
   const classification = useMemo(() => getClassification(cgpa, scale), [cgpa, scale]);
   const theme = TIER_THEME[classification.tier] ?? TIER_THEME[5];
-  const [universityName, setUniversityName] = useState("Not Specified");
+  const [identityUniversityName, setIdentityUniversityName] = useState<string | null>(null);
 
   useEffect(() => {
     const identity = getSyncgradeUserFromLocalStorage();
     if (identity?.university?.trim()) {
-      setUniversityName(identity.university.trim());
+      setIdentityUniversityName(identity.university.trim());
     }
   }, []);
 
+  const selectedUniversityName = useMemo(() => {
+    if (settings.activeUniversity) {
+      const selected = universities.find((uni) => uni.shortName === settings.activeUniversity);
+      if (selected?.name) return selected.name;
+    }
+    return identityUniversityName ?? "Institution Not Selected";
+  }, [identityUniversityName, settings.activeUniversity, universities]);
+
   const shareCopy = useMemo(
     () => `📜 SyncGrade Academic Report
-🎓 Institution: ${universityName}
+🎓 Institution: ${selectedUniversityName}
 💎 Status: ${classification.label}
 📈 Current CGPA: ${cgpa.toFixed(2)}
 
 Verified via SyncGrade
 Build your future at: https://syncgrade.aurikrex.tech`,
-    [cgpa, classification.label, universityName],
+    [cgpa, classification.label, selectedUniversityName],
   );
 
   const handleShare = async (): Promise<void> => {
@@ -146,7 +158,7 @@ Build your future at: https://syncgrade.aurikrex.tech`,
                 OFFICIAL ACADEMIC PROGRESS REPORT
               </p>
               <h3 className="mt-2 text-base font-semibold text-foreground sm:text-lg">
-                {universityName}
+                {selectedUniversityName}
               </h3>
             </header>
 
