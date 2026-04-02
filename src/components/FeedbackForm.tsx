@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { FeedbackSubmission } from "@/types/sync";
+import { useFeedbackTrigger } from "@/hooks/useFeedbackTrigger";
 
 const DEFAULT_FEEDBACK_ENDPOINT = "/api/feedback";
 
 export default function FeedbackForm() {
+  const { shouldShowFeedback } = useFeedbackTrigger();
   const [form, setForm] = useState<FeedbackSubmission>({
     fullName: "",
     university: "",
@@ -46,6 +48,7 @@ export default function FeedbackForm() {
   };
 
   return (
+    shouldShowFeedback && (
     <Card className="p-4 sm:p-6">
       <h3 className="text-lg font-semibold">Feedback</h3>
       <p className="mt-1 text-sm text-slate-600">Help us improve SyncGrade for your campus.</p>
@@ -92,5 +95,6 @@ export default function FeedbackForm() {
         </Button>
       </form>
     </Card>
+    )
   );
 }

@@ -5,6 +5,7 @@ import { calculateCGPA as calculateEngineCGPA } from '@/engine/calculations';
 import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 import { useUniversities } from '@/hooks/useUniversities';
 import { normalizeToSupportedScale } from '@/utils/gpaLogic';
+import { incrementInteractionCount } from '@/hooks/useFeedbackTrigger';
 
 export interface Course {
   id: string;
@@ -185,6 +186,7 @@ export function useCGPA() {
         totalGradePoints,
       };
     });
+    incrementInteractionCount();
   }, [data.semesters.length, calculateProgramSummary]);
 
   const removeSemester = useCallback((semesterId: string) => {
@@ -202,6 +204,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
+    incrementInteractionCount();
   }, [calculateProgramSummary]);
 
   const addCourse = useCallback((semesterId: string, course: Omit<Course, 'id'>) => {
@@ -232,6 +235,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
+    incrementInteractionCount();
   }, [calculateProgramSummary]);
 
   const updateCourse = useCallback((semesterId: string, courseId: string, updates: Partial<Course>) => {
@@ -264,6 +268,7 @@ export function useCGPA() {
         semesterGPAs,
       };
     });
+    incrementInteractionCount();
   }, [calculateProgramSummary]);
 
   const removeCourse = useCallback((semesterId: string, courseId: string) => {
