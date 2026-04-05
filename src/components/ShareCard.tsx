@@ -43,18 +43,18 @@ export default function ShareCard({ cgpa, scale }: ShareCardProps) {
   };
 
   return (
-    <Card className="border-slate-700 bg-slate-950 p-5 text-slate-100 shadow-xl">
+    <Card className="rounded-xl border border-border bg-surface p-4 text-foreground shadow-md">
       <div
         ref={cardRef}
-        className="rounded-xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 p-6"
+        className="rounded-xl border border-border bg-surface-elevated p-6"
       >
-        <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">Semester Summary</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-accent">Semester Summary</p>
         <h3 className="mt-2 text-3xl font-extrabold text-primary-foreground">{cgpa.toFixed(2)}</h3>
-        <p className="text-sm text-slate-300">CGPA on a {scale.toFixed(1)} scale</p>
-        <div className="mt-5 inline-flex rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-200">
+        <p className="text-sm text-foreground-muted">CGPA on a {scale.toFixed(1)} scale</p>
+        <div className="mt-5 inline-flex rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
           Level Up: {level}
         </div>
-        <p className="mt-6 text-xs text-slate-400">SyncGrade-- | Aim Higher.</p>
+        <p className="mt-6 text-xs text-foreground-muted">SyncGrade-- | Aim Higher.</p>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <Button onClick={downloadCard} disabled={busy} className="gap-2">

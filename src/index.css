@@ -55,31 +55,40 @@
   --space-grid: 0.5rem;
 
   /* Backgrounds */
-  --background: #f4f7fb;
-  --surface: #ffffff;
-  --surface-elevated: #ecf2ff;
+  --background: #0f172a;
+  --surface: #1e293b;
+  --surface-elevated: #273549;
 
-  /* Brand & Accent */
-  --primary: #4f46e5;
-  --primary-hover: #6366f1;
-  --accent: #06b6d4;
+  /* Brand */
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --accent: #38bdf8;
 
   /* Text */
-  --foreground: #0f172a;
-  --foreground-muted: #475569;
+  --foreground: #f1f5f9;
+  --foreground-muted: #94a3b8;
   --foreground-subtle: #64748b;
 
-  /* Borders & Dividers */
-  --border: #dbe4f0;
-  --border-strong: #b7c5d8;
+  /* Borders */
+  --border: #334155;
+  --border-strong: #475569;
 
   /* Semantic */
-  --success: #10b981;
+  --success: #22c55e;
   --warning: #f59e0b;
   --destructive: #ef4444;
 
+  /* Tool icon accents */
+  --tool-gradient-start: #00c6a7;
+  --tool-gradient-end: #00bcd4;
+  --tool-compare-gradient-end: #0ea5e9;
+  --tool-carryover: #ef4444;
+  --tool-study-load: #6366f1;
+  --tool-universities: #22c55e;
+  --tool-analytics: #a855f7;
+
   /* Compatibility aliases */
-  --primary-foreground: #eef2ff;
+  --primary-foreground: #ffffff;
   --card: var(--surface);
   --card-foreground: var(--foreground);
   --popover: var(--surface-elevated);
@@ -88,8 +97,8 @@
   --secondary-foreground: var(--foreground);
   --muted: color-mix(in oklab, var(--foreground) 8%, transparent);
   --muted-foreground: var(--foreground-muted);
-  --accent-foreground: #083344;
-  --destructive-foreground: #fee2e2;
+  --accent-foreground: var(--foreground);
+  --destructive-foreground: #ffffff;
   --input: var(--surface);
   --ring: var(--primary);
   --chart-1: var(--primary);
@@ -113,27 +122,36 @@
   --surface: #1e293b;
   --surface-elevated: #273549;
 
-  /* Brand & Accent */
-  --primary: #7c83ff;
-  --primary-hover: #8b93ff;
-  --accent: #22d3ee;
+  /* Brand */
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --accent: #38bdf8;
 
   /* Text */
-  --foreground: #e2e8f0;
-  --foreground-muted: #cbd5e1;
-  --foreground-subtle: #94a3b8;
+  --foreground: #f1f5f9;
+  --foreground-muted: #94a3b8;
+  --foreground-subtle: #64748b;
 
-  /* Borders & Dividers */
+  /* Borders */
   --border: #334155;
   --border-strong: #475569;
 
   /* Semantic */
-  --success: #34d399;
-  --warning: #fbbf24;
-  --destructive: #f87171;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --destructive: #ef4444;
+
+  /* Tool icon accents */
+  --tool-gradient-start: #00c6a7;
+  --tool-gradient-end: #00bcd4;
+  --tool-compare-gradient-end: #0ea5e9;
+  --tool-carryover: #ef4444;
+  --tool-study-load: #6366f1;
+  --tool-universities: #22c55e;
+  --tool-analytics: #a855f7;
 
   /* Compatibility aliases */
-  --primary-foreground: #0f172a;
+  --primary-foreground: #ffffff;
   --card: var(--surface);
   --card-foreground: var(--foreground);
   --popover: var(--surface-elevated);
@@ -142,8 +160,8 @@
   --secondary-foreground: var(--foreground);
   --muted: color-mix(in oklab, var(--foreground) 12%, transparent);
   --muted-foreground: var(--foreground-muted);
-  --accent-foreground: #083344;
-  --destructive-foreground: #fee2e2;
+  --accent-foreground: var(--foreground);
+  --destructive-foreground: #ffffff;
   --input: var(--surface);
   --ring: var(--primary);
   --chart-1: var(--primary);

@@ -12,6 +12,7 @@ import {
   Shield,
   AlertTriangle,
   Target,
+  BarChart3,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -36,13 +37,13 @@ import { useUniversities } from '@/hooks/useUniversities';
 import { useGpaScale } from '@/contexts/GpaScaleContext';
 
 const CHART_THEME = {
-  axis: 'hsl(var(--muted-foreground))',
-  grid: 'hsl(var(--border))',
-  tooltipBg: 'hsl(var(--card))',
-  tooltipText: 'hsl(var(--card-foreground))',
-  semesterLine: 'hsl(var(--chart-3))',
-  cumulativeLine: 'hsl(var(--chart-1))',
-  comparisonBar: 'hsl(var(--chart-2))',
+  axis: 'var(--foreground-muted)',
+  grid: 'var(--border)',
+  tooltipBg: 'var(--surface-elevated)',
+  tooltipText: 'var(--foreground)',
+  semesterLine: 'var(--accent)',
+  cumulativeLine: 'var(--accent)',
+  comparisonBar: 'var(--accent)',
 };
 
 export default function Analytics() {
@@ -143,10 +144,10 @@ export default function Analytics() {
   }, [trends]);
 
   const riskColors: Record<string, string> = {
-    safe: 'bg-green-100 text-green-800 border-green-300',
-    warning: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-    danger: 'bg-orange-100 text-orange-800 border-orange-300',
-    critical: 'bg-red-100 text-red-800 border-red-300',
+    safe: 'bg-success/10 text-success border-success/40',
+    warning: 'bg-warning/10 text-warning border-warning/40',
+    danger: 'bg-warning/10 text-warning border-warning/40',
+    critical: 'bg-destructive/10 text-destructive border-destructive/40',
   };
 
   const riskIcons: Record<string, React.ReactNode> = {
@@ -158,9 +159,9 @@ export default function Analytics() {
 
   const trendIcon =
     overallTrend === 'improving' ? (
-      <TrendingUp className="w-5 h-5 text-green-600" />
+      <TrendingUp className="w-5 h-5 text-success" />
     ) : overallTrend === 'declining' ? (
-      <TrendingDown className="w-5 h-5 text-red-600" />
+      <TrendingDown className="w-5 h-5 text-destructive" />
     ) : (
       <Minus className="w-5 h-5 text-foreground-muted" />
     );
@@ -174,18 +175,18 @@ export default function Analytics() {
 
   const trendColor =
     overallTrend === 'improving'
-      ? 'text-green-600'
+      ? 'text-success'
       : overallTrend === 'declining'
-        ? 'text-red-600'
+        ? 'text-destructive'
         : 'text-foreground-muted';
 
   const hasSemesters = semesters.length > 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Header */}
-      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
-        <div className="container mx-auto px-4">
+      <div className="mb-10 rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
+        <div>
           <Button
             variant="ghost"
             className="mb-4"
@@ -208,9 +209,9 @@ export default function Analytics() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12 space-y-8">
+      <div className="space-y-10">
         {!hasSemesters ? (
-          <Card className="p-12 text-center shadow-lg border-0">
+            <Card className="rounded-xl border border-border bg-surface p-4 text-center shadow-md md:p-6">
             <p className="text-foreground-muted text-lg">
               Add semesters and courses on the dashboard to see your analytics.
             </p>
@@ -224,11 +225,11 @@ export default function Analytics() {
         ) : (
           <>
             {/* Trend Indicator */}
-            <Card className="p-6 shadow-lg border-0">
+            <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
               <div className="flex items-center gap-3">
                 {trendIcon}
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">
+                  <h2 className="text-lg font-bold text-foreground">
                     Overall Trend
                   </h2>
                   <p className={`text-sm font-semibold ${trendColor}`}>
@@ -239,16 +240,27 @@ export default function Analytics() {
             </Card>
 
             {/* Performance Trends Chart */}
-            <Card className="p-6 shadow-lg border-0">
-              <h2 className="mb-4 text-xl font-bold text-foreground">
+            <Card className="rounded-xl border border-border bg-surface p-4 shadow-md">
+              <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
+                <BarChart3 className="h-4 w-4 text-accent" />
                 Performance Trends
               </h2>
               {trends.length > 0 ? (
-                <ResponsiveContainer width="100%" height={320}>
+                <ResponsiveContainer width="100%" height={220}>
                   <LineChart data={trends}>
                     <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
-                    <XAxis dataKey="semester" fontSize={12} stroke={CHART_THEME.axis} />
-                    <YAxis domain={[0, scale]} fontSize={12} stroke={CHART_THEME.axis} />
+                    <XAxis
+                      dataKey="semester"
+                      tick={{ fill: CHART_THEME.axis, fontSize: 12 }}
+                      axisLine={{ stroke: CHART_THEME.grid }}
+                      tickLine={{ stroke: CHART_THEME.grid }}
+                    />
+                    <YAxis
+                      domain={[0, scale]}
+                      tick={{ fill: CHART_THEME.axis, fontSize: 12 }}
+                      axisLine={{ stroke: CHART_THEME.grid }}
+                      tickLine={{ stroke: CHART_THEME.grid }}
+                    />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: CHART_THEME.tooltipBg,
@@ -256,15 +268,17 @@ export default function Analytics() {
                         border: `1px solid ${CHART_THEME.grid}`,
                         borderRadius: '0.5rem',
                       }}
+                      labelStyle={{ color: CHART_THEME.tooltipText, fontWeight: 600 }}
+                      itemStyle={{ color: CHART_THEME.comparisonBar }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ color: 'var(--foreground-muted)', fontSize: 12 }} />
                     <Line
                       type="monotone"
                       dataKey="gpa"
                       name="Semester GPA"
                       stroke={CHART_THEME.semesterLine}
                       strokeWidth={2}
-                      dot={{ r: 4, fill: CHART_THEME.semesterLine }}
+                      dot={{ r: 5, fill: CHART_THEME.semesterLine, strokeWidth: 0 }}
                       activeDot={{ r: 6, fill: CHART_THEME.semesterLine }}
                     />
                     <Line
@@ -273,8 +287,8 @@ export default function Analytics() {
                       name="Cumulative CGPA"
                       stroke={CHART_THEME.cumulativeLine}
                       strokeWidth={2}
-                      dot={{ r: 4, fill: CHART_THEME.cumulativeLine }}
-                      activeDot={{ r: 6, fill: CHART_THEME.cumulativeLine }}
+                      dot={{ r: 5, fill: CHART_THEME.cumulativeLine, strokeWidth: 0 }}
+                      activeDot={{ r: 7, fill: CHART_THEME.cumulativeLine }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -284,16 +298,27 @@ export default function Analytics() {
                 </p>
               )}
             </Card>
-            <Card className="p-6 shadow-lg border-0">
-              <h2 className="mb-4 text-xl font-bold text-foreground">
+            <Card className="rounded-xl border border-border bg-surface p-4 shadow-md">
+              <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
+                <BarChart3 className="h-4 w-4 text-accent" />
                 Semester Comparison
               </h2>
               {semesterComparisonData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
+                <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={semesterComparisonData}>
                     <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
-                    <XAxis dataKey="semester" fontSize={12} stroke={CHART_THEME.axis} />
-                    <YAxis domain={[0, scale]} fontSize={12} stroke={CHART_THEME.axis} />
+                    <XAxis
+                      dataKey="semester"
+                      tick={{ fill: CHART_THEME.axis, fontSize: 12 }}
+                      axisLine={{ stroke: CHART_THEME.grid }}
+                      tickLine={{ stroke: CHART_THEME.grid }}
+                    />
+                    <YAxis
+                      domain={[0, scale]}
+                      tick={{ fill: CHART_THEME.axis, fontSize: 12 }}
+                      axisLine={{ stroke: CHART_THEME.grid }}
+                      tickLine={{ stroke: CHART_THEME.grid }}
+                    />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: CHART_THEME.tooltipBg,
@@ -301,9 +326,12 @@ export default function Analytics() {
                         border: `1px solid ${CHART_THEME.grid}`,
                         borderRadius: '0.5rem',
                       }}
+                      labelStyle={{ color: CHART_THEME.tooltipText, fontWeight: 600 }}
+                      itemStyle={{ color: CHART_THEME.comparisonBar }}
                     />
-                    <Legend />
-                    <Bar dataKey="gpa" name="Semester GPA" fill={CHART_THEME.comparisonBar} radius={[8, 8, 0, 0]} />
+                    <Legend wrapperStyle={{ color: 'var(--foreground-muted)', fontSize: 12 }} />
+                    <Bar dataKey="gpa" name="Semester GPA" fill={CHART_THEME.comparisonBar} radius={[6, 6, 0, 0]} />
+                    <Bar dataKey={() => scale} name="Target/Max" fill={CHART_THEME.comparisonBar} fillOpacity={0.2} radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
@@ -313,7 +341,7 @@ export default function Analytics() {
 
             {/* Degree Risk Assessment */}
             {riskAssessment && (
-              <Card className="p-6 shadow-lg border-0">
+              <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
                 <h2 className="mb-4 text-xl font-bold text-foreground">
                   Degree Risk Assessment
                 </h2>
@@ -338,7 +366,7 @@ export default function Analytics() {
             )}
 
             {/* Best / Worst Case Projection */}
-            <Card className="p-6 shadow-lg border-0">
+            <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
               <h2 className="mb-4 text-xl font-bold text-foreground">
                 Best / Worst Case Projection
               </h2>
@@ -355,45 +383,45 @@ export default function Analytics() {
                   className="mt-1"
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 {/* Best Case */}
                 <div className="rounded-lg border border-success/40 bg-success/10 p-4 text-center">
-                  <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                  <p className="text-sm text-green-700 font-medium">
+                  <TrendingUp className="mx-auto mb-2 h-6 w-6 text-success" />
+                  <p className="text-sm font-medium text-success">
                     Best Case
                   </p>
-                  <p className="text-2xl font-bold text-green-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {projection.bestCase.cgpa.toFixed(2)}
                   </p>
-                  <p className="text-sm text-green-600">
+                  <p className="text-sm text-success">
                     {projection.bestCase.degreeClass}
                   </p>
                 </div>
 
                 {/* Current Case */}
                 <div className="rounded-lg border border-primary/40 bg-primary/10 p-4 text-center">
-                  <Target className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-                  <p className="text-sm text-purple-700 font-medium">
+                  <Target className="mx-auto mb-2 h-6 w-6 text-primary" />
+                  <p className="text-sm font-medium text-primary">
                     Current
                   </p>
-                  <p className="text-2xl font-bold text-purple-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {projection.currentCase.cgpa.toFixed(2)}
                   </p>
-                  <p className="text-sm text-purple-600">
+                  <p className="text-sm text-primary">
                     {projection.currentCase.degreeClass}
                   </p>
                 </div>
 
                 {/* Worst Case */}
                 <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-center">
-                  <TrendingDown className="w-6 h-6 text-red-600 mx-auto mb-2" />
-                  <p className="text-sm text-red-700 font-medium">
+                  <TrendingDown className="mx-auto mb-2 h-6 w-6 text-destructive" />
+                  <p className="text-sm font-medium text-destructive">
                     Worst Case
                   </p>
-                  <p className="text-2xl font-bold text-red-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {projection.worstCase.cgpa.toFixed(2)}
                   </p>
-                  <p className="text-sm text-red-600">
+                  <p className="text-sm text-destructive">
                     {projection.worstCase.degreeClass}
                   </p>
                 </div>
@@ -401,56 +429,56 @@ export default function Analytics() {
             </Card>
 
             {/* Performance Summary Stats */}
-            <Card className="p-6 shadow-lg border-0">
+            <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
               <h2 className="mb-4 text-xl font-bold text-foreground">
                 Performance Summary
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                 <div className="rounded-lg bg-primary/10 p-4 text-center">
-                  <p className="text-sm text-purple-600 font-medium">
+                  <p className="text-sm font-medium text-primary">
                     Highest GPA
                   </p>
-                  <p className="text-2xl font-bold text-purple-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {stats.highest.toFixed(2)}
                   </p>
                 </div>
                 <div className="rounded-lg bg-destructive/10 p-4 text-center">
-                  <p className="text-sm text-red-600 font-medium">
+                  <p className="text-sm font-medium text-destructive">
                     Lowest GPA
                   </p>
-                  <p className="text-2xl font-bold text-red-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {stats.lowest.toFixed(2)}
                   </p>
                 </div>
                 <div className="rounded-lg bg-accent/10 p-4 text-center">
-                  <p className="text-sm text-cyan-600 font-medium">
+                  <p className="text-sm font-medium text-accent">
                     Average GPA
                   </p>
-                  <p className="text-2xl font-bold text-cyan-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {stats.average.toFixed(2)}
                   </p>
                 </div>
                 <div className="rounded-lg bg-warning/10 p-4 text-center">
-                  <p className="text-sm text-amber-600 font-medium">
+                  <p className="text-sm font-medium text-warning">
                     Total Courses
                   </p>
-                  <p className="text-2xl font-bold text-amber-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {stats.totalCourses}
                   </p>
                 </div>
                 <div className="rounded-lg bg-success/10 p-4 text-center">
-                  <p className="text-sm text-emerald-600 font-medium">
+                  <p className="text-sm font-medium text-success">
                     Credits Completed
                   </p>
-                  <p className="text-2xl font-bold text-emerald-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {stats.totalCredits}
                   </p>
                 </div>
                 <div className="rounded-lg bg-surface-elevated p-4 text-center">
-                  <p className="text-sm text-violet-600 font-medium">
+                  <p className="text-sm font-medium text-foreground-muted">
                     Semesters
                   </p>
-                  <p className="text-2xl font-bold text-violet-800">
+                  <p className="text-2xl font-bold text-foreground">
                     {stats.semesterCount}
                   </p>
                 </div>
@@ -459,7 +487,7 @@ export default function Analytics() {
 
             {/* Per-semester Trend Details */}
             {trends.length > 1 && (
-              <Card className="p-6 shadow-lg border-0">
+              <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
                 <h2 className="mb-4 text-xl font-bold text-foreground">
                   Semester-by-Semester Trends
                 </h2>
@@ -471,9 +499,9 @@ export default function Analytics() {
                     >
                       <div className="flex items-center gap-3">
                         {t.trend === 'improving' ? (
-                          <TrendingUp className="w-4 h-4 text-green-600" />
+                          <TrendingUp className="w-4 h-4 text-success" />
                         ) : t.trend === 'declining' ? (
-                          <TrendingDown className="w-4 h-4 text-red-600" />
+                          <TrendingDown className="w-4 h-4 text-destructive" />
                         ) : (
                           <Minus className="w-4 h-4 text-foreground-subtle" />
                         )}
@@ -489,9 +517,9 @@ export default function Analytics() {
                           CGPA: <strong>{t.cgpa.toFixed(2)}</strong>
                         </span>
                         {t.improvementMarker && (
-                          <span className="text-green-600 text-xs">
-                            {t.improvementMarker}
-                          </span>
+                           <span className="text-xs text-success">
+                             {t.improvementMarker}
+                           </span>
                         )}
                       </div>
                     </div>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { BarChart3, Plus } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -30,12 +30,12 @@ export default function Home() {
 
   const chartTheme = useMemo(
     () => ({
-      axis: "hsl(var(--muted-foreground))",
-      grid: "hsl(var(--border))",
-      tooltipBg: "hsl(var(--card))",
-      tooltipText: "hsl(var(--card-foreground))",
-      line: "hsl(var(--primary))",
-      dot: "hsl(var(--chart-2))",
+      axis: "var(--foreground-muted)",
+      grid: "var(--border)",
+      tooltipBg: "var(--surface-elevated)",
+      tooltipText: "var(--foreground)",
+      line: "var(--accent)",
+      dot: "var(--accent)",
     }),
     [],
   );
@@ -53,8 +53,8 @@ export default function Home() {
   const classification = useMemo(() => getClassification(cgpa.currentCGPA, scale), [cgpa.currentCGPA, scale]);
 
   return (
-    <div className="space-y-8">
-        <Card className="border-border bg-card p-6 shadow-md md:p-8">
+    <div className="space-y-10">
+        <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Current CGPA</p>
@@ -76,7 +76,7 @@ export default function Home() {
           ) : null}
         </Card>
 
-        <section className="space-y-4">
+        <section className="mb-10 space-y-4">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-2xl font-bold text-foreground">Your Semesters</h2>
             <Button onClick={() => setShowAddSemester(true)} className="min-h-12 gap-2">
@@ -86,7 +86,7 @@ export default function Home() {
           </div>
 
           {cgpa.semesters.length === 0 ? (
-            <Card className="border-border bg-card p-8 text-center">
+            <Card className="rounded-xl border border-border bg-surface p-4 text-center shadow-md md:p-6">
               <p className="text-muted-foreground">No semesters yet. Add your first semester to begin tracking your CGPA.</p>
             </Card>
           ) : (
@@ -111,13 +111,26 @@ export default function Home() {
         </section>
 
         {chartData.length > 0 ? (
-          <Card className="border-border bg-card p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-foreground">CGPA Progression</h3>
-            <ResponsiveContainer width="100%" height={300}>
+          <Card className="rounded-xl border border-border bg-surface p-4 shadow-md">
+            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
+              <BarChart3 className="h-4 w-4 text-accent" />
+              CGPA Progression
+            </h3>
+            <ResponsiveContainer width="100%" height={220}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-                <XAxis dataKey="name" stroke={chartTheme.axis} />
-                <YAxis domain={[0, scale]} stroke={chartTheme.axis} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: chartTheme.axis, fontSize: 12 }}
+                  axisLine={{ stroke: chartTheme.grid }}
+                  tickLine={{ stroke: chartTheme.grid }}
+                />
+                <YAxis
+                  domain={[0, scale]}
+                  tick={{ fill: chartTheme.axis, fontSize: 12 }}
+                  axisLine={{ stroke: chartTheme.grid }}
+                  tickLine={{ stroke: chartTheme.grid }}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: chartTheme.tooltipBg,
@@ -125,13 +138,15 @@ export default function Home() {
                     border: `1px solid ${chartTheme.grid}`,
                     borderRadius: "0.5rem",
                   }}
+                  labelStyle={{ color: chartTheme.tooltipText, fontWeight: 600 }}
+                  itemStyle={{ color: chartTheme.dot }}
                 />
                 <Line
                   type="monotone"
                   dataKey="gpa"
                   stroke={chartTheme.line}
-                  strokeWidth={3}
-                  dot={{ fill: chartTheme.dot, r: 5 }}
+                  strokeWidth={2}
+                  dot={{ fill: chartTheme.dot, strokeWidth: 0, r: 5 }}
                   activeDot={{ r: 7, fill: chartTheme.line }}
                 />
               </LineChart>

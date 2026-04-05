@@ -20,7 +20,7 @@ export default function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="glass-panel fixed inset-x-0 bottom-0 z-50 rounded-none border-t md:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 rounded-none border-t border-border bg-surface md:hidden"
     >
       <ul className="mx-auto grid h-16 max-w-xl grid-cols-4">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
@@ -29,11 +29,11 @@ export default function BottomNav() {
             <li key={href} className="h-full">
               <Link href={href}>
                 <span
-                  className={cn(
-                    "relative flex h-full min-h-12 w-full min-w-12 flex-col items-center justify-center gap-1 text-xs",
-                    active ? "text-primary" : "text-muted-foreground",
-                  )}
-                >
+                    className={cn(
+                      "relative flex h-full min-h-12 w-full min-w-12 flex-col items-center justify-center gap-1 text-xs",
+                      active ? "text-primary" : "text-foreground-muted",
+                    )}
+                  >
                   <Icon className="h-5 w-5" />
                   <span className="font-medium">{label}</span>
                   <span

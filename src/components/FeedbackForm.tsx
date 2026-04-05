@@ -61,52 +61,52 @@ export default function FeedbackForm() {
 
   return (
     shouldShowFeedback && (
-    <Card className="bg-background p-4 text-foreground sm:p-6">
-      <h3 className="text-lg font-semibold text-foreground">Feedback</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Help us improve SyncGrade for your campus.</p>
-      <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="feedback-fullname" className="text-foreground">Full Name</Label>
+    <Card className="rounded-xl border border-border bg-surface p-4 text-foreground shadow-md md:p-6">
+      <h3 className="mb-2 text-2xl font-bold text-foreground">Feedback</h3>
+      <p className="mb-6 text-base text-foreground-muted">Help us improve SyncGrade for your campus.</p>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-5">
+          <Label htmlFor="feedback-fullname" className="mb-1.5 block text-sm font-semibold text-foreground">Full Name</Label>
           <Input
             id="feedback-fullname"
             value={form.fullName}
             onChange={(e) => setForm((prev) => ({ ...prev, fullName: e.target.value }))}
-            className="min-h-12 border-border bg-background text-foreground"
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-foreground-subtle focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-150"
             required
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="feedback-university" className="text-foreground">University</Label>
+        <div className="mb-5">
+          <Label htmlFor="feedback-university" className="mb-1.5 block text-sm font-semibold text-foreground">University</Label>
           <Input
             id="feedback-university"
             value={form.university}
             onChange={(e) => setForm((prev) => ({ ...prev, university: e.target.value }))}
-            className="min-h-12 border-border bg-background text-foreground"
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-foreground-subtle focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-150"
             required
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="feedback-subject" className="text-foreground">Subject</Label>
+        <div className="mb-5">
+          <Label htmlFor="feedback-subject" className="mb-1.5 block text-sm font-semibold text-foreground">Subject</Label>
           <Input
             id="feedback-subject"
             value={form.subject}
             onChange={(e) => setForm((prev) => ({ ...prev, subject: e.target.value }))}
-            className="min-h-12 border-border bg-background text-foreground"
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-foreground-subtle focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-150"
             required
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="feedback-context" className="text-foreground">Context</Label>
+        <div className="mb-5">
+          <Label htmlFor="feedback-context" className="mb-1.5 block text-sm font-semibold text-foreground">Context</Label>
           <Textarea
             id="feedback-context"
             value={form.context}
             onChange={(e) => setForm((prev) => ({ ...prev, context: e.target.value }))}
-            className="min-h-24 border-border bg-background text-foreground"
+            className="min-h-[100px] w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-foreground-subtle focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-150"
             required
             rows={4}
           />
         </div>
-        <Button type="submit" disabled={sending}>
+        <Button type="submit" disabled={sending} className="w-auto rounded-full bg-primary px-8 py-3 font-semibold text-white shadow-none border-0 hover:bg-primary-hover transition-colors duration-150">
           {sending ? "Sending..." : "Submit Feedback"}
         </Button>
       </form>
