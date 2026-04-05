@@ -12,8 +12,8 @@ export default function Layout({ children, topContent }: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
-      {topContent ? <div className="container mx-auto px-4 pt-4">{topContent}</div> : null}
-      <main className="container mx-auto flex-1 px-4 py-6 pb-28 md:pb-12">{children}</main>
+      {topContent ? <div className="mx-auto w-full max-w-7xl px-4 pt-4 md:px-6">{topContent}</div> : null}
+      <main className="mx-auto flex-1 w-full max-w-7xl bg-background px-4 py-6 pb-24 md:px-6 md:pb-12">{children}</main>
       <BottomNav />
       <AppFooter />
     </div>
