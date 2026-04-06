@@ -1,7 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import FirstTimeSetup from "@/components/FirstTimeSetup";
 import { Route, Switch, useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -15,7 +14,7 @@ import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
 import UniversityComparison from "./pages/UniversityComparison";
 import BackupRestore from "./pages/BackupRestore";
 import CustomUniversityForm from "./pages/CustomUniversityForm";
-import { STORAGE_KEYS } from "./storage/db";
+import { getOnboardingComplete, getStoredValue, setOnboardingComplete, setStoredValue, STORAGE_KEYS } from "./storage/db";
 import GradeConverter from "./pages/GradeConverter";
 import UniversityGpLanding from "./pages/UniversityGpLanding";
 import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/PwaInstallBanner";
@@ -26,41 +25,18 @@ import { normalizeToSupportedScale } from "./utils/gpaLogic";
 import Tools from "./pages/Tools";
 import More from "./pages/More";
 import Layout from "./components/Layout";
+import { Spinner } from "./components/ui/spinner";
+import OnboardingProfileForm from "./components/OnboardingProfileForm";
+import type { AppSettings } from "./hooks/useCGPA";
 
 
 function Router() {
-  const [location, setLocation] = useLocation();
-  const [checkedOnboardingGate, setCheckedOnboardingGate] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const rawSettings = localStorage.getItem(STORAGE_KEYS.settings);
-    let hasSelectedUniversity = false;
-    if (rawSettings) {
-      try {
-        const parsed = JSON.parse(rawSettings) as { activeUniversity?: unknown };
-        hasSelectedUniversity =
-          typeof parsed.activeUniversity === "string" && parsed.activeUniversity.trim().length > 0;
-      } catch {
-        hasSelectedUniversity = false;
-      }
-    }
-
-    const onboardingRoute = "/nigerian-universities";
-    const bypassRoutes = [onboardingRoute, "/custom-university", "/404"];
-    if (!hasSelectedUniversity && !bypassRoutes.includes(location)) {
-      setLocation(onboardingRoute);
-      return;
-    }
-    setCheckedOnboardingGate(true);
-  }, [location, setLocation]);
-
-  if (!checkedOnboardingGate) return null;
-
   return (
     <Switch>
       <Route path={"/"} component={Home} />
-      <Route path={"/nigerian-universities"} component={NigerianUniversities} />
+      <Route path={"/nigerian-universities"}>
+        <NigerianUniversities />
+      </Route>
       <Route path={"/grade-predictor"} component={GradePredictor} />
       <Route path={"/analytics"} component={Analytics} />
       <Route path={"/tools"} component={Tools} />
@@ -87,33 +63,46 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
-  const [setupCheckComplete, setSetupCheckComplete] = useState(false);
-  const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
+  const [, setLocation] = useLocation();
+  const [onboardingStep, setOnboardingStep] = useState<"loading" | "profile" | "university" | "app">("loading");
   const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [canShowInstallBanner, setCanShowInstallBanner] = useState(false);
   const [gpaScale, setGpaScale] = useState<SupportedGpaScale>(5.0);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const localUserExists = localStorage.getItem(STORAGE_KEYS.syncgradeUser);
-    setShowFirstTimeSetup(!localUserExists);
-    setCanShowInstallBanner(localStorage.getItem(FIRST_SYNC_SUCCESS_KEY) === "1");
-    try {
-      const settingsRaw = localStorage.getItem(STORAGE_KEYS.settings);
-      if (settingsRaw) {
-        const parsed = JSON.parse(settingsRaw) as { gpaScale?: number };
-        if (typeof parsed.gpaScale === "number") {
-          setGpaScale(normalizeToSupportedScale(parsed.gpaScale));
+    let active = true;
+    (async () => {
+      if (typeof window === "undefined") return;
+      setCanShowInstallBanner(localStorage.getItem(FIRST_SYNC_SUCCESS_KEY) === "1");
+      try {
+        const settingsRaw = localStorage.getItem(STORAGE_KEYS.settings);
+        if (settingsRaw) {
+          const parsed = JSON.parse(settingsRaw) as { gpaScale?: number };
+          if (typeof parsed.gpaScale === "number") {
+            setGpaScale(normalizeToSupportedScale(parsed.gpaScale));
+          }
         }
+      } catch {
+        setGpaScale(5.0);
       }
-    } catch {
-      setGpaScale(5.0);
-    }
-    setSetupCheckComplete(true);
-  }, []);
+
+      const onboardingComplete = await getOnboardingComplete();
+      if (!active) return;
+      if (onboardingComplete) {
+        setOnboardingStep("app");
+        setLocation("/");
+        return;
+      }
+      setOnboardingStep("profile");
+    })();
+    return () => {
+      active = false;
+    };
+  }, [setLocation]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const onScaleUpdated = (event: Event) => {
       const customEvent = event as CustomEvent<{ scale?: number }>;
       if (typeof customEvent.detail?.scale === "number") {
@@ -125,6 +114,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const onBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setInstallPromptEvent(event as BeforeInstallPromptEvent);
@@ -144,6 +134,47 @@ function App() {
     };
   }, [canShowInstallBanner, installPromptEvent]);
 
+  const handleProfileContinue = async ({
+    studentName,
+    programme,
+  }: {
+    studentName: string;
+    programme: string;
+  }) => {
+    const rawSettings = await getStoredValue(STORAGE_KEYS.settings);
+    let existingSettings: Partial<AppSettings> = {};
+    if (rawSettings) {
+      try {
+        existingSettings = JSON.parse(rawSettings) as Partial<AppSettings>;
+      } catch {
+        existingSettings = {};
+      }
+    }
+    await setStoredValue(
+      STORAGE_KEYS.settings,
+      JSON.stringify({
+        ...existingSettings,
+        studentName,
+        programme,
+      }),
+    );
+    setOnboardingStep("university");
+  };
+
+  const handleUniversityApplied = async () => {
+    await setOnboardingComplete(true);
+    setOnboardingStep("app");
+    setLocation("/");
+  };
+
+  if (onboardingStep === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Spinner className="size-6 text-primary" />
+      </div>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -153,8 +184,13 @@ function App() {
         <GpaScaleProvider value={gpaScale}>
           <TooltipProvider>
             <Toaster />
-            <FirstTimeSetup open={showFirstTimeSetup} onComplete={() => setShowFirstTimeSetup(false)} />
-            {setupCheckComplete && !showFirstTimeSetup && (
+            {onboardingStep === "profile" ? (
+              <OnboardingProfileForm onContinue={handleProfileContinue} />
+            ) : null}
+            {onboardingStep === "university" ? (
+              <NigerianUniversities onboardingMode onUniversityApplied={handleUniversityApplied} />
+            ) : null}
+            {onboardingStep === "app" ? (
               <Layout
                 topContent={
                   showInstallBanner && canShowInstallBanner ? (
@@ -164,7 +200,7 @@ function App() {
               >
                 <Router />
               </Layout>
-            )}
+            ) : null}
           </TooltipProvider>
         </GpaScaleProvider>
       </ThemeProvider>

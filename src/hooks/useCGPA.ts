@@ -29,6 +29,8 @@ export interface AppSettings {
   activeUniversity: string | null;
   admissionSession: string | null;
   repeatPolicy: 'replace' | 'average' | 'both' | 'highest';
+  studentName: string;
+  programme: string;
 }
 
 interface CGPAData {
@@ -50,6 +52,8 @@ const getDefaultSettings = (): AppSettings => ({
   activeUniversity: null,
   admissionSession: null,
   repeatPolicy: 'replace',
+  studentName: "",
+  programme: "",
 });
 
 const loadSettings = (): AppSettings => {

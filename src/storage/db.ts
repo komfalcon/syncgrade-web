@@ -84,6 +84,7 @@ export const STORAGE_KEYS = {
   settings: "cgpa-calculator-settings",
   predictions: "cgpa-saved-predictions",
   syncgradeUser: "syncgrade_user",
+  onboardingComplete: "onboarding_complete",
 } as const;
 
 export async function getStoredValue(key: string): Promise<string | null> {
@@ -97,6 +98,18 @@ export async function setStoredValue(key: string, value: string): Promise<void> 
 
 export async function removeStoredValue(key: string): Promise<void> {
   await appDb.kv.delete(key);
+}
+
+export async function getOnboardingComplete(): Promise<boolean> {
+  return (await getStoredValue(STORAGE_KEYS.onboardingComplete)) === "true";
+}
+
+export async function setOnboardingComplete(value: boolean): Promise<void> {
+  if (value) {
+    await setStoredValue(STORAGE_KEYS.onboardingComplete, "true");
+    return;
+  }
+  await removeStoredValue(STORAGE_KEYS.onboardingComplete);
 }
 
 export function getSyncgradeUserFromLocalStorage(): SyncgradeUserProfileEntry | null {
