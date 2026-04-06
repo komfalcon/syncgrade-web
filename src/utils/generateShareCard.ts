@@ -324,7 +324,7 @@ function drawStatCard(ctx: DrawingContext, x: number, y: number, w: number, h: n
 
   ctx.fillStyle = "rgba(148,163,184,0.9)";
   ctx.font = "400 16px Poppins, sans-serif";
-  drawWrappedText(ctx, data.sublabel, x + 18, y + 108, w - 36, 18, 1);
+  drawWrappedText(ctx, data.sublabel, x + 18, y + 104, w - 36, 16, 1);
 }
 
 function drawStatsGrid(
@@ -542,7 +542,7 @@ function drawShareCard(
     semestersProgress: `${completedSemesters} of ${totalSemesters}`,
   });
 
-  const graphBottom = drawTrendGraph(ctx, statsBottom + 8, points, scale);
+  const graphBottom = drawTrendGraph(ctx, statsBottom + 6, points, scale);
   drawBadgeAndFooter(ctx, graphBottom, getAchievementText(classification, cgpa, scale));
   drawTicker(ctx);
 
