@@ -28,6 +28,11 @@ import Layout from "./components/Layout";
 import { Spinner } from "./components/ui/spinner";
 import OnboardingProfileForm from "./components/OnboardingProfileForm";
 import type { AppSettings } from "./hooks/useCGPA";
+import {
+  getBootOnboardingStep,
+  getOnboardingStepAfterProfile,
+  getOnboardingStepAfterUniversity,
+} from "./lib/onboardingFlow";
 
 
 function Router() {
@@ -89,12 +94,13 @@ function App() {
 
       const onboardingComplete = await getOnboardingComplete();
       if (!active) return;
-      if (onboardingComplete) {
+      const bootStep = getBootOnboardingStep(onboardingComplete);
+      setOnboardingStep(bootStep);
+      if (bootStep === "app") {
         setOnboardingStep("app");
         setLocation("/");
         return;
       }
-      setOnboardingStep("profile");
     })();
     return () => {
       active = false;
@@ -158,12 +164,12 @@ function App() {
         programme,
       }),
     );
-    setOnboardingStep("university");
+    setOnboardingStep(getOnboardingStepAfterProfile());
   };
 
   const handleUniversityApplied = async () => {
     await setOnboardingComplete(true);
-    setOnboardingStep("app");
+    setOnboardingStep(getOnboardingStepAfterUniversity());
     setLocation("/");
   };
 
