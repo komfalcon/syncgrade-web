@@ -62,7 +62,15 @@ function getInstitutionBadge(type?: UniversityConfig['type']) {
   };
 }
 
-export default function NigerianUniversities() {
+interface NigerianUniversitiesProps {
+  onboardingMode?: boolean;
+  onUniversityApplied?: () => void | Promise<void>;
+}
+
+export default function NigerianUniversities({
+  onboardingMode = false,
+  onUniversityApplied,
+}: NigerianUniversitiesProps) {
   const [, setLocation] = useLocation();
   const cgpa = useCGPA();
   const { universities, meta } = useUniversities();
@@ -170,20 +178,25 @@ export default function NigerianUniversities() {
 
     setSelectedUni(null);
     toast.success(`✅ ${selectedUni.name} grading system applied!`);
+    if (onUniversityApplied) {
+      await onUniversityApplied();
+    }
   };
 
   return (
     <div className="space-y-8">
       <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
         <div className="container mx-auto px-4">
-          <Button
-            variant="ghost"
-            className="mb-4"
-            onClick={() => setLocation('/')}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
+          {!onboardingMode && (
+            <Button
+              variant="ghost"
+              className="mb-4"
+              onClick={() => setLocation('/')}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          )}
           <h1 className="text-3xl md:text-4xl font-bold">🇳🇬 Nigerian Universities</h1>
           <p className="mt-2 text-foreground-muted">
             Select your university to apply its official grading system
