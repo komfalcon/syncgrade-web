@@ -51,10 +51,18 @@ export default function Home() {
 
   const semesterNames = useMemo(() => cgpa.semesters.map((s) => s.name), [cgpa.semesters]);
   const classification = useMemo(() => getClassification(cgpa.currentCGPA, scale), [cgpa.currentCGPA, scale]);
+  const firstName = useMemo(() => {
+    const value = cgpa.settings.studentName?.trim();
+    if (!value) return "";
+    return value.split(/\s+/)[0] ?? "";
+  }, [cgpa.settings.studentName]);
 
   return (
     <div className="space-y-10">
         <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
+          {firstName ? (
+            <p className="mb-2 text-lg font-semibold text-foreground-muted">{firstName}, your CGPA is</p>
+          ) : null}
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Current CGPA</p>
