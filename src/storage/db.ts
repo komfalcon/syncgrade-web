@@ -107,9 +107,9 @@ export async function getOnboardingComplete(): Promise<boolean> {
 export async function setOnboardingComplete(value: boolean): Promise<void> {
   if (value) {
     await setStoredValue(STORAGE_KEYS.onboardingComplete, "true");
-    return;
+  } else {
+    await removeStoredValue(STORAGE_KEYS.onboardingComplete);
   }
-  await removeStoredValue(STORAGE_KEYS.onboardingComplete);
 }
 
 export function getSyncgradeUserFromLocalStorage(): SyncgradeUserProfileEntry | null {

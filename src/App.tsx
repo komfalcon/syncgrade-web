@@ -32,6 +32,7 @@ import {
   getBootOnboardingStep,
   getOnboardingStepAfterProfile,
   getOnboardingStepAfterUniversity,
+  shouldShowFullApp,
 } from "./lib/onboardingFlow";
 
 
@@ -76,20 +77,22 @@ function App() {
   const [gpaScale, setGpaScale] = useState<SupportedGpaScale>(5.0);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    setCanShowInstallBanner(localStorage.getItem(FIRST_SYNC_SUCCESS_KEY) === "1");
     let active = true;
     (async () => {
-      if (typeof window === "undefined") return;
-      setCanShowInstallBanner(localStorage.getItem(FIRST_SYNC_SUCCESS_KEY) === "1");
       try {
         const settingsRaw = localStorage.getItem(STORAGE_KEYS.settings);
         if (settingsRaw) {
           const parsed = JSON.parse(settingsRaw) as { gpaScale?: number };
-          if (typeof parsed.gpaScale === "number") {
+          if (active && typeof parsed.gpaScale === "number") {
             setGpaScale(normalizeToSupportedScale(parsed.gpaScale));
           }
         }
       } catch {
-        setGpaScale(5.0);
+        if (active) {
+          setGpaScale(5.0);
+        }
       }
 
       const onboardingComplete = await getOnboardingComplete();
@@ -97,7 +100,6 @@ function App() {
       const bootStep = getBootOnboardingStep(onboardingComplete);
       setOnboardingStep(bootStep);
       if (bootStep === "app") {
-        setOnboardingStep("app");
         setLocation("/");
         return;
       }
@@ -196,7 +198,7 @@ function App() {
             {onboardingStep === "university" ? (
               <NigerianUniversities onboardingMode onUniversityApplied={handleUniversityApplied} />
             ) : null}
-            {onboardingStep === "app" ? (
+            {shouldShowFullApp(onboardingStep) ? (
               <Layout
                 topContent={
                   showInstallBanner && canShowInstallBanner ? (

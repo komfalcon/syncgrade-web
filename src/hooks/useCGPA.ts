@@ -312,8 +312,6 @@ export function useCGPA() {
       removeStoredValue(STORAGE_KEYS.settings),
       removeStoredValue(STORAGE_KEYS.predictions),
       removeStoredValue(STORAGE_KEYS.onboardingComplete),
-    ]);
-    await Promise.all([
       appDb.customUniversities.clear(),
       appDb.userProfile.clear(),
       appDb.user_profile.clear(),
