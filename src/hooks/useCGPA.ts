@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import type { GradeRange } from '@/universities/types';
 import { DEFAULT_NIGERIAN_GRADES } from '@/universities/types';
 import { calculateCGPA as calculateEngineCGPA } from '@/engine/calculations';
-import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
+import { appDb, getStoredValue, removeStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 import { useUniversities } from '@/hooks/useUniversities';
 import { normalizeToSupportedScale } from '@/utils/gpaLogic';
 import { incrementInteractionCount } from '@/hooks/useFeedbackTrigger';
@@ -305,8 +305,23 @@ export function useCGPA() {
     });
   }, [calculateProgramSummary]);
 
-  const clearAllData = useCallback(() => {
+  const clearAllData = useCallback(async () => {
     setData(getInitialData());
+    await Promise.all([
+      removeStoredValue(STORAGE_KEYS.cgpaData),
+      removeStoredValue(STORAGE_KEYS.settings),
+      removeStoredValue(STORAGE_KEYS.predictions),
+      removeStoredValue(STORAGE_KEYS.onboardingComplete),
+    ]);
+    await Promise.all([
+      appDb.customUniversities.clear(),
+      appDb.userProfile.clear(),
+      appDb.user_profile.clear(),
+    ]);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(STORAGE_KEYS.syncgradeUser);
+      window.location.reload();
+    }
   }, []);
 
   const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
