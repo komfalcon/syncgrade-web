@@ -15,7 +15,7 @@ import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
 import UniversityComparison from "./pages/UniversityComparison";
 import BackupRestore from "./pages/BackupRestore";
 import CustomUniversityForm from "./pages/CustomUniversityForm";
-import { STORAGE_KEYS } from "./storage/db";
+import { getStoredValue, STORAGE_KEYS } from "./storage/db";
 import GradeConverter from "./pages/GradeConverter";
 import UniversityGpLanding from "./pages/UniversityGpLanding";
 import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/PwaInstallBanner";
@@ -33,26 +33,35 @@ function Router() {
   const [checkedOnboardingGate, setCheckedOnboardingGate] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const rawSettings = localStorage.getItem(STORAGE_KEYS.settings);
-    let hasSelectedUniversity = false;
-    if (rawSettings) {
+    let active = true;
+    (async () => {
+      if (typeof window === "undefined") return;
+      let hasSelectedUniversity = false;
       try {
-        const parsed = JSON.parse(rawSettings) as { activeUniversity?: unknown };
-        hasSelectedUniversity =
-          typeof parsed.activeUniversity === "string" && parsed.activeUniversity.trim().length > 0;
+        const rawSettings =
+          (await getStoredValue(STORAGE_KEYS.settings)) ?? localStorage.getItem(STORAGE_KEYS.settings);
+        if (rawSettings) {
+          const parsed = JSON.parse(rawSettings) as { activeUniversity?: unknown };
+          hasSelectedUniversity =
+            typeof parsed.activeUniversity === "string" && parsed.activeUniversity.trim().length > 0;
+        }
       } catch {
         hasSelectedUniversity = false;
       }
-    }
 
-    const onboardingRoute = "/nigerian-universities";
-    const bypassRoutes = [onboardingRoute, "/custom-university", "/404"];
-    if (!hasSelectedUniversity && !bypassRoutes.includes(location)) {
-      setLocation(onboardingRoute);
-      return;
-    }
-    setCheckedOnboardingGate(true);
+      if (!active) return;
+      const onboardingRoute = "/nigerian-universities";
+      const bypassRoutes = [onboardingRoute, "/custom-university", "/404"];
+      if (!hasSelectedUniversity && !bypassRoutes.includes(location)) {
+        setLocation(onboardingRoute);
+        return;
+      }
+      setCheckedOnboardingGate(true);
+    })();
+
+    return () => {
+      active = false;
+    };
   }, [location, setLocation]);
 
   if (!checkedOnboardingGate) return null;
