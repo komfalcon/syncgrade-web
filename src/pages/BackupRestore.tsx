@@ -13,9 +13,14 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCGPA } from '@/hooks/useCGPA';
+import { getDefaultSettings, type AppSettings, useCGPA } from '@/hooks/useCGPA';
 import { exportBackup, parseBackupFile, generateCSV } from '@/engine/backup';
-import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
+import {
+  getStoredValue,
+  setOnboardingComplete,
+  setStoredValue,
+  STORAGE_KEYS,
+} from '@/storage/db';
 import DataManagement from '@/components/DataManagement';
 
 export default function BackupRestore() {
@@ -54,7 +59,7 @@ export default function BackupRestore() {
   };
 
   const handleExportCSV = () => {
-    const gradeRanges = settings.gradeRanges;
+    const gradeRanges = settings.gradeRanges ?? getDefaultSettings().gradeRanges;
     const csvSemesters = semesters.map((sem) => ({
       name: sem.name,
       courses: sem.courses.map((c) => {
@@ -120,20 +125,72 @@ export default function BackupRestore() {
     }
 
     const backup = parsed as Record<string, unknown>;
+    const importedSettings =
+      typeof backup.settings === 'object' &&
+      backup.settings !== null &&
+      !Array.isArray(backup.settings)
+        ? (backup.settings as Partial<AppSettings>)
+        : {};
+    const defaultSettings = getDefaultSettings();
+    const mergedSettings: AppSettings = {
+      ...defaultSettings,
+      ...importedSettings,
+      studentName:
+        typeof importedSettings.studentName === 'string'
+          ? importedSettings.studentName
+          : defaultSettings.studentName,
+      programme:
+        typeof importedSettings.programme === 'string'
+          ? importedSettings.programme
+          : defaultSettings.programme,
+      gradeRanges: Array.isArray(importedSettings.gradeRanges)
+        ? importedSettings.gradeRanges
+        : defaultSettings.gradeRanges,
+      activeUniversity:
+        typeof importedSettings.activeUniversity === 'string' ||
+        importedSettings.activeUniversity === null
+          ? importedSettings.activeUniversity
+          : defaultSettings.activeUniversity,
+      admissionSession:
+        typeof importedSettings.admissionSession === 'string'
+          ? importedSettings.admissionSession
+          : defaultSettings.admissionSession,
+      gpaScale:
+        typeof importedSettings.gpaScale === 'number'
+          ? importedSettings.gpaScale
+          : defaultSettings.gpaScale,
+      repeatPolicy:
+        importedSettings.repeatPolicy === 'replace' ||
+        importedSettings.repeatPolicy === 'average' ||
+        importedSettings.repeatPolicy === 'both' ||
+        importedSettings.repeatPolicy === 'highest'
+          ? importedSettings.repeatPolicy
+          : defaultSettings.repeatPolicy,
+    };
+    const restoredSemesters = Array.isArray(backup.semesters)
+      ? backup.semesters
+      : [];
     const restoredData = {
-      semesters: backup.semesters,
-      currentCGPA: backup.currentCGPA,
-      totalCredits: backup.totalCredits,
-      totalGradePoints: backup.totalGradePoints,
-      semesterGPAs: backup.semesterGPAs,
-      settings: backup.settings,
+      semesters: restoredSemesters,
+      currentCGPA:
+        typeof backup.currentCGPA === 'number' ? backup.currentCGPA : 0,
+      totalCredits:
+        typeof backup.totalCredits === 'number' ? backup.totalCredits : 0,
+      totalGradePoints:
+        typeof backup.totalGradePoints === 'number' ? backup.totalGradePoints : 0,
+      semesterGPAs:
+        backup.semesterGPAs &&
+        typeof backup.semesterGPAs === 'object' &&
+        !Array.isArray(backup.semesterGPAs)
+          ? backup.semesterGPAs
+          : {},
+      settings: mergedSettings,
     };
 
     try {
       await setStoredValue(STORAGE_KEYS.cgpaData, JSON.stringify(restoredData));
-      if (backup.settings) {
-        await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(backup.settings));
-      }
+      await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(mergedSettings));
+      await setOnboardingComplete(true);
 
       toast.success('Backup restored! Reloading…');
       setTimeout(() => window.location.reload(), 500);

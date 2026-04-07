@@ -46,15 +46,57 @@ const SETTINGS_KEY = 'cgpa-calculator-settings';
 const DATA_KEY = 'cgpa-calculator-data';
 export const GPA_SCALE_UPDATED_EVENT = 'syncgrade:gpa-scale-updated';
 
-const getDefaultSettings = (): AppSettings => ({
+export const getDefaultSettings = (): AppSettings => ({
   gpaScale: 5.0,
   gradeRanges: [...DEFAULT_NIGERIAN_GRADES],
   activeUniversity: null,
-  admissionSession: null,
+  admissionSession: "",
   repeatPolicy: 'replace',
   studentName: "",
   programme: "",
 });
+
+const sanitizeSettings = (
+  settings: Partial<AppSettings> | null | undefined,
+): AppSettings => {
+  const defaults = getDefaultSettings();
+  const safeInput =
+    settings && typeof settings === 'object' ? settings : {};
+  return {
+    ...defaults,
+    ...safeInput,
+    studentName:
+      typeof safeInput.studentName === 'string'
+        ? safeInput.studentName
+        : defaults.studentName,
+    programme:
+      typeof safeInput.programme === 'string'
+        ? safeInput.programme
+        : defaults.programme,
+    gradeRanges: Array.isArray(safeInput.gradeRanges)
+      ? safeInput.gradeRanges
+      : defaults.gradeRanges,
+    activeUniversity:
+      typeof safeInput.activeUniversity === 'string' || safeInput.activeUniversity === null
+        ? safeInput.activeUniversity
+        : defaults.activeUniversity,
+    admissionSession:
+      typeof safeInput.admissionSession === 'string'
+        ? safeInput.admissionSession
+        : defaults.admissionSession,
+    gpaScale:
+      typeof safeInput.gpaScale === 'number'
+        ? safeInput.gpaScale
+        : defaults.gpaScale,
+    repeatPolicy:
+      safeInput.repeatPolicy === 'replace' ||
+      safeInput.repeatPolicy === 'average' ||
+      safeInput.repeatPolicy === 'both' ||
+      safeInput.repeatPolicy === 'highest'
+        ? safeInput.repeatPolicy
+        : defaults.repeatPolicy,
+  };
+};
 
 const loadSettings = (): AppSettings => {
   return getDefaultSettings();
@@ -88,7 +130,10 @@ export function useCGPA() {
           : null;
 
         const next = parsedData ?? getInitialData();
-        next.settings = parsedSettings ?? next.settings ?? getDefaultSettings();
+        const hydratedSettings = sanitizeSettings(
+          parsedSettings ?? next.settings ?? null,
+        );
+        next.settings = hydratedSettings;
         next.semesters = (next.semesters ?? []).map((sem) => ({
           ...sem,
           courses: (sem.courses ?? []).map((c) => ({
@@ -145,11 +190,12 @@ export function useCGPA() {
     semesters: Semester[],
     settings: AppSettings = data.settings,
   ): { cgpa: number; totalCredits: number; totalGradePoints: number } => {
+    const safeSettings = sanitizeSettings(settings);
     const activeUni = universities.find(
-      (u) => u.shortName === settings.activeUniversity,
+      (u) => u.shortName === safeSettings.activeUniversity,
     );
-    const repeatPolicy = settings.repeatPolicy ?? activeUni?.repeatPolicy.method ?? 'replace';
-    const grades = settings.gradeRanges;
+    const repeatPolicy = safeSettings.repeatPolicy ?? activeUni?.repeatPolicy.method ?? 'replace';
+    const grades = safeSettings.gradeRanges ?? getDefaultSettings().gradeRanges;
     const semesterInputs = semesters.map((semester) => ({
       name: semester.name,
       courses: semester.courses.map((course) => {
@@ -324,7 +370,7 @@ export function useCGPA() {
 
   const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
     setData(prevData => {
-      const mergedSettings = { ...prevData.settings, ...newSettings };
+      const mergedSettings = sanitizeSettings({ ...prevData.settings, ...newSettings });
       if (typeof window !== 'undefined' && typeof newSettings.gpaScale === 'number') {
         window.dispatchEvent(
           new CustomEvent(GPA_SCALE_UPDATED_EVENT, {
