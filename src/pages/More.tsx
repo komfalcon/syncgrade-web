@@ -1,10 +1,11 @@
 import { Link } from "wouter";
-import { Database, MessageSquare, Settings, Trash2 } from "lucide-react";
+import { Database, MessageSquare, Moon, Settings, Sun, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import FeedbackForm from "@/components/FeedbackForm";
 import UniversitySelector from "@/components/UniversitySelector";
 import { useCGPA } from "@/hooks/useCGPA";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const MORE_ITEMS = [
   {
@@ -17,6 +18,8 @@ const MORE_ITEMS = [
 
 export default function More() {
   const { clearAllData } = useCGPA();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <div className="space-y-10">
@@ -53,6 +56,24 @@ export default function More() {
               </div>
             </Card>
           ))}
+
+          <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex w-full items-center justify-between gap-3 rounded-lg p-2 text-left transition-colors duration-150 hover:bg-surface-elevated"
+            >
+              <div className="flex items-center gap-3">
+                <div className="rounded-md bg-muted p-2 text-foreground-muted">
+                  {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </div>
+                <span className="text-base font-semibold text-foreground">Appearance</span>
+              </div>
+              <span className="text-sm text-foreground-muted">
+                {isDark ? "Dark" : "Light"}
+              </span>
+            </button>
+          </Card>
 
           <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
             <div className="mb-4 flex items-center gap-2">
