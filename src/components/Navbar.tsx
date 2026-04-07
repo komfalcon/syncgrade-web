@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
@@ -23,6 +24,7 @@ export default function Navbar() {
           <span className="text-base font-semibold text-foreground">SyncGrade</span>
         </Link>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {NAV_ITEMS.map((item) => (
             <Link key={item.href} href={item.href}>
               <span
