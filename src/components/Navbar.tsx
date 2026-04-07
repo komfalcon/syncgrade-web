@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
@@ -37,6 +38,7 @@ export default function Navbar() {
               </span>
             </Link>
           ))}
+          <ThemeToggle />
         </div>
       </nav>
     </header>
