@@ -13,9 +13,9 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCGPA } from '@/hooks/useCGPA';
+import { useCGPA, getDefaultSettings } from '@/hooks/useCGPA';
 import { exportBackup, parseBackupFile, generateCSV } from '@/engine/backup';
-import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
+import { getStoredValue, setStoredValue, setOnboardingComplete, STORAGE_KEYS } from '@/storage/db';
 import DataManagement from '@/components/DataManagement';
 
 export default function BackupRestore() {
@@ -120,20 +120,28 @@ export default function BackupRestore() {
     }
 
     const backup = parsed as Record<string, unknown>;
+
+    // Defensively merge settings with defaults so missing fields never crash
+    const rawBackupSettings =
+      backup.settings && typeof backup.settings === 'object'
+        ? (backup.settings as Record<string, unknown>)
+        : {};
+    const mergedSettings = { ...getDefaultSettings(), ...rawBackupSettings };
+
     const restoredData = {
-      semesters: backup.semesters,
-      currentCGPA: backup.currentCGPA,
-      totalCredits: backup.totalCredits,
-      totalGradePoints: backup.totalGradePoints,
-      semesterGPAs: backup.semesterGPAs,
-      settings: backup.settings,
+      semesters: Array.isArray(backup.semesters) ? backup.semesters : [],
+      currentCGPA: typeof backup.currentCGPA === 'number' ? backup.currentCGPA : 0,
+      totalCredits: typeof backup.totalCredits === 'number' ? backup.totalCredits : 0,
+      totalGradePoints: typeof backup.totalGradePoints === 'number' ? backup.totalGradePoints : 0,
+      semesterGPAs: backup.semesterGPAs && typeof backup.semesterGPAs === 'object' ? backup.semesterGPAs : {},
+      settings: mergedSettings,
     };
 
     try {
       await setStoredValue(STORAGE_KEYS.cgpaData, JSON.stringify(restoredData));
-      if (backup.settings) {
-        await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(backup.settings));
-      }
+      await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(mergedSettings));
+      // Mark onboarding complete so user is never sent back through the flow
+      await setOnboardingComplete(true);
 
       toast.success('Backup restored! Reloading…');
       setTimeout(() => window.location.reload(), 500);

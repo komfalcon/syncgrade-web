@@ -46,7 +46,7 @@ const SETTINGS_KEY = 'cgpa-calculator-settings';
 const DATA_KEY = 'cgpa-calculator-data';
 export const GPA_SCALE_UPDATED_EVENT = 'syncgrade:gpa-scale-updated';
 
-const getDefaultSettings = (): AppSettings => ({
+export const getDefaultSettings = (): AppSettings => ({
   gpaScale: 5.0,
   gradeRanges: [...DEFAULT_NIGERIAN_GRADES],
   activeUniversity: null,
@@ -88,7 +88,8 @@ export function useCGPA() {
           : null;
 
         const next = parsedData ?? getInitialData();
-        next.settings = parsedSettings ?? next.settings ?? getDefaultSettings();
+        const rawSettings = parsedSettings ?? next.settings ?? getDefaultSettings();
+        next.settings = { ...getDefaultSettings(), ...rawSettings };
         next.semesters = (next.semesters ?? []).map((sem) => ({
           ...sem,
           courses: (sem.courses ?? []).map((c) => ({
@@ -145,11 +146,12 @@ export function useCGPA() {
     semesters: Semester[],
     settings: AppSettings = data.settings,
   ): { cgpa: number; totalCredits: number; totalGradePoints: number } => {
+    const activeUniversity = settings.activeUniversity ?? null;
     const activeUni = universities.find(
-      (u) => u.shortName === settings.activeUniversity,
+      (u) => u.shortName === activeUniversity,
     );
     const repeatPolicy = settings.repeatPolicy ?? activeUni?.repeatPolicy.method ?? 'replace';
-    const grades = settings.gradeRanges;
+    const grades = settings.gradeRanges ?? getDefaultSettings().gradeRanges;
     const semesterInputs = semesters.map((semester) => ({
       name: semester.name,
       courses: semester.courses.map((course) => {
