@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
+const THEME_STORAGE_KEY = "syncgrade_theme";
 
 interface ThemeContextType {
   theme: Theme;
@@ -11,17 +12,21 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
+  defaultTheme?: Theme;
 }
 
-const THEME_STORAGE_KEY = "syncgrade_theme";
-
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export function ThemeProvider({
+  children,
+  defaultTheme = "dark",
+}: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
-      if (stored === "light" || stored === "dark") return stored;
+      if (stored === "dark" || stored === "light") {
+        return stored;
+      }
     }
-    return "dark";
+    return defaultTheme;
   });
 
   useEffect(() => {
@@ -35,7 +40,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    setTheme(prev => (prev === "light" ? "dark" : "light"));
   };
 
   return (
