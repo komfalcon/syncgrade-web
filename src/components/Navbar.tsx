@@ -39,6 +39,7 @@ export default function Navbar() {
               </span>
             </Link>
           ))}
+          <ThemeToggle />
         </div>
       </nav>
     </header>

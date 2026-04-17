@@ -190,6 +190,18 @@
   --sidebar-ring: var(--ring);
 }
 
+/* Light mode token overrides — applied when .dark is absent from <html> */
+html:not(.dark) {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-elevated: #f1f5f9;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --foreground: #0f172a;
+  --foreground-muted: #475569;
+  --foreground-subtle: #94a3b8;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
