@@ -2,12 +2,10 @@ import { Link } from "wouter";
 import {
   ArrowDownToLine,
   BarChart3,
-  BookOpen,
   Calculator,
   ChartNoAxesColumn,
   GraduationCap,
   RefreshCw,
-  Scale,
   Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -35,13 +33,6 @@ const PREDICTION_TOOLS: ToolRow[] = [
     icon: RefreshCw,
     iconBg: "var(--tool-carryover)",
   },
-  {
-    href: "/study-load-optimizer",
-    title: "Study Load",
-    description: "Optimize your schedule",
-    icon: BookOpen,
-    iconBg: "var(--tool-study-load)",
-  },
 ];
 
 const COMPARISON_TOOLS: ToolRow[] = [
@@ -51,13 +42,6 @@ const COMPARISON_TOOLS: ToolRow[] = [
     description: "Apply grading systems",
     icon: GraduationCap,
     iconBg: "var(--tool-universities)",
-  },
-  {
-    href: "/university-comparison",
-    title: "Compare Unis",
-    description: "Side-by-side comparison",
-    icon: Scale,
-    iconBg: "linear-gradient(135deg, var(--tool-gradient-start), var(--tool-compare-gradient-end))",
   },
   {
     href: "/analytics",

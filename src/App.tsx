@@ -10,8 +10,6 @@ import NigerianUniversities from "./pages/NigerianUniversities";
 import GradePredictor from "./pages/GradePredictor";
 import Analytics from "./pages/Analytics";
 import CarryoverSimulator from "./pages/CarryoverSimulator";
-import StudyLoadOptimizer from "./pages/StudyLoadOptimizer";
-import UniversityComparison from "./pages/UniversityComparison";
 import BackupRestore from "./pages/BackupRestore";
 import CustomUniversityForm from "./pages/CustomUniversityForm";
 import { getOnboardingComplete, getStoredValue, setOnboardingComplete, setStoredValue, STORAGE_KEYS } from "./storage/db";
@@ -48,8 +46,6 @@ function Router() {
       <Route path={"/tools"} component={Tools} />
       <Route path={"/more"} component={More} />
       <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
-      <Route path={"/study-load-optimizer"} component={StudyLoadOptimizer} />
-      <Route path={"/university-comparison"} component={UniversityComparison} />
       <Route path={"/backup-restore"} component={BackupRestore} />
       <Route path={"/custom-university"} component={CustomUniversityForm} />
       <Route path={"/grade-converter"} component={GradeConverter} />
