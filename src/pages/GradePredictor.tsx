@@ -1,606 +1,771 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Target, Plus, Trash2, Save, Clock } from 'lucide-react';
-import { useLocation } from 'wouter';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  BookOpen,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  ClipboardList,
+  Info,
+  Loader2,
+  Plus,
+  Rocket,
+  Scale,
+  Shield,
+  Target,
+  Trash2,
+  XCircle,
+} from 'lucide-react';
 import { useCGPA } from '@/hooks/useCGPA';
-import { toast } from 'sonner';
-import { projectCGPA, simulateWhatIf } from '@/engine/calculations';
-import { DEFAULT_NIGERIAN_DEGREE_CLASSES } from '@/universities/types';
-import { DEFAULT_MAX_SEMESTER_UNITS } from '@shared/const';
-import { getStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 import { useUniversities } from '@/hooks/useUniversities';
-import { useGpaScale } from '@/contexts/GpaScaleContext';
+import { getClassification, normalizeToSupportedScale } from '@/utils/gpaLogic';
+import {
+  calculateMaxCGPA,
+  deriveGradeOptions,
+  generateStrategies,
+  type Course,
+  type PredictorResult,
+  type Strategy,
+  type StrategyType,
+} from '@/utils/gradePredictorEngine';
 
-const MAX_WHAT_IF_COURSES = 20;
+const HOW_TO_SEEN_KEY = 'syncgrade_predictor_howto_seen';
+const MAX_COURSES = 12;
 
-interface PredictionResult {
-  requiredGPA: number;
-  letterGrade: string;
-  verdict: string;
-  verdictIcon: string;
-  isAchievable: boolean;
-}
-
-interface WhatIfCourse {
+type CourseRow = {
   id: string;
   name: string;
-  credits: number;
-  gradePoint: number;
-}
+  units: string;
+};
 
-interface SavedPrediction {
-  id: string;
-  timestamp: number;
-  currentCGPA: number;
-  completedCredits: number;
-  targetCGPA: number;
-  remainingCredits: number;
-  requiredGPA: number;
-  verdict: string;
-}
+const makeCourseRow = (): CourseRow => ({
+  id: crypto.randomUUID(),
+  name: '',
+  units: '',
+});
+
+const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+
+const parseNumber = (value: string, fallback = 0): number => {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const round2 = (value: number): number => Math.round(value * 100) / 100;
+
+const getFeasibilityClasses = (score: number): string => {
+  if (score >= 80) return 'text-success';
+  if (score >= 50) return 'text-warning';
+  return 'text-destructive';
+};
+
+const getFeasibilityBarClasses = (score: number): string => {
+  if (score >= 80) return 'bg-success';
+  if (score >= 50) return 'bg-warning';
+  return 'bg-destructive';
+};
+
+const getTierBadgeClasses = (tier: number): string => {
+  if (tier === 1) return 'bg-success/10 text-success';
+  if (tier === 2) return 'bg-accent/15 text-accent';
+  if (tier === 3) return 'bg-warning/15 text-warning';
+  return 'bg-destructive/10 text-destructive';
+};
+
+const getStrategyMeta = (type: StrategyType): { icon: React.ReactNode; borderClass: string } => {
+  if (type === 'safe') {
+    return { icon: <Shield className="h-5 w-5" />, borderClass: 'border-l-4 border-success' };
+  }
+  if (type === 'balanced') {
+    return { icon: <Scale className="h-5 w-5" />, borderClass: 'border-l-4 border-accent' };
+  }
+  return { icon: <Rocket className="h-5 w-5" />, borderClass: 'border-l-4 border-warning' };
+};
+
+const getScoreClass = (gradeLabel: string): string => {
+  const normalized = gradeLabel.trim().toUpperCase();
+  if (normalized === 'A') return 'text-success font-semibold';
+  if (normalized === 'B') return 'text-accent font-semibold';
+  if (normalized === 'C') return 'text-warning font-semibold';
+  if (normalized === 'D' || normalized === 'E') return 'text-destructive font-semibold';
+  return 'text-foreground-muted font-semibold';
+};
 
 export default function GradePredictor() {
-  const [, setLocation] = useLocation();
   const cgpa = useCGPA();
   const { universities } = useUniversities();
-  const scale = useGpaScale();
-  const universityConfig = useMemo(
-    () =>
-      universities.find(
-        (u) => u.shortName === cgpa.settings.activeUniversity,
-      ) ?? null,
-    [cgpa.settings.activeUniversity, universities],
-  );
-  const maxSemesterUnits =
-    universityConfig?.creditRules.maximumPerSemester ?? DEFAULT_MAX_SEMESTER_UNITS;
 
-  // Section 1 - Current Standing
-  const [currentCGPAInput, setCurrentCGPAInput] = useState(
-    cgpa.currentCGPA > 0 ? cgpa.currentCGPA.toString() : ''
-  );
-  const [completedCredits, setCompletedCredits] = useState(
-    cgpa.totalCredits > 0 ? cgpa.totalCredits.toString() : ''
-  );
-  const [targetCGPA, setTargetCGPA] = useState('');
-  const [remainingCredits, setRemainingCredits] = useState('');
+  const [isHowToExpanded, setIsHowToExpanded] = useState(true);
 
-  // Results
-  const [result, setResult] = useState<PredictionResult | null>(null);
-  const [hasCalculated, setHasCalculated] = useState(false);
+  const initialScale = normalizeToSupportedScale(cgpa.settings.gpaScale);
+  const [currentCGPAInput, setCurrentCGPAInput] = useState(cgpa.currentCGPA.toFixed(2));
+  const [completedCreditsInput, setCompletedCreditsInput] = useState(String(Math.round(cgpa.totalCredits)));
+  const [scaleInput, setScaleInput] = useState<'5.0' | '4.0'>(initialScale === 4 ? '4.0' : '5.0');
+  const [semesterLabel, setSemesterLabel] = useState('');
 
-  // What-If courses
-  const [whatIfCourses, setWhatIfCourses] = useState<WhatIfCourse[]>([
-    { id: '1', name: 'Course 1', credits: 3, gradePoint: scale },
-  ]);
+  const [stage1Locked, setStage1Locked] = useState(false);
+  const [stage2Locked, setStage2Locked] = useState(false);
+  const [stage3Locked, setStage3Locked] = useState(false);
 
-  // Saved predictions
-  const [savedPredictions, setSavedPredictions] = useState<SavedPrediction[]>([]);
+  const [courses, setCourses] = useState<CourseRow[]>([makeCourseRow()]);
+  const [courseErrors, setCourseErrors] = useState<Record<string, { name?: string; units?: string }>>({});
+
+  const [targetCGPAInput, setTargetCGPAInput] = useState('');
+  const [isCalculatingStrategies, setIsCalculatingStrategies] = useState(false);
+  const [strategyResult, setStrategyResult] = useState<PredictorResult | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Record<StrategyType, boolean>>({
+    safe: false,
+    balanced: false,
+    highEffort: false,
+  });
+
+  const stage2Ref = useRef<HTMLDivElement | null>(null);
+  const stage3Ref = useRef<HTMLDivElement | null>(null);
+  const stage4Ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const saved = await getStoredValue(STORAGE_KEYS.predictions);
-        if (!active) return;
-        setSavedPredictions(saved ? (JSON.parse(saved) as SavedPrediction[]) : []);
-      } catch {
-        if (active) setSavedPredictions([]);
-      }
-    })();
-    return () => {
-      active = false;
-    };
+    if (typeof window === 'undefined') return;
+    const seen = window.localStorage.getItem(HOW_TO_SEEN_KEY) === 'true';
+    setIsHowToExpanded(!seen);
   }, []);
 
   useEffect(() => {
-    void setStoredValue(STORAGE_KEYS.predictions, JSON.stringify(savedPredictions));
-  }, [savedPredictions]);
+    setCurrentCGPAInput(cgpa.currentCGPA.toFixed(2));
+    setCompletedCreditsInput(String(Math.round(cgpa.totalCredits)));
+    const nextScale = normalizeToSupportedScale(cgpa.settings.gpaScale);
+    setScaleInput(nextScale === 4 ? '4.0' : '5.0');
+  }, [cgpa.currentCGPA, cgpa.totalCredits, cgpa.settings.gpaScale]);
 
-  const getLetterGrade = useCallback(
-    (gpa: number): string => {
-      const ranges = cgpa.settings.gradeRanges;
-      // Find the grade whose points is closest to (but not less than) the GPA
-      // Ranges are sorted descending by points
-      const sorted = [...ranges].sort((a, b) => b.points - a.points);
-      for (const range of sorted) {
-        if (gpa >= range.points) {
-          return range.grade;
-        }
-      }
-      // If GPA is below all grade points, return the lowest grade
-      return sorted.length > 0 ? sorted[sorted.length - 1].grade : 'F';
-    },
-    [cgpa.settings.gradeRanges]
-  );
+  const scale = useMemo(() => normalizeToSupportedScale(parseNumber(scaleInput, initialScale)), [scaleInput, initialScale]);
+  const currentCGPA = useMemo(() => round2(clamp(parseNumber(currentCGPAInput, 0), 0, scale)), [currentCGPAInput, scale]);
+  const completedCredits = useMemo(() => Math.max(0, Math.round(parseNumber(completedCreditsInput, 0))), [completedCreditsInput]);
 
-  const getVerdict = useCallback(
-    (requiredGPA: number): { verdict: string; icon: string; achievable: boolean } => {
-      if (requiredGPA > scale) {
-        return {
-          verdict: 'Impossible',
-          icon: '❌',
-          achievable: false,
-        };
-      }
-      if (requiredGPA <= scale * 0.6) {
-        return { verdict: 'Achievable', icon: '✅', achievable: true };
-      }
-      if (requiredGPA <= scale * 0.8) {
-        return { verdict: 'Challenging', icon: '⚠️', achievable: true };
-      }
-      return { verdict: 'Very Difficult', icon: '🔴', achievable: true };
-    },
-    [scale]
-  );
+  const activeUniversityName = useMemo(() => {
+    const active = universities.find((uni) => uni.shortName === cgpa.settings.activeUniversity);
+    return active?.name ?? 'Your University';
+  }, [universities, cgpa.settings.activeUniversity]);
 
-  const handleCalculate = () => {
-    const current = parseFloat(currentCGPAInput);
-    const completed = parseFloat(completedCredits);
-    const target = parseFloat(targetCGPA);
-    const remaining = parseFloat(remainingCredits);
+  const gradeOptions = useMemo(() => deriveGradeOptions(cgpa.settings.gradeRanges), [cgpa.settings.gradeRanges]);
 
-    if (isNaN(current) || isNaN(completed) || isNaN(target) || isNaN(remaining) || remaining <= 0) {
-      toast.error('Please fill in all fields with valid numbers');
-      return;
+  const validCourses = useMemo<Course[]>(() => {
+    return courses
+      .map((course) => ({
+        name: course.name.trim(),
+        units: Math.round(parseNumber(course.units, 0)),
+      }))
+      .filter((course) => course.name.length > 0 && course.units >= 1 && course.units <= 6);
+  }, [courses]);
+
+  const totalNextUnits = useMemo(() => validCourses.reduce((sum, course) => sum + course.units, 0), [validCourses]);
+
+  const maxAttainableCGPA = useMemo(() => {
+    if (validCourses.length === 0) return null;
+    return calculateMaxCGPA(currentCGPA, completedCredits, validCourses, scale);
+  }, [currentCGPA, completedCredits, validCourses, scale]);
+
+  const maxClassification = useMemo(() => {
+    if (maxAttainableCGPA === null) return null;
+    return getClassification(maxAttainableCGPA, scale);
+  }, [maxAttainableCGPA, scale]);
+
+  const highestGradeLabel = gradeOptions[0]?.label ?? 'A';
+
+  const targetValue = parseNumber(targetCGPAInput, NaN);
+  const targetValidation = useMemo(() => {
+    if (!Number.isFinite(targetValue) || maxAttainableCGPA === null) {
+      return { isValid: false as const, state: 'empty' as const, message: '' };
     }
-
-    if (remaining > maxSemesterUnits) {
-      toast.error(`Remaining units cannot exceed ${maxSemesterUnits} for this university.`);
-      return;
-    }
-
-    const projection = projectCGPA(
-      current,
-      Math.round(completed),
-      target,
-      Math.round(remaining),
-      scale,
-    );
-    const { verdict, icon, achievable } = getVerdict(projection.requiredGPA);
-
-    setResult({
-      requiredGPA: projection.requiredGPA,
-      letterGrade: getLetterGrade(projection.requiredGPA),
-      verdict,
-      verdictIcon: icon,
-      isAchievable: achievable,
-    });
-    setHasCalculated(true);
-  };
-
-  const handleSavePrediction = () => {
-    if (!result) return;
-    const prediction: SavedPrediction = {
-      id: Date.now().toString(),
-      timestamp: Date.now(),
-      currentCGPA: parseFloat(currentCGPAInput),
-      completedCredits: parseFloat(completedCredits),
-      targetCGPA: parseFloat(targetCGPA),
-      remainingCredits: parseFloat(remainingCredits),
-      requiredGPA: result.requiredGPA,
-      verdict: `${result.verdictIcon} ${result.verdict}`,
-    };
-    const updated = [prediction, ...savedPredictions];
-    setSavedPredictions(updated);
-    toast.success('Prediction saved!');
-  };
-
-  const handleDeletePrediction = (id: string) => {
-    const updated = savedPredictions.filter(p => p.id !== id);
-    setSavedPredictions(updated);
-  };
-
-  // Uniform distribution table
-  const uniformRows = useMemo(() => {
-    const target = parseFloat(targetCGPA);
-    const completed = parseFloat(completedCredits);
-    const remaining = parseFloat(remainingCredits);
-    if (isNaN(target) || isNaN(completed) || isNaN(remaining) || remaining <= 0) return [];
-
-    const current = parseFloat(currentCGPAInput);
-    if (isNaN(current)) return [];
-
-    const offsets = [-0.4, -0.2, 0, 0.2, 0.4];
-
-    return offsets.map(offset => {
-      const t = Math.max(0, Math.min(scale, target + offset));
-      const projection = projectCGPA(
-        current,
-        Math.round(completed),
-        t,
-        Math.round(remaining),
-        scale,
-      );
-      const { verdict, icon } = getVerdict(projection.requiredGPA);
+    if (targetValue > maxAttainableCGPA) {
       return {
-        target: t.toFixed(2),
-        requiredGPA: projection.requiredGPA.toFixed(2),
-        grade: getLetterGrade(projection.requiredGPA),
-        verdict: `${icon} ${verdict}`,
-        isTarget: offset === 0,
+        isValid: false as const,
+        state: 'high' as const,
+        message: `Exceeds your maximum of ${maxAttainableCGPA.toFixed(2)}. Try ${maxAttainableCGPA.toFixed(2)}.`,
       };
-    });
-  }, [targetCGPA, completedCredits, remainingCredits, currentCGPAInput, scale, getVerdict, getLetterGrade]);
-
-  // What-If predicted CGPA
-  const predictedCGPA = useMemo(() => {
-    const current = parseFloat(currentCGPAInput);
-    const completed = parseFloat(completedCredits);
-    if (isNaN(current) || isNaN(completed)) return null;
-
-    const totalWhatIfUnits = whatIfCourses.reduce((sum, c) => sum + c.credits, 0);
-    if (totalWhatIfUnits > maxSemesterUnits) return null;
-
-    const grades = cgpa.settings.gradeRanges;
-    const result = simulateWhatIf(
-      current,
-      Math.round(completed),
-      {
-        semesterName: 'What-If',
-        courses: whatIfCourses.map((c) => ({
-          name: c.name,
-          credits: Math.round(c.credits),
-          grade:
-            grades.find((g) => g.points === c.gradePoint)?.grade ??
-            grades[grades.length - 1]?.grade ??
-            'F',
-        })),
-      },
-      grades,
-      universityConfig?.degreeClasses ?? DEFAULT_NIGERIAN_DEGREE_CLASSES,
-    );
-    return result.projectedCGPA;
-  }, [currentCGPAInput, completedCredits, whatIfCourses, cgpa.settings.gradeRanges, universityConfig, maxSemesterUnits]);
-
-  const getCGPAColor = (gpa: number | null) => {
-    if (gpa === null) return 'text-foreground-muted';
-    if (gpa >= scale * 0.74) return 'text-emerald-600';
-    if (gpa >= scale * 0.6) return 'text-amber-600';
-    return 'text-red-600';
-  };
-
-  const addWhatIfCourse = () => {
-    if (whatIfCourses.length >= MAX_WHAT_IF_COURSES) return;
-    const currentUnits = whatIfCourses.reduce((sum, c) => sum + c.credits, 0);
-    if (currentUnits + 3 > maxSemesterUnits) {
-      toast.error(`Cannot exceed ${maxSemesterUnits} units.`);
-      return;
     }
-    setWhatIfCourses(prev => [
-      ...prev,
-      {
-        id: Date.now().toString(),
-        name: `Course ${prev.length + 1}`,
-        credits: 3,
-        gradePoint: scale,
-      },
-    ]);
-  };
+    if (targetValue <= currentCGPA) {
+      return {
+        isValid: false as const,
+        state: 'low' as const,
+        message: `Must be higher than your current CGPA of ${currentCGPA.toFixed(2)}.`,
+      };
+    }
+    const targetClass = getClassification(targetValue, scale);
+    return {
+      isValid: true as const,
+      state: 'valid' as const,
+      message: `Achievable ✓ This puts you in ${targetClass.label}`,
+    };
+  }, [targetValue, maxAttainableCGPA, currentCGPA, scale]);
 
-  const updateWhatIfCourse = (id: string, updates: Partial<WhatIfCourse>) => {
-    setWhatIfCourses((prev) => {
-      const next = prev.map((c) => (c.id === id ? { ...c, ...updates } : c));
-      const totalUnits = next.reduce((sum, c) => sum + c.credits, 0);
-      if (totalUnits > maxSemesterUnits) {
-        toast.error(`What-if course load cannot exceed ${maxSemesterUnits} units.`);
-        return prev;
+  const handleHowToToggle = () => {
+    setIsHowToExpanded((prev) => {
+      const next = !prev;
+      if (!next && typeof window !== 'undefined') {
+        window.localStorage.setItem(HOW_TO_SEEN_KEY, 'true');
       }
       return next;
     });
   };
 
-  const removeWhatIfCourse = (id: string) => {
-    setWhatIfCourses(prev => prev.filter(c => c.id !== id));
+  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  const handleStage1Continue = () => {
+    setStage1Locked(true);
+    setTimeout(() => scrollTo(stage2Ref), 80);
+  };
+
+  const updateCourse = (id: string, patch: Partial<CourseRow>) => {
+    setCourses((prev) => prev.map((course) => (course.id === id ? { ...course, ...patch } : course)));
+  };
+
+  const addCourse = () => {
+    if (stage2Locked || courses.length >= MAX_COURSES) return;
+    setCourses((prev) => [...prev, makeCourseRow()]);
+  };
+
+  const removeCourse = (id: string) => {
+    if (stage2Locked || courses.length <= 1) return;
+    setCourses((prev) => prev.filter((course) => course.id !== id));
+    setCourseErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  };
+
+  const validateCourses = (): boolean => {
+    const nextErrors: Record<string, { name?: string; units?: string }> = {};
+
+    courses.forEach((course) => {
+      const rowErrors: { name?: string; units?: string } = {};
+      if (!course.name.trim()) rowErrors.name = 'Course name required';
+      const units = Math.round(parseNumber(course.units, 0));
+      if (!Number.isFinite(units) || units < 1 || units > 6) {
+        rowErrors.units = 'Enter credit units (1–6)';
+      }
+      if (rowErrors.name || rowErrors.units) {
+        nextErrors[course.id] = rowErrors;
+      }
+    });
+
+    setCourseErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleStage2Continue = () => {
+    const isValid = validateCourses();
+    if (!isValid) return;
+    setStage2Locked(true);
+    setTimeout(() => scrollTo(stage3Ref), 80);
+  };
+
+  const handleFindStrategies = async () => {
+    if (!targetValidation.isValid || maxAttainableCGPA === null || gradeOptions.length === 0) return;
+    setIsCalculatingStrategies(true);
+    const startedAt = Date.now();
+
+    const generated = generateStrategies(
+      currentCGPA,
+      completedCredits,
+      validCourses,
+      round2(targetValue),
+      gradeOptions,
+      scale,
+    );
+
+    const elapsed = Date.now() - startedAt;
+    const wait = Math.max(0, 400 - elapsed);
+    await new Promise((resolve) => setTimeout(resolve, wait));
+
+    setStrategyResult(generated);
+    setStage3Locked(true);
+    setExpandedCards({ safe: false, balanced: false, highEffort: false });
+    setIsCalculatingStrategies(false);
+    setTimeout(() => scrollTo(stage4Ref), 80);
+  };
+
+  const handleTryAgain = () => {
+    setTargetCGPAInput('');
+    setStage3Locked(false);
+    setStrategyResult(null);
+    scrollTo(stage3Ref);
+  };
+
+  const handleStartOver = () => {
+    setIsHowToExpanded(true);
+    setCurrentCGPAInput(cgpa.currentCGPA.toFixed(2));
+    setCompletedCreditsInput(String(Math.round(cgpa.totalCredits)));
+    const resetScale = normalizeToSupportedScale(cgpa.settings.gpaScale);
+    setScaleInput(resetScale === 4 ? '4.0' : '5.0');
+    setSemesterLabel('');
+    setStage1Locked(false);
+    setStage2Locked(false);
+    setStage3Locked(false);
+    setCourses([makeCourseRow()]);
+    setCourseErrors({});
+    setTargetCGPAInput('');
+    setStrategyResult(null);
+    setExpandedCards({ safe: false, balanced: false, highEffort: false });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const stage2CanContinue = validCourses.length > 0;
+
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
-        <div className="container mx-auto px-4">
-          <Button
-            variant="ghost"
-            className="mb-4"
-            onClick={() => setLocation('/')}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <div className="flex items-center gap-3">
-            <Target className="w-8 h-8" />
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold">Grade Predictor</h1>
-              <p className="mt-1 text-foreground-muted">Plan your target CGPA</p>
-            </div>
-          </div>
-        </div>
+    <div className="space-y-6">
+      <header>
+        <h1 className="text-2xl font-bold text-foreground">Grade Predictor</h1>
+        <p className="mt-1 text-sm text-foreground-muted">Plan what you need to score next semester</p>
+      </header>
+
+      <div className="rounded-xl border border-border bg-surface p-3">
+        <button
+          type="button"
+          onClick={handleHowToToggle}
+          className="flex w-full items-center justify-between gap-2 text-left text-sm text-foreground-muted"
+        >
+          <span className="flex items-center gap-2">
+            <Info className="h-4 w-4" />
+            <span>How does this work?</span>
+          </span>
+          {isHowToExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+        </button>
+
+        <AnimatePresence initial={false}>
+          {isHowToExpanded && (
+            <motion.div
+              key="how-to"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              className="overflow-hidden"
+            >
+              <div className="pt-3 text-sm text-foreground-muted leading-relaxed">
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2">
+                    <ClipboardList className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>Enter your current CGPA and credits — we pull these from your profile automatically.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <BookOpen className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>Add the courses you'll take next semester with their credit units.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Target className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>Set your target CGPA — we show you the maximum you can realistically achieve.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>Get 3 clear strategies showing exactly what to score in each course.</span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Section 1: Current Standing */}
-        <Card className="p-6 shadow-lg border-0 mb-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Current Standing</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="current-cgpa">Current CGPA</Label>
-              <Input
-                id="current-cgpa"
-                type="number"
-                min="0"
-                max={scale}
-                step="0.01"
-                placeholder={`0.00 - ${scale.toFixed(2)}`}
-                value={currentCGPAInput}
-                onChange={e => setCurrentCGPAInput(e.target.value)}
-              />
+      <section className="rounded-xl border border-border bg-surface p-5">
+        <h2 className="text-lg font-semibold text-foreground">Your Current Standing</h2>
+        <p className="text-xs text-foreground-subtle">Pulled from your profile. Edit only if needed.</p>
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <label className="space-y-1">
+            <span className="text-xs text-foreground-muted">Current CGPA</span>
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              max={scale}
+              value={currentCGPAInput}
+              onChange={(event) => setCurrentCGPAInput(event.target.value)}
+              disabled={stage1Locked}
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground transition-colors duration-150 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-70"
+            />
+          </label>
+
+          <label className="space-y-1">
+            <span className="text-xs text-foreground-muted">Credits Completed</span>
+            <input
+              type="number"
+              min={0}
+              step={1}
+              value={completedCreditsInput}
+              onChange={(event) => setCompletedCreditsInput(event.target.value)}
+              disabled={stage1Locked}
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground transition-colors duration-150 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-70"
+            />
+          </label>
+
+          <label className="space-y-1">
+            <span className="text-xs text-foreground-muted">GPA Scale</span>
+            <select
+              value={scaleInput}
+              onChange={(event) => setScaleInput(event.target.value === '4.0' ? '4.0' : '5.0')}
+              disabled={stage1Locked}
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground transition-colors duration-150 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-70"
+            >
+              <option value="5.0">5.0</option>
+              <option value="4.0">4.0</option>
+            </select>
+          </label>
+
+          <label className="space-y-1">
+            <span className="text-xs text-foreground-muted">Planning For</span>
+            <input
+              type="text"
+              value={semesterLabel}
+              onChange={(event) => setSemesterLabel(event.target.value)}
+              disabled={stage1Locked}
+              placeholder="e.g. 300L First Semester"
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground transition-colors duration-150 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-70"
+            />
+          </label>
+        </div>
+
+        <div className="mt-4">
+          <p className="text-xs text-foreground-subtle">Grading system: {activeUniversityName}</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {gradeOptions.map((grade) => (
+              <span
+                key={`${grade.label}-${grade.point}`}
+                className="rounded-full border border-border bg-surface-elevated px-3 py-1 text-xs text-foreground-muted"
+              >
+                {grade.label} = {grade.point.toFixed(1)}pts
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleStage1Continue}
+          className="mt-6 w-full rounded-full bg-primary px-8 py-3 font-semibold text-white transition-colors duration-150 hover:bg-primary-hover"
+        >
+          Continue →
+        </button>
+      </section>
+
+      {stage1Locked && (
+        <section ref={stage2Ref} className="rounded-xl border border-border bg-surface p-5">
+          <h2 className="text-lg font-semibold text-foreground">Next Semester Courses</h2>
+          <p className="text-sm text-foreground-muted">Add your courses and credit units.</p>
+
+          <div className="sticky top-0 z-20 mb-4 mt-4 rounded-xl border border-border bg-surface-elevated p-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-foreground-muted">Max attainable CGPA</span>
+              {maxAttainableCGPA === null ? (
+                <span className="text-xl font-bold text-foreground-muted">—</span>
+              ) : (
+                <span className={`text-xl font-bold ${maxClassification?.color ?? 'text-foreground'}`}>
+                  {maxAttainableCGPA.toFixed(2)}
+                </span>
+              )}
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="completed-credits">Total Credit Units Completed</Label>
-              <Input
-                id="completed-credits"
-                type="number"
-                min="0"
-                step="1"
-                placeholder="e.g., 60"
-                value={completedCredits}
-                onChange={e => setCompletedCredits(e.target.value)}
+            <div className="mt-3 h-1.5 w-full rounded-full bg-border">
+              <motion.div
+                className="h-1.5 rounded-full bg-primary"
+                initial={false}
+                animate={{ width: `${maxAttainableCGPA === null ? 0 : (maxAttainableCGPA / scale) * 100}%` }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="target-cgpa">Target CGPA</Label>
-              <Input
-                id="target-cgpa"
-                type="number"
-                min="0"
-                max={scale}
-                step="0.01"
-                placeholder={`0.00 - ${scale.toFixed(2)}`}
-                value={targetCGPA}
-                onChange={e => setTargetCGPA(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="remaining-credits">Remaining Credit Units</Label>
-              <Input
-                id="remaining-credits"
-                type="number"
-                min="1"
-                step="1"
-                placeholder="e.g., 30"
-                value={remainingCredits}
-                onChange={e => setRemainingCredits(e.target.value)}
-              />
-              <p className="text-xs text-foreground-subtle">
-                Max per semester: {maxSemesterUnits} units
-              </p>
             </div>
           </div>
-        </Card>
 
-        {/* Section 2: Calculate Button */}
-        <Button
-          className="mb-6 w-full text-lg py-6"
-          onClick={handleCalculate}
-        >
-          Calculate Required GPA
-        </Button>
-
-        {/* Section 3: Results */}
-        {hasCalculated && result && (
-          <Card className="p-6 shadow-lg border-0 mb-6">
-            <Tabs defaultValue="summary">
-              <TabsList className="w-full mb-4">
-                <TabsTrigger value="summary" className="flex-1">Summary</TabsTrigger>
-                <TabsTrigger value="uniform" className="flex-1">Uniform Distribution</TabsTrigger>
-                <TabsTrigger value="whatif" className="flex-1">Interactive What-If</TabsTrigger>
-              </TabsList>
-
-              {/* View 1: Summary */}
-              <TabsContent value="summary">
-                <div className="space-y-4">
-                  <div className="rounded-lg border border-border p-6 bg-surface-elevated">
-                    <p className="text-foreground-muted mb-1">
-                      To achieve a CGPA of <span className="font-bold text-primary">{targetCGPA}</span>:
-                    </p>
-                    <p className="text-2xl font-bold text-slate-900 mb-2">
-                      You need an average GPA of:{' '}
-                      <span className="font-mono text-primary">{result.requiredGPA.toFixed(2)}</span>
-                    </p>
-                    <p className="text-foreground-muted mb-4">
-                      That's approximately: <span className="font-bold">{result.letterGrade}</span> in all remaining courses
-                    </p>
-                    <div
-                      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
-                        result.verdict === 'Achievable'
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : result.verdict === 'Challenging'
-                            ? 'bg-amber-100 text-amber-700'
-                            : result.verdict === 'Very Difficult'
-                              ? 'bg-red-100 text-red-700'
-                              : 'bg-surface-elevated text-foreground-muted'
-                      }`}
-                    >
-                      {result.verdictIcon} {result.verdict}
-                    </div>
-                    {!result.isAchievable && (
-                      <p className="text-sm text-red-600 mt-3">
-                        This target is not mathematically achievable. Consider adjusting your target CGPA.
-                      </p>
+          <div className="rounded-xl border border-border">
+            {courses.map((course, index) => (
+              <div
+                key={course.id}
+                className={`p-3 ${index < courses.length - 1 ? 'border-b border-border' : ''}`}
+              >
+                <div className="flex items-start gap-2">
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      placeholder="e.g. MTH 301"
+                      value={course.name}
+                      onChange={(event) => updateCourse(course.id, { name: event.target.value })}
+                      disabled={stage2Locked}
+                      className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground transition-colors duration-150 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-70"
+                    />
+                    {courseErrors[course.id]?.name && (
+                      <p className="mt-1 text-xs text-destructive">{courseErrors[course.id].name}</p>
                     )}
                   </div>
 
-                  <Button
-                    variant="outline"
-                    className="gap-2"
-                    onClick={handleSavePrediction}
-                  >
-                    <Save className="w-4 h-4" />
-                    Save Prediction
-                  </Button>
-                </div>
-              </TabsContent>
-
-              {/* View 2: Uniform Distribution */}
-              <TabsContent value="uniform">
-                <div>
-                  <p className="text-sm text-foreground-muted mb-4">
-                    If you score uniformly across all remaining courses:
-                  </p>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Target CGPA</th>
-                          <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Required GPA</th>
-                          <th className="text-left py-2 pr-4 text-foreground-muted font-semibold">Grade</th>
-                          <th className="text-left py-2 text-foreground-muted font-semibold">Verdict</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {uniformRows.map((row, i) => (
-                          <tr
-                            key={i}
-                            className={`border-b border-slate-100 ${row.isTarget ? 'bg-cyan-50 font-semibold' : ''}`}
-                          >
-                            <td className="py-2 pr-4 font-mono">{row.target}</td>
-                            <td className="py-2 pr-4 font-mono text-primary">{row.requiredGPA}</td>
-                            <td className="py-2 pr-4 font-mono">{row.grade}</td>
-                            <td className="py-2">{row.verdict}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </TabsContent>
-
-              {/* View 3: Interactive What-If */}
-              <TabsContent value="whatif">
-                <div>
-                  {/* Live predicted CGPA */}
-                  <div className="rounded-lg border border-border p-4 bg-surface-elevated mb-4">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-foreground-muted">Predicted Final CGPA:</p>
-                      <span className={`gpa-value ${getCGPAColor(predictedCGPA)}`}>
-                        {predictedCGPA !== null ? predictedCGPA.toFixed(2) : '—'}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-xs text-foreground-subtle">
-                      Load cap: {maxSemesterUnits} units
-                    </p>
+                  <div className="w-20">
+                    {index === 0 && <p className="mb-1 text-xs text-foreground-muted">Units</p>}
+                    <input
+                      type="number"
+                      min={1}
+                      max={6}
+                      step={1}
+                      value={course.units}
+                      onChange={(event) => updateCourse(course.id, { units: event.target.value })}
+                      disabled={stage2Locked}
+                      className="w-20 rounded-lg border border-border bg-surface px-2 py-3 text-center text-sm text-foreground transition-colors duration-150 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-70"
+                    />
+                    {courseErrors[course.id]?.units && (
+                      <p className="mt-1 text-xs text-destructive">{courseErrors[course.id].units}</p>
+                    )}
                   </div>
 
-                  {/* Course rows */}
-                  <div className="space-y-3 mb-4">
-                    {whatIfCourses.map(course => (
-                      <div
-                        key={course.id}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-border bg-surface"
-                      >
-                        <Input
-                          className="flex-1 min-w-0"
-                          value={course.name}
-                          onChange={e => updateWhatIfCourse(course.id, { name: e.target.value })}
-                          placeholder="Course Name"
-                        />
-                        <Input
-                          className="w-20"
-                          type="number"
-                          min="0.5"
-                          max="12"
-                          step="0.5"
-                          value={course.credits}
-                          onChange={e =>
-                            updateWhatIfCourse(course.id, { credits: parseFloat(e.target.value) || 0 })
-                          }
-                          placeholder="Credits"
-                        />
-                        <select
-                          className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                          value={course.gradePoint}
-                          onChange={e =>
-                            updateWhatIfCourse(course.id, { gradePoint: parseFloat(e.target.value) })
-                          }
-                        >
-                          {cgpa.settings.gradeRanges.map(range => (
-                            <option key={range.grade} value={range.points}>
-                              {range.grade} ({range.points.toFixed(1)})
-                            </option>
-                          ))}
-                        </select>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeWhatIfCourse(course.id)}
-                          className="text-red-600 hover:bg-red-50 shrink-0"
-                          disabled={whatIfCourses.length <= 1}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-
-                  <Button
-                    variant="outline"
-                    className="w-full gap-2"
-                    onClick={addWhatIfCourse}
-                    disabled={whatIfCourses.length >= MAX_WHAT_IF_COURSES}
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Course ({whatIfCourses.length}/{MAX_WHAT_IF_COURSES})
-                  </Button>
+                  {courses.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeCourse(course.id)}
+                      disabled={stage2Locked}
+                      className="rounded-lg p-2 text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-70"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
-              </TabsContent>
-            </Tabs>
-          </Card>
-        )}
+              </div>
+            ))}
+          </div>
 
-        {/* Saved Predictions History */}
-        {savedPredictions.length > 0 && (
-          <Card className="p-6 shadow-lg border-0">
-            <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-bold text-slate-900">Prediction History</h2>
+          <button
+            type="button"
+            onClick={addCourse}
+            disabled={stage2Locked || courses.length >= MAX_COURSES}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-transparent px-4 py-2 text-sm text-foreground-muted transition-colors duration-150 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            <Plus className="h-4 w-4" />
+            {courses.length >= MAX_COURSES ? 'Maximum 12 courses' : 'Add Course'}
+          </button>
+
+          <p className="mt-3 text-right text-sm text-foreground-muted">Total units next semester: {totalNextUnits}</p>
+
+          <button
+            type="button"
+            onClick={handleStage2Continue}
+            disabled={!stage2CanContinue || stage2Locked}
+            className="mt-6 w-full rounded-full bg-primary px-8 py-3 font-semibold text-white transition-colors duration-150 hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            Calculate Maximum CGPA →
+          </button>
+        </section>
+      )}
+
+      {stage2Locked && (
+        <section ref={stage3Ref} className="rounded-xl border border-border bg-surface p-5">
+          <div className="rounded-xl border border-border bg-surface p-5 text-center">
+            <p className="text-sm text-foreground-muted">Your Maximum Attainable CGPA</p>
+            <motion.p
+              key={maxAttainableCGPA ?? 'none'}
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2 }}
+              className={`mt-2 text-5xl font-bold ${maxClassification?.color ?? 'text-foreground'}`}
+            >
+              {maxAttainableCGPA?.toFixed(2) ?? '—'}
+            </motion.p>
+            {maxClassification && (
+              <p className={`mx-auto mt-3 inline-flex rounded-full px-3 py-1 text-sm ${getTierBadgeClasses(maxClassification.tier)}`}>
+                {maxClassification.label}
+              </p>
+            )}
+            <p className="mt-2 text-xs text-foreground-subtle">
+              If you score {highestGradeLabel} in all {totalNextUnits} units
+            </p>
+          </div>
+
+          <div className="mt-6">
+            <p className="text-base font-semibold text-foreground">What CGPA are you targeting?</p>
+            <p className="mb-3 mt-1 text-xs text-foreground-muted">
+              Must be between your current CGPA and the maximum above.
+            </p>
+            <input
+              type="number"
+              step="0.01"
+              min={currentCGPA}
+              max={maxAttainableCGPA ?? scale}
+              placeholder="e.g. 3.50"
+              value={targetCGPAInput}
+              onChange={(event) => setTargetCGPAInput(event.target.value)}
+              disabled={stage3Locked}
+              className={`w-full rounded-lg border bg-surface px-4 py-3 text-sm text-foreground transition-colors duration-150 focus:ring-1 ${
+                targetValidation.state === 'high' || targetValidation.state === 'low'
+                  ? 'border-destructive focus:border-destructive focus:ring-destructive'
+                  : targetValidation.state === 'valid'
+                    ? 'border-success focus:border-success focus:ring-success'
+                    : 'border-border focus:border-primary focus:ring-primary'
+              } disabled:opacity-70`}
+            />
+
+            {targetValidation.message && (
+              <p
+                className={`mt-2 text-xs ${
+                  targetValidation.state === 'valid' ? 'text-success' : 'text-destructive'
+                }`}
+              >
+                {targetValidation.message}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={handleFindStrategies}
+              disabled={!targetValidation.isValid || stage3Locked || isCalculatingStrategies}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 font-semibold text-white transition-colors duration-150 hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isCalculatingStrategies && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isCalculatingStrategies ? 'Calculating...' : 'Find My Strategies →'}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {stage3Locked && strategyResult && (
+        <section ref={stage4Ref} className="space-y-4 rounded-xl border border-border bg-surface p-5">
+          <div>
+            <h2 className="text-xl font-bold text-foreground">
+              Ways to achieve {round2(targetValue).toFixed(2)}
+              {semesterLabel.trim() ? ` in ${semesterLabel.trim()}` : ''}
+            </h2>
+            <p className="text-sm text-foreground-muted">
+              {strategyResult.strategies.length} {strategyResult.strategies.length === 1 ? 'strategy' : 'strategies'} found
+            </p>
+          </div>
+
+          {strategyResult.hasNoSolution ? (
+            <div className="rounded-xl border border-border bg-surface p-5">
+              <p className="flex items-center gap-2 text-lg font-semibold text-destructive">
+                <XCircle className="h-5 w-5" />
+                Target Not Achievable
+              </p>
+              <p className="mt-2 text-sm text-foreground-muted">
+                Your target CGPA of {round2(targetValue).toFixed(2)} is not achievable with {totalNextUnits} units next semester.
+                Your maximum is {strategyResult.maxAttainableCGPA.toFixed(2)}. Try lowering your target or consider registering
+                for more credit units.
+              </p>
+              <button
+                type="button"
+                onClick={handleTryAgain}
+                className="mt-4 rounded-full bg-primary px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+              >
+                Try Again
+              </button>
             </div>
-            <div className="space-y-3">
-              {savedPredictions.map(prediction => (
+          ) : (
+            strategyResult.strategies.map((strategy) => {
+              const meta = getStrategyMeta(strategy.type);
+              const classification = getClassification(strategy.resultingCGPA, scale);
+              const isOpen = expandedCards[strategy.type];
+              const feasibilityTextClass = getFeasibilityClasses(strategy.feasibilityScore);
+              const feasibilityBarClass = getFeasibilityBarClasses(strategy.feasibilityScore);
+
+              return (
                 <div
-                  key={prediction.id}
-                  className="flex items-center justify-between p-4 rounded-lg border border-border bg-surface-elevated"
+                  key={strategy.type}
+                  className={`mb-4 rounded-xl border border-border bg-surface ${meta.borderClass}`}
                 >
-                  <div>
-                    <p className="text-sm text-foreground-subtle">
-                      {new Date(prediction.timestamp).toLocaleDateString()} at{' '}
-                      {new Date(prediction.timestamp).toLocaleTimeString()}
-                    </p>
-                    <p className="font-semibold text-slate-900">
-                      Target: {prediction.targetCGPA.toFixed(2)} → Required GPA:{' '}
-                      <span className="font-mono text-primary">{prediction.requiredGPA.toFixed(2)}</span>
-                    </p>
-                    <p className="text-sm text-foreground-muted">
-                      Current: {prediction.currentCGPA.toFixed(2)} | Completed: {prediction.completedCredits} |
-                      Remaining: {prediction.remainingCredits} | {prediction.verdict}
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDeletePrediction(prediction.id)}
-                    className="text-red-600 hover:bg-red-50 shrink-0"
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedCards((prev) => ({
+                        ...prev,
+                        [strategy.type]: !prev[strategy.type],
+                      }))
+                    }
+                    className="w-full px-4 py-4 text-left"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-2">
+                        <span className="mt-0.5 text-foreground-muted">{meta.icon}</span>
+                        <div>
+                          <p className="text-base font-bold text-foreground">{strategy.label}</p>
+                          <p className="text-xs text-foreground-muted">{strategy.description}</p>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <p className={`text-lg font-bold ${classification.color}`}>{strategy.resultingCGPA.toFixed(2)}</p>
+                        <p className={`text-xs ${classification.color}`}>{classification.label}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <div className="mb-1 flex items-center justify-between text-xs">
+                        <span className="text-foreground-muted">Feasibility</span>
+                        <span className={feasibilityTextClass}>{strategy.feasibilityScore}%</span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-border">
+                        <motion.div
+                          className={`h-1.5 rounded-full ${feasibilityBarClass}`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${strategy.feasibilityScore}%` }}
+                          transition={{ duration: 0.25, ease: 'easeOut' }}
+                        />
+                      </div>
+                      <p className="mt-1 text-xs text-foreground-subtle">
+                        Minimum grade needed: {strategy.minimumGradeRequired}
+                      </p>
+                    </div>
+
+                    <div className="mt-2 flex justify-end text-foreground-muted">
+                      {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </div>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        className="overflow-hidden border-t border-border"
+                      >
+                        <div>
+                          <div className="grid grid-cols-[1.8fr_0.8fr_0.8fr_1.2fr] bg-surface-elevated px-3 py-2 text-xs font-semibold uppercase tracking-wide text-foreground-muted">
+                            <span>Course</span>
+                            <span>Units</span>
+                            <span>Score</span>
+                            <span>Grade Point</span>
+                          </div>
+
+                          {strategy.assignments.map((assignment, index) => (
+                            <div
+                              key={`${strategy.type}-${assignment.courseName}`}
+                              className={`grid grid-cols-[1.8fr_0.8fr_0.8fr_1.2fr] items-center border-b border-border px-3 py-3 text-sm text-foreground ${
+                                index % 2 === 0 ? 'bg-surface' : 'bg-surface-elevated'
+                              }`}
+                            >
+                              <span>{assignment.courseName}</span>
+                              <span>{assignment.units}</span>
+                              <span className={getScoreClass(assignment.gradeLabel)}>{assignment.minScore}+</span>
+                              <span className="text-foreground-muted">
+                                {assignment.gradeLabel} ({assignment.gradePoint.toFixed(1)})
+                              </span>
+                            </div>
+                          ))}
+
+                          <div className="bg-surface-elevated py-3 text-center text-sm font-semibold text-foreground">
+                            Resulting CGPA: {strategy.resultingCGPA.toFixed(2)} · Classification: {classification.label}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              ))}
-            </div>
-          </Card>
-        )}
-      </div>
+              );
+            })
+          )}
+
+          <button
+            type="button"
+            onClick={handleStartOver}
+            className="w-full rounded-full border border-border bg-transparent px-6 py-2 text-sm text-foreground-muted transition-colors duration-150 hover:bg-surface-elevated hover:text-foreground"
+          >
+            START OVER
+          </button>
+        </section>
+      )}
     </div>
   );
 }
