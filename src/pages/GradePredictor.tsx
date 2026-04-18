@@ -157,6 +157,14 @@ export default function GradePredictor() {
   }, [courses]);
 
   const totalNextUnits = useMemo(() => validCourses.reduce((sum, course) => sum + course.units, 0), [validCourses]);
+  const enteredTotalUnits = useMemo(
+    () =>
+      courses.reduce((sum, course) => {
+        const units = Math.round(parseNumber(course.units, 0));
+        return sum + (units > 0 ? units : 0);
+      }, 0),
+    [courses],
+  );
 
   const maxAttainableCGPA = useMemo(() => {
     if (validCourses.length === 0) return null;
@@ -538,7 +546,7 @@ export default function GradePredictor() {
             {courses.length >= MAX_COURSES ? 'Maximum 12 courses' : 'Add Course'}
           </button>
 
-          <p className="mt-3 text-right text-sm text-foreground-muted">Total units next semester: {totalNextUnits}</p>
+          <p className="mt-3 text-right text-sm text-foreground-muted">Total units next semester: {enteredTotalUnits}</p>
 
           <button
             type="button"
