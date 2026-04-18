@@ -86,10 +86,12 @@ const getStrategyMeta = (type: StrategyType): { icon: React.ReactNode; borderCla
 
 const getScoreClass = (gradeLabel: string): string => {
   const normalized = gradeLabel.trim().toUpperCase();
-  if (normalized === 'A') return 'text-success font-semibold';
-  if (normalized === 'B') return 'text-accent font-semibold';
-  if (normalized === 'C') return 'text-warning font-semibold';
-  if (normalized === 'D' || normalized === 'E' || normalized === 'F') return 'text-destructive font-semibold';
+  if (normalized.startsWith('A')) return 'text-success font-semibold';
+  if (normalized.startsWith('B')) return 'text-accent font-semibold';
+  if (normalized.startsWith('C')) return 'text-warning font-semibold';
+  if (normalized.startsWith('D') || normalized.startsWith('E') || normalized.startsWith('F')) {
+    return 'text-destructive font-semibold';
+  }
   return 'text-foreground-muted font-semibold';
 };
 
@@ -550,7 +552,7 @@ export default function GradePredictor() {
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-transparent px-4 py-2 text-sm text-foreground-muted transition-colors duration-150 hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-70"
           >
             <Plus className="h-4 w-4" />
-            {courses.length >= MAX_COURSES ? 'Maximum 12 courses' : 'Add Course'}
+            {courses.length >= MAX_COURSES ? `Maximum ${MAX_COURSES} courses` : 'Add Course'}
           </button>
 
           <p className="mt-3 text-right text-sm text-foreground-muted">Total units next semester: {enteredTotalUnits}</p>
