@@ -31,6 +31,8 @@ import {
 
 const HOW_TO_SEEN_KEY = 'syncgrade_predictor_howto_seen';
 const MAX_COURSES = 12;
+const SCROLL_DELAY_MS = 80;
+const MIN_CALCULATION_DISPLAY_MS = 400;
 
 type CourseRow = {
   id: string;
@@ -222,7 +224,7 @@ export default function GradePredictor() {
 
   const handleStage1Continue = () => {
     setStage1Locked(true);
-    setTimeout(() => scrollTo(stage2Ref), 80);
+    setTimeout(() => scrollTo(stage2Ref), SCROLL_DELAY_MS);
   };
 
   const updateCourse = (id: string, patch: Partial<CourseRow>) => {
@@ -267,7 +269,7 @@ export default function GradePredictor() {
     const isValid = validateCourses();
     if (!isValid) return;
     setStage2Locked(true);
-    setTimeout(() => scrollTo(stage3Ref), 80);
+    setTimeout(() => scrollTo(stage3Ref), SCROLL_DELAY_MS);
   };
 
   const handleFindStrategies = async () => {
@@ -285,14 +287,14 @@ export default function GradePredictor() {
     );
 
     const elapsed = Date.now() - startedAt;
-    const wait = Math.max(0, 400 - elapsed);
+    const wait = Math.max(0, MIN_CALCULATION_DISPLAY_MS - elapsed);
     await new Promise((resolve) => setTimeout(resolve, wait));
 
     setStrategyResult(generated);
     setStage3Locked(true);
     setExpandedCards({ safe: false, balanced: false, highEffort: false });
     setIsCalculatingStrategies(false);
-    setTimeout(() => scrollTo(stage4Ref), 80);
+    setTimeout(() => scrollTo(stage4Ref), SCROLL_DELAY_MS);
   };
 
   const handleTryAgain = () => {

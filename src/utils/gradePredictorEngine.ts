@@ -44,6 +44,17 @@ type WorkingAssignment = {
   gradeIndex: number;
 };
 
+const HIGH_EFFORT_TOP_COURSE_RATIO = 0.5;
+const SAFE_FEASIBILITY_MIN = 85;
+const SAFE_FEASIBILITY_MAX = 100;
+const SAFE_FEASIBILITY_RANGE = SAFE_FEASIBILITY_MAX - SAFE_FEASIBILITY_MIN;
+const BALANCED_FEASIBILITY_MIN = 50;
+const BALANCED_FEASIBILITY_MAX = 84;
+const BALANCED_FEASIBILITY_RANGE = BALANCED_FEASIBILITY_MAX - BALANCED_FEASIBILITY_MIN;
+const HIGH_EFFORT_FEASIBILITY_MIN = 10;
+const HIGH_EFFORT_FEASIBILITY_MAX = 49;
+const HIGH_EFFORT_FEASIBILITY_RANGE = HIGH_EFFORT_FEASIBILITY_MAX - HIGH_EFFORT_FEASIBILITY_MIN;
+
 const round2 = (value: number): number => Math.round(value * 100) / 100;
 
 const toSafeNumber = (value: number, fallback = 0): number =>
@@ -268,7 +279,7 @@ const generateHighEffortAssignments = (
   const ordered = sortByPriority(courses);
   const highest = gradeOptionsDescending[0];
   const oneBelow = gradeOptionsDescending[1] ?? highest;
-  const topCount = Math.ceil(courses.length / 2);
+  const topCount = Math.ceil(courses.length * HIGH_EFFORT_TOP_COURSE_RATIO);
 
   const assignments = ordered.map((course, index) => ({
     courseName: course.name,
@@ -376,7 +387,11 @@ export function generateStrategies(
       completedCredits,
       safeScale,
       canonicalDesc,
-      100 - Math.min(15, Math.round((safeGenerated.upgrades / Math.max(1, safeCourses.length * 2)) * 15)),
+      SAFE_FEASIBILITY_MAX -
+        Math.min(
+          SAFE_FEASIBILITY_RANGE,
+          Math.round((safeGenerated.upgrades / Math.max(1, safeCourses.length * 2)) * SAFE_FEASIBILITY_RANGE),
+        ),
     );
 
   const balancedStrategy =
@@ -390,7 +405,11 @@ export function generateStrategies(
       completedCredits,
       safeScale,
       canonicalDesc,
-      84 - Math.min(34, Math.round(distributionVariance(balancedAssignments) * 15)),
+      BALANCED_FEASIBILITY_MAX -
+        Math.min(
+          BALANCED_FEASIBILITY_RANGE,
+          Math.round(distributionVariance(balancedAssignments) * 15),
+        ),
     );
 
   const highEffortResult =
@@ -409,7 +428,11 @@ export function generateStrategies(
       completedCredits,
       safeScale,
       canonicalDesc,
-      Math.max(10, 49 - Math.round((highEffortBuffer / Math.max(0.01, safeScale)) * 40)),
+      Math.max(
+        HIGH_EFFORT_FEASIBILITY_MIN,
+        HIGH_EFFORT_FEASIBILITY_MAX -
+          Math.round((highEffortBuffer / Math.max(0.01, safeScale)) * HIGH_EFFORT_FEASIBILITY_RANGE),
+      ),
     );
 
   const deduped = [safeStrategy, balancedStrategy, highEffortStrategy]
