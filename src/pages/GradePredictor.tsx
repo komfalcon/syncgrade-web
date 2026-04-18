@@ -87,7 +87,7 @@ const getScoreClass = (gradeLabel: string): string => {
   if (normalized === 'A') return 'text-success font-semibold';
   if (normalized === 'B') return 'text-accent font-semibold';
   if (normalized === 'C') return 'text-warning font-semibold';
-  if (normalized === 'D' || normalized === 'E') return 'text-destructive font-semibold';
+  if (normalized === 'D' || normalized === 'E' || normalized === 'F') return 'text-destructive font-semibold';
   return 'text-foreground-muted font-semibold';
 };
 
