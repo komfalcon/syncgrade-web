@@ -172,6 +172,10 @@ export default function GradePredictor() {
     if (validCourses.length === 0) return null;
     return calculateMaxCGPA(currentCGPA, completedCredits, validCourses, scale);
   }, [currentCGPA, completedCredits, validCourses, scale]);
+  const maxPreviewPercent = useMemo(() => {
+    if (maxAttainableCGPA === null || scale <= 0) return 0;
+    return clamp((maxAttainableCGPA / scale) * 100, 0, 100);
+  }, [maxAttainableCGPA, scale]);
 
   const maxClassification = useMemo(() => {
     if (maxAttainableCGPA === null) return null;
@@ -480,7 +484,7 @@ export default function GradePredictor() {
               <motion.div
                 className="h-1.5 rounded-full bg-primary"
                 initial={false}
-                animate={{ width: `${maxAttainableCGPA === null ? 0 : (maxAttainableCGPA / scale) * 100}%` }}
+                animate={{ width: `${maxPreviewPercent}%` }}
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
               />
             </div>
@@ -595,11 +599,11 @@ export default function GradePredictor() {
               inputMode="decimal"
               step="0.01"
               min={currentCGPA}
-              max={maxAttainableCGPA ?? scale}
+              max={maxAttainableCGPA ?? undefined}
               placeholder="e.g. 3.50"
               value={targetCGPAInput}
               onChange={(event) => setTargetCGPAInput(event.target.value)}
-              disabled={stage3Locked}
+              disabled={stage3Locked || maxAttainableCGPA === null}
               className={`w-full rounded-lg border bg-surface px-4 py-3 text-sm text-foreground transition-colors duration-150 focus:ring-1 ${
                 targetValidation.state === 'high' || targetValidation.state === 'low'
                   ? 'border-destructive focus:border-destructive focus:ring-destructive'
