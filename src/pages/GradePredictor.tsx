@@ -197,7 +197,8 @@ export default function GradePredictor() {
         message: `Must be higher than your current CGPA of ${currentCGPA.toFixed(2)}.`,
       };
     }
-    const targetClass = getClassification(targetValue, scale);
+    const normalizedTarget = round2(targetValue);
+    const targetClass = getClassification(normalizedTarget, scale);
     return {
       isValid: true as const,
       state: 'valid' as const,
@@ -589,6 +590,7 @@ export default function GradePredictor() {
             </p>
             <input
               type="number"
+              inputMode="decimal"
               step="0.01"
               min={currentCGPA}
               max={maxAttainableCGPA ?? scale}
