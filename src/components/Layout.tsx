@@ -22,8 +22,8 @@ export default function Layout({ children, topContent }: LayoutProps) {
       {/* 1. Removed pb-40
           2. Added a container for main + footer that handles the bottom clearance
       */}
-      <div className="flex-1 pb-16 md:pb-0"> 
-        <main className="mx-auto w-full max-w-7xl bg-background px-4 py-6 md:px-6">
+      <div className="flex-1 pb-20 md:pb-0"> 
+        <main className="mx-auto w-full max-w-7xl px-4 py-6 md:px-6">
           {children}
         </main>
         <AppFooter />
