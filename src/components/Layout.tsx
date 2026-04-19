@@ -10,12 +10,11 @@ interface LayoutProps {
 
 export default function Layout({ children, topContent }: LayoutProps) {
   return (
-    // 1. ADDED: pb-40 md:pb-0 to the parent div
-    <div className="flex min-h-screen flex-col bg-background pb-40 md:pb-0">
+    // Change pb-40 to pb-20 (5rem/80px) or pb-24 (6rem/96px)
+    <div className="flex min-h-screen flex-col bg-background pb-20 md:pb-0">
       <Navbar />
       {topContent ? <div className="mx-auto w-full max-w-7xl px-4 pt-4 md:px-6">{topContent}</div> : null}
       
-      {/* 2. REMOVED: pb-40 md:pb-0 from the main tag */}
       <main className="mx-auto flex-1 w-full max-w-7xl bg-background px-4 py-6 md:px-6">
         {children}
       </main>
