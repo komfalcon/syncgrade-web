@@ -10,17 +10,26 @@ interface LayoutProps {
 
 export default function Layout({ children, topContent }: LayoutProps) {
   return (
-    // Change pb-40 to pb-20 (5rem/80px) or pb-24 (6rem/96px)
-    <div className="flex min-h-screen flex-col bg-background pb-20 md:pb-0">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
-      {topContent ? <div className="mx-auto w-full max-w-7xl px-4 pt-4 md:px-6">{topContent}</div> : null}
       
-      <main className="mx-auto flex-1 w-full max-w-7xl bg-background px-4 py-6 md:px-6">
-        {children}
-      </main>
+      {topContent && (
+        <div className="mx-auto w-full max-w-7xl px-4 pt-4 md:px-6">
+          {topContent}
+        </div>
+      )}
       
+      {/* 1. Removed pb-40
+          2. Added a container for main + footer that handles the bottom clearance
+      */}
+      <div className="flex-1 pb-16 md:pb-0"> 
+        <main className="mx-auto w-full max-w-7xl bg-background px-4 py-6 md:px-6">
+          {children}
+        </main>
+        <AppFooter />
+      </div>
+
       <BottomNav />
-      <AppFooter />
     </div>
   );
 }
