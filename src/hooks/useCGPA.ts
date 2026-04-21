@@ -21,6 +21,7 @@ export interface Semester {
   id: string;
   name: string;
   courses: Course[];
+  level: number;
 }
 
 export interface AppSettings {
@@ -31,6 +32,7 @@ export interface AppSettings {
   repeatPolicy: 'replace' | 'average' | 'both' | 'highest';
   studentName: string;
   programme: string;
+  startingLevel: number;
 }
 
 interface CGPAData {
@@ -54,7 +56,20 @@ export const getDefaultSettings = (): AppSettings => ({
   repeatPolicy: 'replace',
   studentName: "",
   programme: "",
+  startingLevel: 100,
 });
+
+const normalizeLevelValue = (value: number): number => {
+  const rounded = Math.round(value / 100) * 100;
+  if (rounded < 100) return 100;
+  if (rounded > 700) return 700;
+  return rounded;
+};
+
+const getSuggestedLevel = (startingLevel: number, existingSemesters: number): number => {
+  const increment = Math.min(Math.floor(existingSemesters / 2) * 100, 500);
+  return normalizeLevelValue(Math.min(startingLevel + increment, 700));
+};
 
 const sanitizeSettings = (
   settings: Partial<AppSettings> | null | undefined,
@@ -95,6 +110,10 @@ const sanitizeSettings = (
       safeInput.repeatPolicy === 'highest'
         ? safeInput.repeatPolicy
         : defaults.repeatPolicy,
+    startingLevel:
+      typeof safeInput.startingLevel === 'number'
+        ? normalizeLevelValue(safeInput.startingLevel)
+        : defaults.startingLevel,
   };
 };
 
@@ -134,15 +153,22 @@ export function useCGPA() {
           parsedSettings ?? next.settings ?? null,
         );
         next.settings = hydratedSettings;
-        next.semesters = (next.semesters ?? []).map((sem) => ({
-          ...sem,
-          courses: (sem.courses ?? []).map((c) => ({
-            ...c,
-            isCarryover: c.isCarryover ?? false,
-            originalSemester: c.originalSemester ?? null,
-            isCarryoverPassed: c.isCarryoverPassed ?? false,
-          })),
-        }));
+        next.semesters = (next.semesters ?? []).map((sem, index) => {
+          const migratedLevel =
+            typeof sem.level === 'number'
+              ? normalizeLevelValue(sem.level)
+              : getSuggestedLevel(hydratedSettings.startingLevel, index);
+          return {
+            ...sem,
+            level: migratedLevel,
+            courses: (sem.courses ?? []).map((c) => ({
+              ...c,
+              isCarryover: c.isCarryover ?? false,
+              originalSemester: c.originalSemester ?? null,
+              isCarryoverPassed: c.isCarryoverPassed ?? false,
+            })),
+          };
+        });
 
         if (active) {
           setData(next);
@@ -218,14 +244,17 @@ export function useCGPA() {
     };
   }, [data.settings, universities]);
 
-  const addSemester = useCallback((semesterName: string) => {
-    const newSemester: Semester = {
-      id: Date.now().toString(),
-      name: semesterName || `Semester ${data.semesters.length + 1}`,
-      courses: [],
-    };
-
+  const addSemester = useCallback((semesterName: string, level?: number) => {
     setData(prevData => {
+      const newSemester: Semester = {
+        id: Date.now().toString(),
+        name: semesterName || `Semester ${prevData.semesters.length + 1}`,
+        courses: [],
+        level:
+          typeof level === 'number'
+            ? normalizeLevelValue(level)
+            : getSuggestedLevel(prevData.settings.startingLevel, prevData.semesters.length),
+      };
       const updatedSemesters = [...prevData.semesters, newSemester];
       const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(updatedSemesters, prevData.settings);
       return {
@@ -237,7 +266,7 @@ export function useCGPA() {
       };
     });
     incrementInteractionCount();
-  }, [data.semesters.length, calculateProgramSummary]);
+  }, [calculateProgramSummary]);
 
   const removeSemester = useCallback((semesterId: string) => {
     setData(prevData => {
