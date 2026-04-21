@@ -118,21 +118,6 @@ export default function GradingGuide({ gradeRanges, universityName }: GradingGui
                 </div>
               </section>
 
-              <section>
-                <h4 className="text-sm font-semibold text-foreground">How is CGPA calculated?</h4>
-                <p className="mt-1 text-xs leading-relaxed text-foreground-muted">
-                  For each course, multiply your grade points by the credit units. Add all of these together, then
-                  divide by your total credit units. SyncGrade does all of this automatically — just enter your
-                  courses and grades.
-                </p>
-                <pre className="mt-2 rounded-lg bg-surface-elevated p-3 font-mono text-xs text-foreground-muted">
-{`MTH 201 (3 units) × A (5.0 pts) = 15.0
-ENG 201 (2 units) × B (4.0 pts) = 8.0
-─────────────────────────────────
-Total: 23.0 ÷ 5 units = GPA of 4.60`}
-                </pre>
-              </section>
-
               <button
                 type="button"
                 onClick={collapseGuide}
