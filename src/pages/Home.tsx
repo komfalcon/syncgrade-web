@@ -9,6 +9,7 @@ import AddSemesterDialog from "@/components/AddSemesterDialog";
 import ShareProgress from "@/components/ShareProgress";
 import { useGpaScale } from "@/contexts/GpaScaleContext";
 import { getClassification } from "@/utils/gpaLogic";
+import GradingGuide from "@/components/GradingGuide";
 import { extractCourseCode, type CourseHistory } from "@/utils/carryoverDetector";
 import { useUniversities } from "@/hooks/useUniversities";
 
@@ -130,6 +131,7 @@ export default function Home() {
       </Card>
 
       <section className="mb-10 space-y-4">
+        <GradingGuide gradeRanges={cgpa.settings.gradeRanges} universityName={activeUniversityName} />
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-2xl font-bold text-foreground">Your Semesters</h2>
           <Button onClick={() => setShowAddSemester(true)} className="min-h-12 gap-2">
