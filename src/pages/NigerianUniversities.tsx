@@ -80,9 +80,16 @@ export default function NigerianUniversities({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const normalizedQuery = query.trim().toLowerCase();
+  const sortedUniversities = useMemo(
+    () =>
+      [...universities].sort((a, b) =>
+        a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }),
+      ),
+    [universities],
+  );
   const filteredUniversities = useMemo(() => {
-    if (!normalizedQuery) return universities;
-    return universities.filter((uni) => {
+    if (!normalizedQuery) return sortedUniversities;
+    return sortedUniversities.filter((uni) => {
       const generatedAcronym = uni.name
         .toLowerCase()
         .split(/\s+/)
@@ -98,7 +105,7 @@ export default function NigerianUniversities({
           .every((token) => haystack.includes(token))
       );
     });
-  }, [normalizedQuery, universities]);
+  }, [normalizedQuery, sortedUniversities]);
 
   const visibleUniversities = useMemo(
     () => filteredUniversities.slice(0, visibleCount),

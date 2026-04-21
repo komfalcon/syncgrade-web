@@ -1,10 +1,10 @@
 {
   "universities": [
     {
-      "id": "abu",
-      "name": "Ahmadu Bello University",
-      "acronym": "ABU",
-      "location": "Zaria, Kaduna",
+      "id": "absu",
+      "name": "Abia State University",
+      "acronym": "ABSU",
+      "location": "Uturu, Abia",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -14,370 +14,10 @@
       }
     },
     {
-      "id": "covenant",
-      "name": "Covenant University",
-      "acronym": "CU",
-      "location": "Ota, Ogun",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "funaab",
-      "name": "Federal University of Agriculture, Abeokuta",
-      "acronym": "FUNAAB",
-      "location": "Abeokuta, Ogun",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "futminna",
-      "name": "Federal University of Technology, Minna",
-      "acronym": "FUTMINNA",
-      "location": "Minna, Niger",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "oau",
-      "name": "Obafemi Awolowo University",
-      "acronym": "OAU",
-      "location": "Ile-Ife, Osun",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "uniben",
-      "name": "University of Benin",
-      "acronym": "UNIBEN",
-      "location": "Benin City, Edo",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "unn",
-      "name": "University of Nigeria, Nsukka",
-      "acronym": "UNN",
-      "location": "Nsukka, Enugu",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "ui",
-      "name": "University of Ibadan",
-      "acronym": "UI",
-      "location": "Ibadan, Oyo",
-      "type": "university",
-      "configurations": [
-        {
-          "sessionRange": "2018/2019 - 2023/2024",
-          "templateId": "ui_legacy_4"
-        },
-        {
-          "sessionRange": "2024/2025 - Present",
-          "templateId": "nuc_standard_5"
-        }
-      ],
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "unilag",
-      "name": "University of Lagos",
-      "acronym": "UNILAG",
-      "location": "Akoka, Lagos",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "unilorin",
-      "name": "University of Ilorin",
-      "acronym": "UNILORIN",
-      "location": "Ilorin, Kwara",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "futa",
-      "name": "Federal University of Technology, Akure",
-      "acronym": "FUTA",
-      "location": "Akure, Ondo",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "futo",
-      "name": "Federal University of Technology, Owerri",
-      "acronym": "FUTO",
-      "location": "Owerri, Imo",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "uniport",
-      "name": "University of Port Harcourt",
-      "acronym": "UNIPORT",
-      "location": "Choba, Rivers",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "unizik",
-      "name": "Nnamdi Azikiwe University",
-      "acronym": "UNIZIK",
-      "location": "Awka, Anambra",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "buk",
-      "name": "Bayero University Kano",
-      "acronym": "BUK",
-      "location": "Kano, Kano",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "uniabuja",
-      "name": "University of Abuja",
-      "acronym": "UNIABUJA",
-      "location": "Gwagwalada, FCT",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "uniuyo",
-      "name": "University of Uyo",
-      "acronym": "UNIUYO",
-      "location": "Uyo, Akwa Ibom",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "unijos",
-      "name": "University of Jos",
-      "acronym": "UNIJOS",
-      "location": "Jos, Plateau",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "udus",
-      "name": "Usmanu Danfodiyo University",
-      "acronym": "UDUS",
-      "location": "Sokoto, Sokoto",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "lasu",
-      "name": "Lagos State University",
-      "acronym": "LASU",
-      "location": "Ojo, Lagos",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "delsu",
-      "name": "Delta State University",
-      "acronym": "DELSU",
-      "location": "Abraka, Delta",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "aau",
-      "name": "Ambrose Alli University",
-      "acronym": "AAU",
-      "location": "Ekpoma, Edo",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "oou",
-      "name": "Olabisi Onabanjo University",
-      "acronym": "OOU",
-      "location": "Ago-Iwoye, Ogun",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "eksu",
-      "name": "Ekiti State University",
-      "acronym": "EKSU",
-      "location": "Ado-Ekiti, Ekiti",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "babcock",
-      "name": "Babcock University",
-      "acronym": "BU",
-      "location": "Ilishan-Remo, Ogun",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "bowen",
-      "name": "Bowen University",
-      "acronym": "BU",
-      "location": "Iwo, Osun",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "abuad",
-      "name": "Afe Babalola University",
-      "acronym": "ABUAD",
-      "location": "Ado-Ekiti, Ekiti",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "landmark",
-      "name": "Landmark University",
-      "acronym": "LMU",
-      "location": "Omu-Aran, Kwara",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "lautech",
-      "name": "Ladoke Akintola University of Technology",
-      "acronym": "LAUTECH",
-      "location": "Ogbomoso, Oyo",
+      "id": "atbu",
+      "name": "Abubakar Tafawa Balewa University",
+      "acronym": "ATBU",
+      "location": "Bauchi, Bauchi",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -400,10 +40,36 @@
       }
     },
     {
-      "id": "kwasu",
-      "name": "Kwara State University",
-      "acronym": "KWASU",
-      "location": "Malete, Kwara",
+      "id": "adeleke",
+      "name": "Adeleke University",
+      "acronym": "AU",
+      "location": "Ede, Osun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "abuad",
+      "name": "Afe Babalola University",
+      "acronym": "ABUAD",
+      "location": "Ado-Ekiti, Ekiti",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "abu",
+      "name": "Ahmadu Bello University",
+      "acronym": "ABU",
+      "location": "Zaria, Kaduna",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -413,42 +79,16 @@
       }
     },
     {
-      "id": "tasued",
-      "name": "Tai Solarin University of Education",
-      "acronym": "TASUED",
-      "location": "Ijagun, Ogun",
+      "id": "acu",
+      "name": "Ajayi Crowther University",
+      "acronym": "ACU",
+      "location": "Oyo, Oyo",
       "type": "university",
-      "templateId": "nuc_standard_5",
+      "templateId": "nuc_revised_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "rsu",
-      "name": "Rivers State University",
-      "acronym": "RSU",
-      "location": "Port Harcourt, Rivers",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "mouau",
-      "name": "Michael Okpara University of Agriculture",
-      "acronym": "MOUAU",
-      "location": "Umudike, Abia",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -465,42 +105,29 @@
       }
     },
     {
-      "id": "nile",
-      "name": "Nile University of Nigeria",
-      "acronym": "NILE",
-      "location": "Jabi, FCT",
-      "type": "university",
-      "templateId": "nuc_revised_5",
+      "id": "alvan",
+      "name": "Alvan Ikoku Federal College of Education",
+      "acronym": "AIFCE",
+      "location": "Owerri, Imo",
+      "type": "college",
+      "templateId": "ncce_standard_5",
       "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
+        "max_credit_load": 25,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
       }
     },
     {
-      "id": "baze",
-      "name": "Baze University",
-      "acronym": "BAZE",
-      "location": "Abuja, FCT",
+      "id": "aau",
+      "name": "Ambrose Alli University",
+      "acronym": "AAU",
+      "location": "Ekpoma, Edo",
       "type": "university",
-      "templateId": "nuc_revised_5",
+      "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
         "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "veritas",
-      "name": "Veritas University",
-      "acronym": "VERITAS",
-      "location": "Bwari, FCT",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
+        "repeat_policy": "both"
       }
     },
     {
@@ -517,10 +144,49 @@
       }
     },
     {
-      "id": "ebsu",
-      "name": "Ebonyi State University",
-      "acronym": "EBSU",
-      "location": "Abakaliki, Ebonyi",
+      "id": "auchipoly",
+      "name": "Auchi Polytechnic",
+      "acronym": "AUCHIPOLY",
+      "location": "Auchi, Edo",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "augustine",
+      "name": "Augustine University",
+      "acronym": "AUI",
+      "location": "Epe, Lagos",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "babcock",
+      "name": "Babcock University",
+      "acronym": "BU",
+      "location": "Ilishan-Remo, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "buk",
+      "name": "Bayero University Kano",
+      "acronym": "BUK",
+      "location": "Kano, Kano",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -530,36 +196,23 @@
       }
     },
     {
-      "id": "imsu",
-      "name": "Imo State University",
-      "acronym": "IMSU",
-      "location": "Owerri, Imo",
+      "id": "baze",
+      "name": "Baze University",
+      "acronym": "BAZE",
+      "location": "Abuja, FCT",
       "type": "university",
-      "templateId": "nuc_standard_5",
+      "templateId": "nuc_revised_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
-      "id": "kasu",
-      "name": "Kaduna State University",
-      "acronym": "KASU",
-      "location": "Kaduna, Kaduna",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "absu",
-      "name": "Abia State University",
-      "acronym": "ABSU",
-      "location": "Uturu, Abia",
+      "id": "bells",
+      "name": "Bells University of Technology",
+      "acronym": "BELLS",
+      "location": "Ota, Ogun",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -582,6 +235,110 @@
       }
     },
     {
+      "id": "bingham",
+      "name": "Bingham University",
+      "acronym": "BU",
+      "location": "Karu, Nasarawa",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "bowen",
+      "name": "Bowen University",
+      "acronym": "BU",
+      "location": "Iwo, Osun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "caleb",
+      "name": "Caleb University",
+      "acronym": "CALEB",
+      "location": "Imota, Lagos",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "coou",
+      "name": "Chukwuemeka Odumegwu Ojukwu University",
+      "acronym": "COOU",
+      "location": "Uli/Igbariam, Anambra",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "covenant",
+      "name": "Covenant University",
+      "acronym": "CU",
+      "location": "Ota, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "delsu",
+      "name": "Delta State University",
+      "acronym": "DELSU",
+      "location": "Abraka, Delta",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "ebsu",
+      "name": "Ebonyi State University",
+      "acronym": "EBSU",
+      "location": "Abakaliki, Ebonyi",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "eksu",
+      "name": "Ekiti State University",
+      "acronym": "EKSU",
+      "location": "Ado-Ekiti, Ekiti",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
       "id": "esut",
       "name": "Enugu State University of Science and Technology",
       "acronym": "ESUT",
@@ -595,10 +352,192 @@
       }
     },
     {
-      "id": "gsu",
-      "name": "Gombe State University",
-      "acronym": "GSU",
-      "location": "Gombe, Gombe",
+      "id": "fceoyo",
+      "name": "Federal College of Education (Special), Oyo",
+      "acronym": "FCE-OYO",
+      "location": "Oyo, Oyo",
+      "type": "college",
+      "templateId": "ncce_standard_5",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fceakoka",
+      "name": "Federal College of Education (Technical), Akoka",
+      "acronym": "FCE-AKOKA",
+      "location": "Akoka, Lagos",
+      "type": "college",
+      "templateId": "ncce_standard_5",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fcekano",
+      "name": "Federal College of Education, Kano",
+      "acronym": "FCE-KANO",
+      "location": "Kano City, Kano",
+      "type": "college",
+      "templateId": "ncce_standard_5",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fceokene",
+      "name": "Federal College of Education, Okene",
+      "acronym": "FCE-OKENE",
+      "location": "Okene, Kogi",
+      "type": "college",
+      "templateId": "ncce_standard_5",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fcezaria",
+      "name": "Federal College of Education, Zaria",
+      "acronym": "FCE-ZARIA",
+      "location": "Zaria, Kaduna",
+      "type": "college",
+      "templateId": "ncce_standard_5",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fedpolybauchi",
+      "name": "Federal Polytechnic, Bauchi",
+      "acronym": "BAUCHIPOLY",
+      "location": "Bauchi, Bauchi",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fpi",
+      "name": "Federal Polytechnic, Ilaro",
+      "acronym": "FEDPOLYILARO",
+      "location": "Ilaro, Ogun",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 26,
+        "probation_cgpa": 2.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "nekede",
+      "name": "Federal Polytechnic, Nekede",
+      "acronym": "NEKEDEPOLY",
+      "location": "Owerri, Imo",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fpo",
+      "name": "Federal Polytechnic, Offa",
+      "acronym": "FEDPOFFA",
+      "location": "Offa, Kwara",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 2.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "funaab",
+      "name": "Federal University of Agriculture, Abeokuta",
+      "acronym": "FUNAAB",
+      "location": "Abeokuta, Ogun",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "futa",
+      "name": "Federal University of Technology, Akure",
+      "acronym": "FUTA",
+      "location": "Akure, Ondo",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "futminna",
+      "name": "Federal University of Technology, Minna",
+      "acronym": "FUTMINNA",
+      "location": "Minna, Niger",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "futo",
+      "name": "Federal University of Technology, Owerri",
+      "acronym": "FUTO",
+      "location": "Owerri, Imo",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fubk",
+      "name": "Federal University, Birnin Kebbi",
+      "acronym": "FUBK",
+      "location": "Birnin Kebbi, Kebbi",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fuk",
+      "name": "Federal University, Kashere",
+      "acronym": "FUK",
+      "location": "Kashere, Gombe",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -634,10 +573,10 @@
       }
     },
     {
-      "id": "fukashere",
-      "name": "Federal University, Kashere",
-      "acronym": "FUKASHERE",
-      "location": "Kashere, Gombe",
+      "id": "gsu",
+      "name": "Gombe State University",
+      "acronym": "GSU",
+      "location": "Gombe, Gombe",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -647,10 +586,10 @@
       }
     },
     {
-      "id": "fubk",
-      "name": "Federal University, Birnin Kebbi",
-      "acronym": "FUBK",
-      "location": "Birnin Kebbi, Kebbi",
+      "id": "imsu",
+      "name": "Imo State University",
+      "acronym": "IMSU",
+      "location": "Owerri, Imo",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -660,270 +599,10 @@
       }
     },
     {
-      "id": "leadcity",
-      "name": "Lead City University",
-      "acronym": "LCU",
-      "location": "Ibadan, Oyo",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "adeleke",
-      "name": "Adeleke University",
-      "acronym": "AU",
-      "location": "Ede, Osun",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "acu",
-      "name": "Ajayi Crowther University",
-      "acronym": "ACU",
-      "location": "Oyo, Oyo",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "run",
-      "name": "Redeemer's University",
-      "acronym": "RUN",
-      "location": "Ede, Osun",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "mtu",
-      "name": "Mountain Top University",
-      "acronym": "MTU",
-      "location": "Ibafo, Ogun",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "caleb",
-      "name": "Caleb University",
-      "acronym": "CALEB",
-      "location": "Imota, Lagos",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "bells",
-      "name": "Bells University of Technology",
-      "acronym": "BELLS",
-      "location": "Ota, Ogun",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "augustine",
-      "name": "Augustine University",
-      "acronym": "AUI",
-      "location": "Epe, Lagos",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "bingham",
-      "name": "Bingham University",
-      "acronym": "BU",
-      "location": "Karu, Nasarawa",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "yabatech",
-      "name": "Yaba College of Technology",
-      "acronym": "YABATECH",
-      "location": "Yaba, Lagos",
-      "type": "polytechnic",
-      "templateId": "nbte_standard_4_0",
-      "academic_rules": {
-        "max_credit_load": 28,
-        "probation_cgpa": 2.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "polyibadan",
-      "name": "The Polytechnic, Ibadan",
-      "acronym": "POLYIBADAN",
-      "location": "Ibadan, Oyo",
-      "type": "polytechnic",
-      "templateId": "nbte_standard_4_0",
-      "academic_rules": {
-        "max_credit_load": 30,
-        "probation_cgpa": 2.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "auchipoly",
-      "name": "Auchi Polytechnic",
-      "acronym": "AUCHIPOLY",
-      "location": "Auchi, Edo",
-      "type": "polytechnic",
-      "templateId": "nbte_standard_4_0",
-      "academic_rules": {
-        "max_credit_load": 28,
-        "probation_cgpa": 2.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fpo",
-      "name": "Federal Polytechnic, Offa",
-      "acronym": "FEDPOFFA",
-      "location": "Offa, Kwara",
-      "type": "polytechnic",
-      "templateId": "nbte_standard_4_0",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 2.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fpi",
-      "name": "Federal Polytechnic, Ilaro",
-      "acronym": "FEDPOLYILARO",
-      "location": "Ilaro, Ogun",
-      "type": "polytechnic",
-      "templateId": "nbte_standard_4_0",
-      "academic_rules": {
-        "max_credit_load": 26,
-        "probation_cgpa": 2.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "atbu",
-      "name": "Abubakar Tafawa Balewa University",
-      "acronym": "ATBU",
-      "location": "Bauchi, Bauchi",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fuk",
-      "name": "Federal University, Kashere",
-      "acronym": "FUK",
-      "location": "Kashere, Gombe",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "pau",
-      "name": "Pan-Atlantic University",
-      "acronym": "PAU",
-      "location": "Ibeju-Lekki, Lagos",
-      "type": "university",
-      "templateId": "nuc_revised_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.5,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "unical",
-      "name": "University of Calabar",
-      "acronym": "UNICAL",
-      "location": "Calabar, Cross River",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "unimaid",
-      "name": "University of Maiduguri",
-      "acronym": "UNIMAID",
-      "location": "Maiduguri, Borno",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "noun",
-      "name": "National Open University of Nigeria",
-      "acronym": "NOUN",
-      "location": "Lagos/Abuja",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 30,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "replace"
-      }
-    },
-    {
-      "id": "coou",
-      "name": "Chukwuemeka Odumegwu Ojukwu University",
-      "acronym": "COOU",
-      "location": "Uli/Igbariam, Anambra",
+      "id": "kasu",
+      "name": "Kaduna State University",
+      "acronym": "KASU",
+      "location": "Kaduna, Kaduna",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -946,10 +625,10 @@
       }
     },
     {
-      "id": "nsuk",
-      "name": "Nasarawa State University",
-      "acronym": "NSUK",
-      "location": "Keffi, Nasarawa",
+      "id": "kwasu",
+      "name": "Kwara State University",
+      "acronym": "KWASU",
+      "location": "Malete, Kwara",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -959,10 +638,10 @@
       }
     },
     {
-      "id": "umyu",
-      "name": "Umaru Musa Yar'adua University",
-      "acronym": "UMYU",
-      "location": "Katsina, Katsina",
+      "id": "lautech",
+      "name": "Ladoke Akintola University of Technology",
+      "acronym": "LAUTECH",
+      "location": "Ogbomoso, Oyo",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -972,114 +651,10 @@
       }
     },
     {
-      "id": "fceakoka",
-      "name": "Federal College of Education (Technical), Akoka",
-      "acronym": "FCE-AKOKA",
-      "location": "Akoka, Lagos",
-      "type": "college",
-      "templateId": "ncce_standard_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fcezaria",
-      "name": "Federal College of Education, Zaria",
-      "acronym": "FCE-ZARIA",
-      "location": "Zaria, Kaduna",
-      "type": "college",
-      "templateId": "ncce_standard_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fcekano",
-      "name": "Federal College of Education, Kano",
-      "acronym": "FCE-KANO",
-      "location": "Kano City, Kano",
-      "type": "college",
-      "templateId": "ncce_standard_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "alvan",
-      "name": "Alvan Ikoku Federal College of Education",
-      "acronym": "AIFCE",
-      "location": "Owerri, Imo",
-      "type": "college",
-      "templateId": "ncce_standard_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fceokene",
-      "name": "Federal College of Education, Okene",
-      "acronym": "FCE-OKENE",
-      "location": "Okene, Kogi",
-      "type": "college",
-      "templateId": "ncce_standard_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fceoyo",
-      "name": "Federal College of Education (Special), Oyo",
-      "acronym": "FCE-OYO",
-      "location": "Oyo, Oyo",
-      "type": "college",
-      "templateId": "ncce_standard_5",
-      "academic_rules": {
-        "max_credit_load": 25,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "nekede",
-      "name": "Federal Polytechnic, Nekede",
-      "acronym": "NEKEDEPOLY",
-      "location": "Owerri, Imo",
-      "type": "polytechnic",
-      "templateId": "nbte_standard_4_0",
-      "academic_rules": {
-        "max_credit_load": 28,
-        "probation_cgpa": 2.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "fedpolybauchi",
-      "name": "Federal Polytechnic, Bauchi",
-      "acronym": "BAUCHIPOLY",
-      "location": "Bauchi, Bauchi",
-      "type": "polytechnic",
-      "templateId": "nbte_standard_4_0",
-      "academic_rules": {
-        "max_credit_load": 28,
-        "probation_cgpa": 2.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
-      "id": "lasustech",
-      "name": "Lagos State University of Science and Technology",
-      "acronym": "LASUSTECH",
-      "location": "Ikorodu, Lagos",
+      "id": "lasu",
+      "name": "Lagos State University",
+      "acronym": "LASU",
+      "location": "Ojo, Lagos",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -1098,6 +673,418 @@
       "academic_rules": {
         "max_credit_load": 24,
         "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "lasustech",
+      "name": "Lagos State University of Science and Technology",
+      "acronym": "LASUSTECH",
+      "location": "Ikorodu, Lagos",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "landmark",
+      "name": "Landmark University",
+      "acronym": "LMU",
+      "location": "Omu-Aran, Kwara",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 25,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "leadcity",
+      "name": "Lead City University",
+      "acronym": "LCU",
+      "location": "Ibadan, Oyo",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "mouau",
+      "name": "Michael Okpara University of Agriculture",
+      "acronym": "MOUAU",
+      "location": "Umudike, Abia",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "mtu",
+      "name": "Mountain Top University",
+      "acronym": "MTU",
+      "location": "Ibafo, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "nsuk",
+      "name": "Nasarawa State University",
+      "acronym": "NSUK",
+      "location": "Keffi, Nasarawa",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "noun",
+      "name": "National Open University of Nigeria",
+      "acronym": "NOUN",
+      "location": "Lagos/Abuja",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 30,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "nile",
+      "name": "Nile University of Nigeria",
+      "acronym": "NILE",
+      "location": "Jabi, FCT",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "unizik",
+      "name": "Nnamdi Azikiwe University",
+      "acronym": "UNIZIK",
+      "location": "Awka, Anambra",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "oau",
+      "name": "Obafemi Awolowo University",
+      "acronym": "OAU",
+      "location": "Ile-Ife, Osun",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "oou",
+      "name": "Olabisi Onabanjo University",
+      "acronym": "OOU",
+      "location": "Ago-Iwoye, Ogun",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "pau",
+      "name": "Pan-Atlantic University",
+      "acronym": "PAU",
+      "location": "Ibeju-Lekki, Lagos",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "run",
+      "name": "Redeemer's University",
+      "acronym": "RUN",
+      "location": "Ede, Osun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "rsu",
+      "name": "Rivers State University",
+      "acronym": "RSU",
+      "location": "Port Harcourt, Rivers",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "tasued",
+      "name": "Tai Solarin University of Education",
+      "acronym": "TASUED",
+      "location": "Ijagun, Ogun",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "polyibadan",
+      "name": "The Polytechnic, Ibadan",
+      "acronym": "POLYIBADAN",
+      "location": "Ibadan, Oyo",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 30,
+        "probation_cgpa": 2.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "umyu",
+      "name": "Umaru Musa Yar'adua University",
+      "acronym": "UMYU",
+      "location": "Katsina, Katsina",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "uniabuja",
+      "name": "University of Abuja",
+      "acronym": "UNIABUJA",
+      "location": "Gwagwalada, FCT",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "uniben",
+      "name": "University of Benin",
+      "acronym": "UNIBEN",
+      "location": "Benin City, Edo",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "unical",
+      "name": "University of Calabar",
+      "acronym": "UNICAL",
+      "location": "Calabar, Cross River",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "ui",
+      "name": "University of Ibadan",
+      "acronym": "UI",
+      "location": "Ibadan, Oyo",
+      "type": "university",
+      "configurations": [
+        {
+          "sessionRange": "2018/2019 - 2023/2024",
+          "templateId": "ui_legacy_4"
+        },
+        {
+          "sessionRange": "2024/2025 - Present",
+          "templateId": "nuc_standard_5"
+        }
+      ],
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "unilorin",
+      "name": "University of Ilorin",
+      "acronym": "UNILORIN",
+      "location": "Ilorin, Kwara",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "unijos",
+      "name": "University of Jos",
+      "acronym": "UNIJOS",
+      "location": "Jos, Plateau",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "unilag",
+      "name": "University of Lagos",
+      "acronym": "UNILAG",
+      "location": "Akoka, Lagos",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "unimaid",
+      "name": "University of Maiduguri",
+      "acronym": "UNIMAID",
+      "location": "Maiduguri, Borno",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "unn",
+      "name": "University of Nigeria, Nsukka",
+      "acronym": "UNN",
+      "location": "Nsukka, Enugu",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "uniport",
+      "name": "University of Port Harcourt",
+      "acronym": "UNIPORT",
+      "location": "Choba, Rivers",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "uniuyo",
+      "name": "University of Uyo",
+      "acronym": "UNIUYO",
+      "location": "Uyo, Akwa Ibom",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "udus",
+      "name": "Usmanu Danfodiyo University",
+      "acronym": "UDUS",
+      "location": "Sokoto, Sokoto",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.0,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "veritas",
+      "name": "Veritas University",
+      "acronym": "VERITAS",
+      "location": "Bwari, FCT",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "yabatech",
+      "name": "Yaba College of Technology",
+      "acronym": "YABATECH",
+      "location": "Yaba, Lagos",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2.0,
         "repeat_policy": "both"
       }
     }

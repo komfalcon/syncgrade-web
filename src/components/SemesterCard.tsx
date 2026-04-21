@@ -4,6 +4,7 @@ import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { Semester, Course } from '@/hooks/useCGPA';
 import { useState } from 'react';
 import AddCourseDialog from './AddCourseDialog';
+import type { CourseHistory } from '@/utils/carryoverDetector';
 
 interface SemesterCardProps {
   semester: Semester;
@@ -16,6 +17,8 @@ interface SemesterCardProps {
   onRemoveCourse: (courseId: string) => void;
   gpaScale?: number;
   semesterNames?: string[];
+  previousCourses?: CourseHistory[];
+  passThreshold?: number;
 }
 
 export default function SemesterCard({
@@ -29,6 +32,8 @@ export default function SemesterCard({
   onRemoveCourse,
   gpaScale = 5.0,
   semesterNames = [],
+  previousCourses = [],
+  passThreshold = 1.0,
 }: SemesterCardProps) {
   const [showAddCourse, setShowAddCourse] = useState(false);
 
@@ -163,6 +168,8 @@ export default function SemesterCard({
         }}
         gpaScale={gpaScale}
         semesterNames={semesterNames}
+        previousCourses={previousCourses}
+        passThreshold={passThreshold}
       />
     </>
   );

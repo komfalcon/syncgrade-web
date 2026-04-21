@@ -141,9 +141,11 @@ function App() {
   const handleProfileContinue = async ({
     studentName,
     programme,
+    startingLevel,
   }: {
     studentName: string;
     programme: string;
+    startingLevel: number;
   }) => {
     const rawSettings = await getStoredValue(STORAGE_KEYS.settings);
     let existingSettings: Partial<AppSettings> = {};
@@ -160,6 +162,7 @@ function App() {
         ...existingSettings,
         studentName,
         programme,
+        startingLevel,
       }),
     );
     setOnboardingStep(getOnboardingStepAfterProfile());

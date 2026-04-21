@@ -261,7 +261,9 @@ function fromCustomEntry(entry: CustomUniversityEntry): UniversityConfig {
   };
 }
 
-export const nigerianUniversities: UniversityConfig[] = universityEntries.map(toUniversityConfig);
+export const nigerianUniversities: UniversityConfig[] = universityEntries
+  .map(toUniversityConfig)
+  .sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
 let mergedUniversities: UniversityConfig[] = [...nigerianUniversities];
 
 export async function getCustomUniversities(): Promise<UniversityConfig[]> {

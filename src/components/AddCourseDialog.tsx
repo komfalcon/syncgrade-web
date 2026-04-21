@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Course } from '@/hooks/useCGPA';
+import { detectCarryover, type CarryoverMatch, type CourseHistory } from '@/utils/carryoverDetector';
 
 interface AddCourseDialogProps {
   open: boolean;
@@ -19,14 +20,25 @@ interface AddCourseDialogProps {
   onAdd: (course: Omit<Course, 'id'>) => void;
   gpaScale?: number;
   semesterNames?: string[];
+  previousCourses?: CourseHistory[];
+  passThreshold?: number;
 }
 
-export default function AddCourseDialog({ open, onOpenChange, onAdd, gpaScale = 5.0, semesterNames = [] }: AddCourseDialogProps) {
+export default function AddCourseDialog({
+  open,
+  onOpenChange,
+  onAdd,
+  gpaScale = 5.0,
+  semesterNames = [],
+  previousCourses = [],
+  passThreshold = 1.0,
+}: AddCourseDialogProps) {
   const [courseName, setCourseName] = useState('');
   const [credits, setCredits] = useState('3');
   const [gradePoint, setGradePoint] = useState(gpaScale.toFixed(1));
   const [isCarryover, setIsCarryover] = useState(false);
   const [originalSemester, setOriginalSemester] = useState('');
+  const [carryoverSuggestion, setCarryoverSuggestion] = useState<CarryoverMatch | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,14 +49,22 @@ export default function AddCourseDialog({ open, onOpenChange, onAdd, gpaScale = 
         gradePoint: parseFloat(gradePoint),
         isCarryover,
         originalSemester: isCarryover && originalSemester ? originalSemester : null,
-        isCarryoverPassed: isCarryover ? parseFloat(gradePoint) >= 1.0 : false,
+        isCarryoverPassed: isCarryover ? parseFloat(gradePoint) >= passThreshold : false,
       });
       setCourseName('');
       setCredits('3');
       setGradePoint(gpaScale.toFixed(1));
       setIsCarryover(false);
       setOriginalSemester('');
+      setCarryoverSuggestion(null);
     }
+  };
+
+  const handleCourseNameBlur = () => {
+    const trimmedName = courseName.trim();
+    if (!trimmedName || isCarryover) return;
+    const match = detectCarryover(trimmedName, previousCourses, passThreshold);
+    setCarryoverSuggestion(match);
   };
 
   return (
@@ -64,9 +84,41 @@ export default function AddCourseDialog({ open, onOpenChange, onAdd, gpaScale = 
                 id="course-name"
                 placeholder="e.g., Data Structures"
                 value={courseName}
-                onChange={(e) => setCourseName(e.target.value)}
+                onChange={(e) => {
+                  setCourseName(e.target.value);
+                  setCarryoverSuggestion(null);
+                }}
+                onBlur={handleCourseNameBlur}
                 autoFocus
               />
+              {carryoverSuggestion && !isCarryover && (
+                <div className="bg-warning/10 border border-warning rounded-lg p-3 mt-2 text-sm">
+                  <p className="font-semibold text-warning text-sm">⚠️ Looks like a repeated course</p>
+                  <p className="text-foreground-muted text-xs mt-1">{carryoverSuggestion.reason}</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      className="bg-warning text-white rounded-lg px-3 py-1.5 text-xs font-semibold"
+                      onClick={() => {
+                        setIsCarryover(true);
+                        if (!originalSemester) {
+                          setOriginalSemester(carryoverSuggestion.matchedCourse.semesterName);
+                        }
+                        setCarryoverSuggestion(null);
+                      }}
+                    >
+                      Yes, mark as carryover
+                    </button>
+                    <button
+                      type="button"
+                      className="bg-transparent border border-border text-foreground-muted rounded-lg px-3 py-1.5 text-xs"
+                      onClick={() => setCarryoverSuggestion(null)}
+                    >
+                      No, it's a new course
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
@@ -135,6 +187,7 @@ export default function AddCourseDialog({ open, onOpenChange, onAdd, gpaScale = 
                 setGradePoint(gpaScale.toFixed(1));
                 setIsCarryover(false);
                 setOriginalSemester('');
+                setCarryoverSuggestion(null);
               }}
             >
               Cancel
