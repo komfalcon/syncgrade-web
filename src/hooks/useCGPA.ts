@@ -34,13 +34,17 @@ export interface AppSettings {
   programme: string;
 }
 
+type RuntimeAppSettings = AppSettings & {
+  startingLevel: number;
+};
+
 interface CGPAData {
   semesters: Semester[];
   currentCGPA: number;
   totalCredits: number;
   totalGradePoints: number;
   semesterGPAs: { [key: string]: number };
-  settings: AppSettings;
+  settings: RuntimeAppSettings;
 }
 
 const SETTINGS_KEY = 'cgpa-calculator-settings';
@@ -71,7 +75,7 @@ const getSuggestedLevel = (existingSemesters: number): number => {
 
 const sanitizeSettings = (
   settings: Partial<AppSettings> | null | undefined,
-): AppSettings => {
+): RuntimeAppSettings => {
   const defaults = getDefaultSettings();
   const safeInput =
     settings && typeof settings === 'object' ? settings : {};
@@ -108,11 +112,12 @@ const sanitizeSettings = (
       safeInput.repeatPolicy === 'highest'
         ? safeInput.repeatPolicy
         : defaults.repeatPolicy,
+    startingLevel: 100,
   };
 };
 
-const loadSettings = (): AppSettings => {
-  return getDefaultSettings();
+const loadSettings = (): RuntimeAppSettings => {
+  return sanitizeSettings(getDefaultSettings());
 };
 
 const getInitialData = (): CGPAData => ({
