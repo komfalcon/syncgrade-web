@@ -32,7 +32,6 @@ export interface AppSettings {
   repeatPolicy: 'replace' | 'average' | 'both' | 'highest';
   studentName: string;
   programme: string;
-  startingLevel: number;
 }
 
 interface CGPAData {
@@ -56,7 +55,6 @@ export const getDefaultSettings = (): AppSettings => ({
   repeatPolicy: 'replace',
   studentName: "",
   programme: "",
-  startingLevel: 100,
 });
 
 const normalizeLevelValue = (value: number): number => {
@@ -66,9 +64,9 @@ const normalizeLevelValue = (value: number): number => {
   return rounded;
 };
 
-const getSuggestedLevel = (startingLevel: number, existingSemesters: number): number => {
+const getSuggestedLevel = (existingSemesters: number): number => {
   const increment = Math.min(Math.floor(existingSemesters / 2) * 100, 500);
-  return normalizeLevelValue(Math.min(startingLevel + increment, 700));
+  return normalizeLevelValue(Math.min(100 + increment, 700));
 };
 
 const sanitizeSettings = (
@@ -110,10 +108,6 @@ const sanitizeSettings = (
       safeInput.repeatPolicy === 'highest'
         ? safeInput.repeatPolicy
         : defaults.repeatPolicy,
-    startingLevel:
-      typeof safeInput.startingLevel === 'number'
-        ? normalizeLevelValue(safeInput.startingLevel)
-        : defaults.startingLevel,
   };
 };
 
@@ -157,7 +151,7 @@ export function useCGPA() {
           const migratedLevel =
             typeof sem.level === 'number'
               ? normalizeLevelValue(sem.level)
-              : getSuggestedLevel(hydratedSettings.startingLevel, index);
+              : getSuggestedLevel(index);
           return {
             ...sem,
             level: migratedLevel,
@@ -253,7 +247,7 @@ export function useCGPA() {
         level:
           typeof level === 'number'
             ? normalizeLevelValue(level)
-            : getSuggestedLevel(prevData.settings.startingLevel, prevData.semesters.length),
+            : getSuggestedLevel(prevData.semesters.length),
       };
       const updatedSemesters = [...prevData.semesters, newSemester];
       const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(updatedSemesters, prevData.settings);
