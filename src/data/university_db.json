@@ -534,19 +534,6 @@
       }
     },
     {
-      "id": "fukashere",
-      "name": "Federal University, Kashere",
-      "acronym": "FUKASHERE",
-      "location": "Kashere, Gombe",
-      "type": "university",
-      "templateId": "nuc_standard_5",
-      "academic_rules": {
-        "max_credit_load": 24,
-        "probation_cgpa": 1.0,
-        "repeat_policy": "both"
-      }
-    },
-    {
       "id": "fuk",
       "name": "Federal University, Kashere",
       "acronym": "FUK",

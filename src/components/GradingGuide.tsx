@@ -93,9 +93,9 @@ export default function GradingGuide({ gradeRanges, universityName }: GradingGui
                   <table className="w-full">
                     <thead className="bg-surface-elevated">
                       <tr className="text-xs font-semibold uppercase tracking-wide text-foreground-muted">
-                        <th className="px-3 py-2 text-left">Grade</th>
-                        <th className="px-3 py-2 text-left">Score Range</th>
-                        <th className="px-3 py-2 text-left">Points</th>
+                        <th scope="col" className="px-3 py-2 text-left">Grade</th>
+                        <th scope="col" className="px-3 py-2 text-left">Score Range</th>
+                        <th scope="col" className="px-3 py-2 text-left">Points</th>
                       </tr>
                     </thead>
                     <tbody>

@@ -119,10 +119,8 @@ export function detectCarryover(
 
   if (!matches.length) return null;
 
-  return matches.reduce((best, current) => {
-    if (!best) return current;
-    if (confidenceScore[current.confidence] > confidenceScore[best.confidence]) return current;
-    if (confidenceScore[current.confidence] === confidenceScore[best.confidence]) return current;
+  return matches.slice(1).reduce((best, current) => {
+    if (confidenceScore[current.confidence] >= confidenceScore[best.confidence]) return current;
     return best;
-  }, null as CarryoverMatch | null);
+  }, matches[0]);
 }

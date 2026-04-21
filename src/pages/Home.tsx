@@ -148,8 +148,10 @@ export default function Home() {
           <div>
             {groupedSemesters.map((group) => {
               const groupAverage =
-                group.semesters.reduce((sum, semester) => sum + (cgpa.semesterGPAs[semester.id] || 0), 0) /
-                group.semesters.length;
+                group.semesters.length > 0
+                  ? group.semesters.reduce((sum, semester) => sum + (cgpa.semesterGPAs[semester.id] || 0), 0) /
+                    group.semesters.length
+                  : 0;
 
               return (
                 <div key={group.level} className="mb-8">
