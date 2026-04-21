@@ -11,16 +11,14 @@ interface OnboardingProfileFormProps {
 export default function OnboardingProfileForm({ onContinue }: OnboardingProfileFormProps) {
   const [studentName, setStudentName] = useState("");
   const [programme, setProgramme] = useState("");
-  const [startingLevel, setStartingLevel] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const canContinue = useMemo(
     () =>
       studentName.trim().length > 0 &&
       programme.trim().length > 0 &&
-      startingLevel.trim().length > 0 &&
       !submitting,
-    [programme, startingLevel, studentName, submitting],
+    [programme, studentName, submitting],
   );
 
   const handleContinue = async () => {
@@ -30,7 +28,7 @@ export default function OnboardingProfileForm({ onContinue }: OnboardingProfileF
       await onContinue({
         studentName: studentName.trim(),
         programme: programme.trim(),
-        startingLevel: Number(startingLevel),
+        startingLevel: 100,
       });
     } finally {
       setSubmitting(false);
@@ -67,25 +65,6 @@ export default function OnboardingProfileForm({ onContinue }: OnboardingProfileF
             placeholder="e.g. Computer Science"
             autoComplete="organization-title"
           />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="onboarding-current-level">Current Level</Label>
-          <select
-            id="onboarding-current-level"
-            value={startingLevel}
-            onChange={(event) => setStartingLevel(event.target.value)}
-            className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          >
-            <option value="">Select your level</option>
-            <option value="100">100 Level</option>
-            <option value="200">200 Level</option>
-            <option value="300">300 Level</option>
-            <option value="400">400 Level</option>
-            <option value="500">500 Level</option>
-            <option value="600">600 Level</option>
-            <option value="700">700 Level</option>
-          </select>
         </div>
 
         <Button className="w-full" disabled={!canContinue} onClick={handleContinue}>
