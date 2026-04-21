@@ -117,7 +117,10 @@ const sanitizeSettings = (
 };
 
 const loadSettings = (): RuntimeAppSettings => {
-  return sanitizeSettings(getDefaultSettings());
+  return {
+    ...getDefaultSettings(),
+    startingLevel: 100,
+  };
 };
 
 const getInitialData = (): CGPAData => ({
