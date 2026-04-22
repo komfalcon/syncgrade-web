@@ -12,17 +12,8 @@ export function useGradePredictorHistory() {
   }, []);
 
   useEffect(() => {
-    let active = true;
-    (async () => {
-      const entries = await appDb.predictorHistory.orderBy('savedAt').reverse().toArray();
-      if (!active) return;
-      setHistory(entries);
-      setIsLoadingHistory(false);
-    })();
-    return () => {
-      active = false;
-    };
-  }, []);
+    void loadHistory();
+  }, [loadHistory]);
 
   const saveHistoryEntry = useCallback(
     async (entry: Omit<PredictorHistoryEntry, 'id' | 'savedAt'>) => {
