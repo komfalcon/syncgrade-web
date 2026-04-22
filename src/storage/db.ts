@@ -1,6 +1,7 @@
 import Dexie, { type Table } from "dexie";
 import type { RepeatPolicy, UniversityConfig } from "@/universities/types";
 import type { UserIdentity } from "@/types/sync";
+import type { Strategy } from "@/utils/gradePredictorEngine";
 
 export interface KvEntry {
   key: string;
@@ -48,11 +49,25 @@ export interface SyncgradeUserProfileEntry extends UserIdentity {
   updatedAt: number;
 }
 
+export interface PredictorHistoryEntry {
+  id?: number;
+  savedAt: number;
+  semesterLabel: string;
+  currentCGPA: number;
+  completedCredits: number;
+  targetCGPA: number;
+  maxAttainableCGPA: number;
+  gpaScale: number;
+  courses: { name: string; units: number }[];
+  strategies: Strategy[];
+}
+
 class AppDb extends Dexie {
   kv!: Table<KvEntry, string>;
   customUniversities!: Table<CustomUniversityEntry, string>;
   userProfile!: Table<UserProfileEntry, string>;
   user_profile!: Table<SyncgradeUserProfileEntry, string>;
+  predictorHistory!: Table<PredictorHistoryEntry, number>;
 
   constructor() {
     super("cgpa_app_db");
@@ -73,6 +88,13 @@ class AppDb extends Dexie {
       customUniversities: "id,shortName,updatedAt",
       userProfile: "id,updatedAt,universityShortName",
       user_profile: "uuid,updatedAt,university",
+    });
+    this.version(5).stores({
+      kv: "key,updatedAt",
+      customUniversities: "id,shortName,updatedAt",
+      userProfile: "id,updatedAt,universityShortName",
+      user_profile: "uuid,updatedAt,university",
+      predictorHistory: "++id,savedAt,targetCGPA,semesterLabel",
     });
   }
 }

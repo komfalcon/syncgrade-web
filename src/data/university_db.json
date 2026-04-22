@@ -9,7 +9,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -22,7 +22,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -35,7 +35,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -74,7 +74,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -92,6 +92,45 @@
       }
     },
     {
+      "id": "aksu",
+      "name": "Akwa Ibom State University",
+      "acronym": "AKSU",
+      "location": "Ikot Akpaden, Akwa Ibom",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "alhikmah",
+      "name": "Al-Hikmah University",
+      "acronym": "AHU",
+      "location": "Ilorin, Kwara",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "aqku",
+      "name": "Al-Qalam University",
+      "acronym": "AQU",
+      "location": "Katsina, Katsina",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
       "id": "funai",
       "name": "Alex Ekwueme Federal University",
       "acronym": "AE-FUNAI",
@@ -100,7 +139,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -113,7 +152,7 @@
       "templateId": "ncce_standard_5",
       "academic_rules": {
         "max_credit_load": 25,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -139,7 +178,20 @@
       "templateId": "nuc_revised_5",
       "academic_rules": {
         "max_credit_load": 18,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "aul",
+      "name": "Anchor University Lagos",
+      "acronym": "AUL",
+      "location": "Lagos, Lagos",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
         "repeat_policy": "replace"
       }
     },
@@ -152,7 +204,7 @@
       "templateId": "nbte_standard_4_0",
       "academic_rules": {
         "max_credit_load": 28,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
       }
     },
@@ -183,6 +235,19 @@
       }
     },
     {
+      "id": "basug",
+      "name": "Bauchi State University, Gadau",
+      "acronym": "BASUG",
+      "location": "Gadau, Bauchi",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
       "id": "buk",
       "name": "Bayero University Kano",
       "acronym": "BUK",
@@ -191,7 +256,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -217,8 +282,21 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "biu",
+      "name": "Benson Idahosa University",
+      "acronym": "BIU",
+      "location": "Benin City, Edo",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -230,7 +308,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -274,6 +352,19 @@
       }
     },
     {
+      "id": "chrisland",
+      "name": "Chrisland University",
+      "acronym": "CU",
+      "location": "Owode, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
       "id": "coou",
       "name": "Chukwuemeka Odumegwu Ojukwu University",
       "acronym": "COOU",
@@ -282,8 +373,21 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "coalcity",
+      "name": "Coal City University",
+      "acronym": "CCU",
+      "location": "Enugu, Enugu",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -300,6 +404,45 @@
       }
     },
     {
+      "id": "crawford",
+      "name": "Crawford University",
+      "acronym": "CU",
+      "location": "Igbesa, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "crescent",
+      "name": "Crescent University",
+      "acronym": "CUA",
+      "location": "Abeokuta, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "crutech",
+      "name": "Cross River University of Technology",
+      "acronym": "CRUTECH",
+      "location": "Calabar, Cross River",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
       "id": "delsu",
       "name": "Delta State University",
       "acronym": "DELSU",
@@ -308,8 +451,21 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "dominican",
+      "name": "Dominican University",
+      "acronym": "DUI",
+      "location": "Ibadan, Oyo",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -321,7 +477,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -334,8 +490,21 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "elizade",
+      "name": "Elizade University",
+      "acronym": "EU",
+      "location": "Ilara-Mokin, Ondo",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -347,7 +516,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -360,7 +529,7 @@
       "templateId": "ncce_standard_5",
       "academic_rules": {
         "max_credit_load": 25,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -373,7 +542,7 @@
       "templateId": "ncce_standard_5",
       "academic_rules": {
         "max_credit_load": 25,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -386,7 +555,7 @@
       "templateId": "ncce_standard_5",
       "academic_rules": {
         "max_credit_load": 25,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -399,7 +568,7 @@
       "templateId": "ncce_standard_5",
       "academic_rules": {
         "max_credit_load": 25,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -412,7 +581,20 @@
       "templateId": "ncce_standard_5",
       "academic_rules": {
         "max_credit_load": 25,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fedpolyado",
+      "name": "Federal Polytechnic, Ado-Ekiti",
+      "acronym": "FEDPOLYADO",
+      "location": "Ado-Ekiti, Ekiti",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
       }
     },
@@ -425,7 +607,20 @@
       "templateId": "nbte_standard_4_0",
       "academic_rules": {
         "max_credit_load": 28,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fedpolybida",
+      "name": "Federal Polytechnic, Bida",
+      "acronym": "FEDPOLYBIDA",
+      "location": "Bida, Niger",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
       }
     },
@@ -438,7 +633,7 @@
       "templateId": "nbte_standard_4_0",
       "academic_rules": {
         "max_credit_load": 26,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
       }
     },
@@ -451,7 +646,7 @@
       "templateId": "nbte_standard_4_0",
       "academic_rules": {
         "max_credit_load": 28,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
       }
     },
@@ -464,7 +659,33 @@
       "templateId": "nbte_standard_4_0",
       "academic_rules": {
         "max_credit_load": 25,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fudutsinma",
+      "name": "Federal University Dutsin-Ma",
+      "acronym": "FUDUTSINMA",
+      "location": "Dutsin-Ma, Katsina",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fugusau",
+      "name": "Federal University Gusau",
+      "acronym": "FUGUSAU",
+      "location": "Gusau, Zamfara",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -477,7 +698,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -486,6 +707,19 @@
       "name": "Federal University of Technology, Akure",
       "acronym": "FUTA",
       "location": "Akure, Ondo",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "futia",
+      "name": "Federal University of Technology, Ikot Abasi",
+      "acronym": "FUTIA",
+      "location": "Ikot Abasi, Akwa Ibom",
       "type": "university",
       "templateId": "nuc_standard_5",
       "academic_rules": {
@@ -521,6 +755,32 @@
       }
     },
     {
+      "id": "fuoye",
+      "name": "Federal University Oye-Ekiti",
+      "acronym": "FUOYE",
+      "location": "Oye-Ekiti, Ekiti",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fuwukari",
+      "name": "Federal University Wukari",
+      "acronym": "FUWUKARI",
+      "location": "Wukari, Taraba",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
       "id": "fubk",
       "name": "Federal University, Birnin Kebbi",
       "acronym": "FUBK",
@@ -529,7 +789,20 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fudutse",
+      "name": "Federal University, Dutse",
+      "acronym": "FUDMA",
+      "location": "Dutse, Jigawa",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -542,7 +815,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -555,7 +828,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -568,8 +841,34 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fuotuoke",
+      "name": "Federal University, Otuoke",
+      "acronym": "FUOTUOKE",
+      "location": "Otuoke, Bayelsa",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "fountain",
+      "name": "Fountain University",
+      "acronym": "FUO",
+      "location": "Osogbo, Osun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -581,8 +880,47 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "gregory",
+      "name": "Gregory University",
+      "acronym": "GUU",
+      "location": "Uturu, Abia",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "hallmark",
+      "name": "Hallmark University",
+      "acronym": "HU",
+      "location": "Ijebu Itele, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "igbinedion",
+      "name": "Igbinedion University",
+      "acronym": "IUO",
+      "location": "Okada, Edo",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -594,7 +932,33 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "imt",
+      "name": "Institute of Management and Technology",
+      "acronym": "IMT",
+      "location": "Enugu, Enugu",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "kadpoly",
+      "name": "Kaduna Polytechnic",
+      "acronym": "KADPOLY",
+      "location": "Kaduna, Kaduna",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
       }
     },
@@ -607,7 +971,20 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "kstu",
+      "name": "Kebbi State University of Science and Technology",
+      "acronym": "KSUSTA",
+      "location": "Aliero, Kebbi",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -620,7 +997,20 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "kwarapoly",
+      "name": "Kwara State Polytechnic",
+      "acronym": "KWARAPOLY",
+      "location": "Ilorin, Kwara",
+      "type": "polytechnic",
+      "templateId": "nbte_standard_4_0",
+      "academic_rules": {
+        "max_credit_load": 28,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
       }
     },
@@ -633,7 +1023,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -646,7 +1036,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -659,7 +1049,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -672,7 +1062,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -685,7 +1075,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -716,6 +1106,32 @@
       }
     },
     {
+      "id": "madonna",
+      "name": "Madonna University",
+      "acronym": "MU",
+      "location": "Okija, Anambra",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "mcpherson",
+      "name": "McPherson University",
+      "acronym": "MU",
+      "location": "Seriki-Sotayo, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
       "id": "mouau",
       "name": "Michael Okpara University of Agriculture",
       "acronym": "MOUAU",
@@ -724,7 +1140,20 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "mau",
+      "name": "Moddibo Adama University",
+      "acronym": "MAU",
+      "location": "Yola, Adamawa",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -750,7 +1179,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -763,8 +1192,21 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 30,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "ndu",
+      "name": "Niger Delta University",
+      "acronym": "NDU",
+      "location": "Yenagoa, Bayelsa",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
       }
     },
     {
@@ -789,8 +1231,21 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "novena",
+      "name": "Novena University",
+      "acronym": "NU",
+      "location": "Ogume, Delta",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -802,7 +1257,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -815,7 +1270,20 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "uniosun",
+      "name": "Osun State University",
+      "acronym": "UNIOSUN",
+      "location": "Osogbo, Osun",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -830,6 +1298,19 @@
         "max_credit_load": 24,
         "probation_cgpa": 1.5,
         "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "plasu",
+      "name": "Plateau State University",
+      "acronym": "PLASU",
+      "location": "Bokkos, Plateau",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
       }
     },
     {
@@ -854,8 +1335,86 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "salem",
+      "name": "Salem University",
+      "acronym": "SU",
+      "location": "Lokoja, Kogi",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "ssu",
+      "name": "Sokoto State University",
+      "acronym": "SSU",
+      "location": "Sokoto, Sokoto",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "southwestern",
+      "name": "Southwestern University",
+      "acronym": "SWU",
+      "location": "Okun-Owa, Ogun",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "spiritan",
+      "name": "Spiritan University",
+      "acronym": "SPUU",
+      "location": "Nneochi, Abia",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "slu",
+      "name": "Sule Lamido University",
+      "acronym": "SLU",
+      "location": "Kafin Hausa, Jigawa",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "summit",
+      "name": "Summit University",
+      "acronym": "SUO",
+      "location": "Offa, Kwara",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -867,7 +1426,33 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "tansian",
+      "name": "Tansian University",
+      "acronym": "TANU",
+      "location": "Umunya, Anambra",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "tsu",
+      "name": "Taraba State University",
+      "acronym": "TSU",
+      "location": "Jalingo, Taraba",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -880,8 +1465,34 @@
       "templateId": "nbte_standard_4_0",
       "academic_rules": {
         "max_credit_load": 30,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
         "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "tau",
+      "name": "Thomas Adewumi University",
+      "acronym": "TAU",
+      "location": "Oko-Irese, Kwara",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "topfaith",
+      "name": "Topfaith University",
+      "acronym": "TFU",
+      "location": "Mkpatak, Akwa Ibom",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
       }
     },
     {
@@ -893,7 +1504,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -906,7 +1517,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -919,7 +1530,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -932,7 +1543,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -954,7 +1565,7 @@
       ],
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -967,7 +1578,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -980,7 +1591,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -993,7 +1604,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -1006,7 +1617,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -1019,7 +1630,7 @@
       "templateId": "nuc_revised_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -1032,7 +1643,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -1045,7 +1656,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -1058,7 +1669,7 @@
       "templateId": "nuc_standard_5",
       "academic_rules": {
         "max_credit_load": 24,
-        "probation_cgpa": 1.0,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     },
@@ -1076,6 +1687,32 @@
       }
     },
     {
+      "id": "wellspring",
+      "name": "Wellspring University",
+      "acronym": "WU",
+      "location": "Evbuobanosa, Edo",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
+      "id": "wdu",
+      "name": "Western Delta University",
+      "acronym": "WDU",
+      "location": "Oghara, Delta",
+      "type": "university",
+      "templateId": "nuc_revised_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1.5,
+        "repeat_policy": "replace"
+      }
+    },
+    {
       "id": "yabatech",
       "name": "Yaba College of Technology",
       "acronym": "YABATECH",
@@ -1084,7 +1721,20 @@
       "templateId": "nbte_standard_4_0",
       "academic_rules": {
         "max_credit_load": 28,
-        "probation_cgpa": 2.0,
+        "probation_cgpa": 2,
+        "repeat_policy": "both"
+      }
+    },
+    {
+      "id": "yusu",
+      "name": "Yobe State University",
+      "acronym": "YSU",
+      "location": "Damaturu, Yobe",
+      "type": "university",
+      "templateId": "nuc_standard_5",
+      "academic_rules": {
+        "max_credit_load": 24,
+        "probation_cgpa": 1,
         "repeat_policy": "both"
       }
     }

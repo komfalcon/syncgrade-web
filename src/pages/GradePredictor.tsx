@@ -6,6 +6,7 @@ import {
   ChevronDown,
   ChevronUp,
   ClipboardList,
+  Clock3,
   Info,
   Loader2,
   Plus,
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useCGPA } from '@/hooks/useCGPA';
 import { useUniversities } from '@/hooks/useUniversities';
+import { useGradePredictorHistory } from '@/hooks/useGradePredictorHistory';
 import { getClassification, normalizeToSupportedScale } from '@/utils/gpaLogic';
 import {
   calculateMaxCGPA,
@@ -98,6 +100,8 @@ const getScoreClass = (gradeLabel: string): string => {
 export default function GradePredictor() {
   const cgpa = useCGPA();
   const { universities } = useUniversities();
+  const { history, isLoadingHistory, saveHistoryEntry, deleteHistoryEntry, clearHistory } =
+    useGradePredictorHistory();
 
   const [isHowToExpanded, setIsHowToExpanded] = useState(true);
 
@@ -299,6 +303,16 @@ export default function GradePredictor() {
     setStrategyResult(generated);
     setStage3Locked(true);
     setExpandedCards({ safe: false, balanced: false, highEffort: false });
+    await saveHistoryEntry({
+      semesterLabel: semesterLabel.trim(),
+      currentCGPA,
+      completedCredits,
+      targetCGPA: round2(targetValue),
+      maxAttainableCGPA: generated.maxAttainableCGPA,
+      gpaScale: scale,
+      courses: validCourses,
+      strategies: generated.strategies,
+    });
     setIsCalculatingStrategies(false);
     setTimeout(() => scrollTo(stage4Ref), SCROLL_DELAY_MS);
   };
@@ -784,6 +798,68 @@ export default function GradePredictor() {
           </button>
         </section>
       )}
+
+      <section className="rounded-xl border border-border bg-surface p-5">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+              <Clock3 className="h-5 w-5" />
+              Predictor History
+            </h2>
+            <p className="text-xs text-foreground-muted">Saved automatically when you generate strategies.</p>
+          </div>
+          <button
+            type="button"
+            onClick={clearHistory}
+            disabled={history.length === 0}
+            className="rounded-full border border-border px-3 py-1 text-xs text-foreground-muted transition-colors hover:bg-surface-elevated hover:text-foreground disabled:opacity-60"
+          >
+            Clear All
+          </button>
+        </div>
+
+        {isLoadingHistory ? (
+          <p className="mt-4 text-sm text-foreground-muted">Loading history…</p>
+        ) : history.length === 0 ? (
+          <p className="mt-4 text-sm text-foreground-muted">No saved predictions yet.</p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {history.map((entry) => (
+              <article key={entry.id} className="rounded-xl border border-border bg-surface-elevated p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      {entry.semesterLabel.trim() || 'Untitled Semester'}
+                    </p>
+                    <p className="text-xs text-foreground-subtle">{new Date(entry.savedAt).toLocaleString()}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (entry.id == null) return;
+                      void deleteHistoryEntry(entry.id);
+                    }}
+                    className="rounded-lg p-2 text-destructive transition-colors hover:bg-destructive/10"
+                    aria-label="Delete history item"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-foreground-muted md:grid-cols-4">
+                  <p>Current: {entry.currentCGPA.toFixed(2)}</p>
+                  <p>Target: {entry.targetCGPA.toFixed(2)}</p>
+                  <p>Max: {entry.maxAttainableCGPA.toFixed(2)}</p>
+                  <p>Scale: {entry.gpaScale.toFixed(1)}</p>
+                  <p>Completed Credits: {entry.completedCredits}</p>
+                  <p>Courses: {entry.courses.length}</p>
+                  <p>Strategies: {entry.strategies.length}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
