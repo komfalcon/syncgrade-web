@@ -47,7 +47,9 @@ function Router() {
       <Route path={"/more"} component={More} />
       <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
       <Route path={"/backup-restore"} component={BackupRestore} />
-      <Route path={"/custom-university"} component={CustomUniversityForm} />
+      <Route path={"/custom-university"}>
+        <CustomUniversityForm />
+      </Route>
       <Route path={"/grade-converter"} component={GradeConverter} />
       <Route path={"/calculate/gp-in-:slug"}>
         {(params) => <UniversityGpLanding slug={params.slug} />}

@@ -62,7 +62,13 @@ const defaultValues: FormValues = {
   admissionSession: "",
 };
 
-export default function CustomUniversityForm() {
+interface CustomUniversityFormProps {
+  onSave?: (entry: CustomUniversityEntry) => void | Promise<void>;
+  onCancel?: () => void;
+  [key: string]: unknown;
+}
+
+export default function CustomUniversityForm({ onSave, onCancel }: CustomUniversityFormProps = {}) {
   const [, setLocation] = useLocation();
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -124,6 +130,10 @@ export default function CustomUniversityForm() {
 
     await appDb.customUniversities.put(entry);
     toast.success("Custom university profile saved.");
+    if (onSave) {
+      await onSave(entry);
+      return;
+    }
     setLocation("/nigerian-universities");
   };
 
@@ -134,7 +144,13 @@ export default function CustomUniversityForm() {
           <Button
             variant="ghost"
             className="mb-3"
-            onClick={() => setLocation("/nigerian-universities")}
+            onClick={() => {
+              if (onCancel) {
+                onCancel();
+                return;
+              }
+              setLocation("/nigerian-universities");
+            }}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to University Selection
@@ -293,4 +309,3 @@ export default function CustomUniversityForm() {
     </div>
   );
 }
-
