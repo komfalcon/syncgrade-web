@@ -3,11 +3,10 @@ import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 export default function AppFooter() {
   return (
     <footer className="border-t border-border bg-surface px-4 py-6 md:px-6">
-      <div className="mx-auto w-full max-w-7xl text-left text-sm text-foreground-muted">
-        <p>Copyright @2026 | Founder: Korede Omotosho</p>
+      <div className="mx-auto w-full max-w-7xl text-center text-sm text-foreground-muted">
         <p>Powered by Aurikrex</p>
-        <div className="mt-4 mb-4 border-t border-border" />
-        <div className="flex items-center justify-center gap-5 mt-1">
+        <div className="my-4 border-t border-border" />
+        <div className="flex items-center justify-center gap-5">
           <a
             href="https://x.com/aurikrex"
             target="_blank"
@@ -27,7 +26,7 @@ export default function AppFooter() {
             <Facebook className="h-5 w-5" />
           </a>
           <a
-            href="https://www.instagram.com/aurikrex?igsh=dDNneDF3NXEycmE="
+            href="https://www.instagram.com/aurikrex"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Follow Aurikrex on Instagram"
@@ -61,7 +60,7 @@ export default function AppFooter() {
             </svg>
           </a>
         </div>
-        <div className="mt-3 text-center">
+        <div className="mt-3">
           <a
             href="mailto:falcon@aurikrex.tech"
             className="text-xs text-foreground-subtle transition-colors duration-150 hover:text-foreground-muted underline-offset-2 hover:underline"
@@ -69,6 +68,7 @@ export default function AppFooter() {
             falcon@aurikrex.tech
           </a>
         </div>
+        <p className="mt-2">Copyright @2026 | Founder: Korede Omotosho</p>
       </div>
     </footer>
   );
