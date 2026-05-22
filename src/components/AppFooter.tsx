@@ -26,7 +26,7 @@ export default function AppFooter() {
             <Facebook className="h-5 w-5" />
           </a>
           <a
-            href="https://www.instagram.com/aurikrex"
+            href="https://www.instagram.com/falcon.omotosho"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Follow Aurikrex on Instagram"
@@ -35,7 +35,7 @@ export default function AppFooter() {
             <Instagram className="h-5 w-5" />
           </a>
           <a
-            href="https://www.linkedin.com/in/korede-omotosho-a0a1b42b7"
+            href="https://linkedin.com/in/falcon-omotosho"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Connect on LinkedIn"
