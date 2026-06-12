@@ -192,36 +192,30 @@ export default function NigerianUniversities({
 
   return (
     <div className="space-y-8">
-      <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
-        <div className="container mx-auto px-4">
-          {!onboardingMode && (
-            <Button
-              variant="ghost"
-              className="mb-4"
-              onClick={() => setLocation('/')}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-          )}
-          <h1 className="text-3xl md:text-4xl font-bold">🇳🇬 Nigerian Universities</h1>
-          <p className="mt-2 text-foreground-muted">
-            Select your university to apply its official grading system
-          </p>
-          <p className="mt-2 text-xs text-foreground-subtle">
-            {/* Data Version: {meta.version} · Last updated:{' '}
-            {new Date(meta.lastUpdated).toLocaleDateString()} */}
-          </p>
-          {cgpa.settings.activeUniversity && (
-            <div className="mt-3 inline-flex items-center gap-2 bg-surface/20 rounded-full px-4 py-1.5 text-sm">
-              <Check className="w-4 h-4" />
-              Active: {cgpa.settings.activeUniversity} ({cgpa.settings.gpaScale.toFixed(1)} Scale)
-            </div>
-          )}
-        </div>
+      <div className="rounded-xl border border-border bg-surface-elevated p-4 shadow-md md:p-6">
+        {!onboardingMode && (
+          <Button
+            variant="ghost"
+            className="mb-4"
+            onClick={() => setLocation('/')}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        )}
+        <h1 className="text-2xl font-bold md:text-4xl">🇳🇬 Nigerian Universities</h1>
+        <p className="mt-2 text-sm text-foreground-muted md:text-base">
+          Select your university to apply its official grading system
+        </p>
+        {cgpa.settings.activeUniversity && (
+          <div className="mt-3 inline-flex items-center gap-2 bg-surface/20 rounded-full px-4 py-1.5 text-sm">
+            <Check className="w-4 h-4" />
+            Active: {cgpa.settings.activeUniversity} ({cgpa.settings.gpaScale.toFixed(1)} Scale)
+          </div>
+        )}
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div>
         <Card className="sticky top-3 z-10 mb-4 p-4 shadow-md border-0 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
@@ -247,7 +241,7 @@ export default function NigerianUniversities({
                 <Plus className="w-6 h-6" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-slate-900">Create Custom School</h3>
+                <h3 className="text-lg font-bold text-foreground">Create Custom School</h3>
                 <p className="text-sm text-foreground-muted mt-1">
                   Can't find your institution? Build and save your own grading profile.
                 </p>
@@ -275,7 +269,7 @@ export default function NigerianUniversities({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-lg font-bold text-slate-900">{uni.name}</h3>
+                      <h3 className="text-lg font-bold text-foreground">{uni.name}</h3>
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold border ${institutionBadge.className}`}
                       >
@@ -350,7 +344,7 @@ export default function NigerianUniversities({
         )}
 
         <Card className="mt-8 p-6 shadow-md border-0 bg-surface-elevated">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Current Grading System</h3>
+          <h3 className="text-lg font-bold text-foreground mb-4">Current Grading System</h3>
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm text-foreground-muted">Scale:</span>
             <span className="font-bold text-primary">{cgpa.settings.gpaScale.toFixed(1)}</span>
@@ -369,8 +363,8 @@ export default function NigerianUniversities({
               </thead>
               <tbody>
                 {cgpa.settings.gradeRanges.map((range) => (
-                  <tr key={range.grade} className="border-b border-slate-100">
-                    <td className="py-2 pr-4 font-mono font-semibold text-slate-900">{range.grade}</td>
+                  <tr key={range.grade} className="border-b border-border">
+                    <td className="py-2 pr-4 font-mono font-semibold text-foreground">{range.grade}</td>
                     <td className="py-2 pr-4 text-foreground-muted">
                       {range.min} - {range.max}
                     </td>
@@ -427,8 +421,8 @@ export default function NigerianUniversities({
                     </thead>
                     <tbody>
                       {resolvedSelected.grades.map((g) => (
-                        <tr key={g.grade} className="border-b border-slate-100">
-                          <td className="py-1.5 pr-3 font-mono font-semibold text-slate-900">{g.grade}</td>
+                        <tr key={g.grade} className="border-b border-border">
+                          <td className="py-1.5 pr-3 font-mono font-semibold text-foreground">{g.grade}</td>
                           <td className="py-1.5 pr-3 text-foreground-muted">
                             {g.min} – {g.max}
                           </td>
@@ -461,8 +455,8 @@ export default function NigerianUniversities({
                     </thead>
                     <tbody>
                       {selectedUni.degreeClasses.map((dc) => (
-                        <tr key={dc.name} className="border-b border-slate-100">
-                          <td className="py-1.5 pr-3 font-semibold text-slate-900">{dc.name}</td>
+                        <tr key={dc.name} className="border-b border-border">
+                          <td className="py-1.5 pr-3 font-semibold text-foreground">{dc.name}</td>
                           <td className="py-1.5 font-mono text-foreground-muted">
                             {dc.minCGPA.toFixed(2)} – {dc.maxCGPA.toFixed(2)}
                           </td>
@@ -478,23 +472,23 @@ export default function NigerianUniversities({
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
                     <span className="text-foreground-subtle text-xs">Min Credits</span>
-                    <p className="font-semibold text-slate-900">{selectedUni.creditRules.minimumCredits}</p>
+                    <p className="font-semibold text-foreground">{selectedUni.creditRules.minimumCredits}</p>
                   </div>
                   <div>
                     <span className="text-foreground-subtle text-xs">Max / Semester</span>
-                    <p className="font-semibold text-slate-900">
+                    <p className="font-semibold text-foreground">
                       {selectedUni.creditRules.maximumPerSemester}
                     </p>
                   </div>
                   <div>
                     <span className="text-foreground-subtle text-xs">Min / Semester</span>
-                    <p className="font-semibold text-slate-900">
+                    <p className="font-semibold text-foreground">
                       {selectedUni.creditRules.minimumPerSemester}
                     </p>
                   </div>
                   <div>
                     <span className="text-foreground-subtle text-xs">Max Program Duration</span>
-                    <p className="font-semibold text-slate-900">{selectedUni.maxProgramDuration}</p>
+                    <p className="font-semibold text-foreground">{selectedUni.maxProgramDuration}</p>
                   </div>
                 </div>
               </div>

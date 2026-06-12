@@ -45,10 +45,11 @@ export default function More() {
       </motion.header>
 
       <motion.section variants={staggerContainer} initial="hidden" animate="show" className="space-y-4">
-        <motion.div variants={fadeUpItem} className="flex justify-center md:justify-end">
+        <motion.div variants={fadeUpItem} className="flex justify-end">
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               variant="ghost"
+              size="sm"
               className="border-0 bg-transparent text-destructive hover:bg-transparent hover:opacity-80"
               onClick={clearAllData}
             >

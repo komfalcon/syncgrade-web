@@ -753,8 +753,8 @@ export default function GradePredictor() {
                         transition={{ duration: 0.2, ease: 'easeInOut' }}
                         className="overflow-hidden border-t border-border"
                       >
-                        <div>
-                          <div className="grid grid-cols-[1.8fr_0.8fr_0.8fr_1.2fr] bg-surface-elevated px-3 py-2 text-xs font-semibold uppercase tracking-wide text-foreground-muted">
+                        <div className="overflow-x-auto">
+                          <div className="grid min-w-[400px] grid-cols-[1.8fr_0.8fr_0.8fr_1.2fr] bg-surface-elevated px-3 py-2 text-xs font-semibold uppercase tracking-wide text-foreground-muted">
                             <span>Course</span>
                             <span>Units</span>
                             <span>Score</span>
@@ -764,7 +764,7 @@ export default function GradePredictor() {
                           {strategy.assignments.map((assignment, index) => (
                             <div
                               key={`${strategy.type}-${assignment.courseName}`}
-                              className={`grid grid-cols-[1.8fr_0.8fr_0.8fr_1.2fr] items-center border-b border-border px-3 py-3 text-sm text-foreground ${
+                              className={`grid min-w-[400px] grid-cols-[1.8fr_0.8fr_0.8fr_1.2fr] items-center border-b border-border px-3 py-3 text-sm text-foreground ${
                                 index % 2 === 0 ? 'bg-surface' : 'bg-surface-elevated'
                               }`}
                             >

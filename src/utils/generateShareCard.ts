@@ -193,13 +193,13 @@ function drawHeader(ctx: DrawingContext, sessionText: string): void {
 
   ctx.textAlign = "left";
   ctx.fillStyle = "#ffffff";
-  ctx.font = "700 32px Poppins, sans-serif";
+  ctx.font = "700 32px Inter, sans-serif";
   ctx.fillText("SyncGrade", left + 42, topPadding + 24);
   ctx.fillStyle = "rgba(203,213,225,0.95)";
-  ctx.font = "400 20px Poppins, sans-serif";
+  ctx.font = "400 20px Inter, sans-serif";
   ctx.fillText("Academic Progress", left + 42, topPadding + 56);
 
-  ctx.font = "500 18px Poppins, sans-serif";
+  ctx.font = "500 18px Inter, sans-serif";
   const pillPadX = 16;
   const pillPadY = 9;
   const textWidth = ctx.measureText(sessionText).width;
@@ -229,12 +229,12 @@ function drawCgpaSection(
   cgpaGradient.addColorStop(1, "#a78bfa");
   ctx.fillStyle = cgpaGradient;
   ctx.textAlign = "center";
-  ctx.font = "700 150px Poppins, sans-serif";
+  ctx.font = "700 150px Inter, sans-serif";
   ctx.fillText(formatGpa(cgpa), centerX, y);
 
   y += 48;
   ctx.fillStyle = "#ffffff";
-  ctx.font = "400 24px Poppins, sans-serif";
+  ctx.font = "400 24px Inter, sans-serif";
   ctx.fillText("Cumulative GPA", centerX, y);
 
   y += 30;
@@ -258,7 +258,7 @@ function drawCgpaSection(
 
   ctx.textAlign = "right";
   ctx.fillStyle = "#22c55e";
-  ctx.font = "500 22px Poppins, sans-serif";
+  ctx.font = "500 22px Inter, sans-serif";
   ctx.fillText(`${classification} ✓`, progressX + progressWidth, progressY + 36);
 
   return progressY + 48;
@@ -275,12 +275,12 @@ function drawIdentitySection(
   const name = firstName(studentName) || "Student";
   ctx.textAlign = "center";
   ctx.fillStyle = "#ffffff";
-  ctx.font = "700 52px Poppins, sans-serif";
+  ctx.font = "700 52px Inter, sans-serif";
   ctx.fillText(name, centerX, y + 48);
 
   const details = [levelLabel, programme.trim()].filter(Boolean).join(" · ");
   ctx.fillStyle = "#818cf8";
-  ctx.font = "500 26px Poppins, sans-serif";
+  ctx.font = "500 26px Inter, sans-serif";
   if (details) {
     drawWrappedText(ctx, details, centerX, y + 88, 820, 30, 2);
   }
@@ -309,11 +309,11 @@ function drawStatCard(ctx: DrawingContext, x: number, y: number, w: number, h: n
 
   ctx.textAlign = "left";
   ctx.fillStyle = "rgba(148,163,184,0.95)";
-  ctx.font = "500 18px Poppins, sans-serif";
+  ctx.font = "500 18px Inter, sans-serif";
   ctx.fillText(data.label, x + 18, y + 36);
 
   ctx.fillStyle = "#ffffff";
-  ctx.font = "700 38px Poppins, sans-serif";
+  ctx.font = "700 38px Inter, sans-serif";
   const valueFits = ctx.measureText(data.value).width <= w - 36;
   if (valueFits) {
     ctx.fillText(data.value, x + 18, y + 84);
@@ -323,7 +323,7 @@ function drawStatCard(ctx: DrawingContext, x: number, y: number, w: number, h: n
   }
 
   ctx.fillStyle = "rgba(148,163,184,0.9)";
-  ctx.font = "400 16px Poppins, sans-serif";
+  ctx.font = "400 16px Inter, sans-serif";
   drawWrappedText(ctx, data.sublabel, x + 18, y + 104, w - 36, 16, 1);
 }
 
@@ -434,7 +434,7 @@ function drawTrendGraph(ctx: DrawingContext, y: number, points: SemesterPoint[],
   }
 
   ctx.fillStyle = "rgba(148,163,184,0.95)";
-  ctx.font = "400 18px Poppins, sans-serif";
+  ctx.font = "400 18px Inter, sans-serif";
   ctx.textAlign = "center";
   normalized.forEach((point) => {
     ctx.fillText(point.shortName, point.x, axisY + 22);
@@ -459,11 +459,11 @@ function drawBadgeAndFooter(ctx: DrawingContext, y: number, achievement: string)
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#ffffff";
-  ctx.font = "500 22px Poppins, sans-serif";
+  ctx.font = "500 22px Inter, sans-serif";
   drawWrappedText(ctx, achievement, centerX, badgeY + 35, badgeW - 24, 24, 1);
 
   ctx.fillStyle = "rgba(148,163,184,0.95)";
-  ctx.font = "400 18px Poppins, sans-serif";
+  ctx.font = "400 18px Inter, sans-serif";
   ctx.fillText("Tracked with SyncGrade · syncgrade.aurikrex.tech", centerX, badgeY + 82);
 }
 
@@ -476,9 +476,9 @@ function drawTicker(ctx: DrawingContext): void {
   const text = "SyncGrade   SyncGrade   SyncGrade   SyncGrade   SyncGrade   SyncGrade";
   ctx.textAlign = "left";
   ctx.fillStyle = "#ffffff";
-  ctx.font = "400 16px Poppins, sans-serif";
+  ctx.font = "400 16px Inter, sans-serif";
   ctx.fillText(text, 28, y + 22);
-  ctx.font = "700 16px Poppins, sans-serif";
+  ctx.font = "700 16px Inter, sans-serif";
   ctx.fillText("SyncGrade", 30, y + 22);
   ctx.fillText("SyncGrade", 286, y + 22);
   ctx.fillText("SyncGrade", 542, y + 22);

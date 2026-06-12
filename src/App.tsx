@@ -1,114 +1,20 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { Spinner } from "@/components/ui/spinner";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import NigerianUniversities from "./pages/NigerianUniversities";
-import GradePredictor from "./pages/GradePredictor";
-import Analytics from "./pages/Analytics";
-import CarryoverSimulator from "./pages/CarryoverSimulator";
-import BackupRestore from "./pages/BackupRestore";
-import CustomUniversityForm from "./pages/CustomUniversityForm";
-import { getOnboardingComplete, getStoredValue, setOnboardingComplete, setStoredValue, STORAGE_KEYS } from "./storage/db";
-import GradeConverter from "./pages/GradeConverter";
-import UniversityGpLanding from "./pages/UniversityGpLanding";
+import { Layout } from "@/components/Layout";
+import { AppRoutes } from "@/routes";
+import { GpaScaleProvider, type SupportedGpaScale } from "./contexts/GpaScaleContext";
+import { getOnboardingComplete, setOnboardingComplete, getStoredValue, setStoredValue, STORAGE_KEYS } from "./lib/db";
+import { normalizeToSupportedScale } from "./utils/gpaLogic";
+import { GPA_SCALE_UPDATED_EVENT } from "./hooks/useCGPA";
+import { getBootOnboardingStep, getOnboardingStepAfterProfile, getOnboardingStepAfterUniversity } from "./lib/onboardingFlow";
 import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/PwaInstallBanner";
 import { FIRST_SYNC_SUCCESS_EVENT, FIRST_SYNC_SUCCESS_KEY } from "./lib/cloudSync";
-import { GpaScaleProvider, type SupportedGpaScale } from "./contexts/GpaScaleContext";
-import { GPA_SCALE_UPDATED_EVENT } from "./hooks/useCGPA";
-import { normalizeToSupportedScale } from "./utils/gpaLogic";
-import Tools from "./pages/Tools";
-import More from "./pages/More";
-import Layout from "./components/Layout";
-import { Spinner } from "./components/ui/spinner";
-import OnboardingProfileForm from "./components/OnboardingProfileForm";
 import type { AppSettings } from "./hooks/useCGPA";
-import {
-  getBootOnboardingStep,
-  getOnboardingStepAfterProfile,
-  getOnboardingStepAfterUniversity,
-  shouldShowFullApp,
-} from "./lib/onboardingFlow";
-
-const pageTransition = {
-  type: "spring" as const,
-  stiffness: 260,
-  damping: 28,
-};
-
-const pageVariants = {
-  initial: { opacity: 0, y: 16, scale: 0.98 },
-  animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: -12, scale: 0.98 },
-};
-
-function AnimatedPage({ children }: { children: React.ReactNode }) {
-  return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={pageTransition}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function Router() {
-  const [location] = useLocation();
-
-  return (
-    <AnimatePresence mode="wait">
-      <Switch key={location}>
-        <Route path={"/"}>
-          <AnimatedPage><Home /></AnimatedPage>
-        </Route>
-        <Route path={"/nigerian-universities"}>
-          <AnimatedPage><NigerianUniversities /></AnimatedPage>
-        </Route>
-        <Route path={"/grade-predictor"}>
-          <AnimatedPage><GradePredictor /></AnimatedPage>
-        </Route>
-        <Route path={"/analytics"}>
-          <AnimatedPage><Analytics /></AnimatedPage>
-        </Route>
-        <Route path={"/tools"}>
-          <AnimatedPage><Tools /></AnimatedPage>
-        </Route>
-        <Route path={"/more"}>
-          <AnimatedPage><More /></AnimatedPage>
-        </Route>
-        <Route path={"/carryover-simulator"}>
-          <AnimatedPage><CarryoverSimulator /></AnimatedPage>
-        </Route>
-        <Route path={"/backup-restore"}>
-          <AnimatedPage><BackupRestore /></AnimatedPage>
-        </Route>
-        <Route path={"/custom-university"}>
-          <AnimatedPage><CustomUniversityForm /></AnimatedPage>
-        </Route>
-        <Route path={"/grade-converter"}>
-          <AnimatedPage><GradeConverter /></AnimatedPage>
-        </Route>
-        <Route path={"/calculate/gp-in-:slug"}>
-          {(params) => <AnimatedPage><UniversityGpLanding slug={params.slug} /></AnimatedPage>}
-        </Route>
-        <Route path={"/404"}>
-          <AnimatedPage><NotFound /></AnimatedPage>
-        </Route>
-        <Route>
-          <AnimatedPage><NotFound /></AnimatedPage>
-        </Route>
-      </Switch>
-    </AnimatePresence>
-  );
-}
 
 function App() {
   const [, setLocation] = useLocation();
@@ -132,9 +38,7 @@ function App() {
           }
         }
       } catch {
-        if (active) {
-          setGpaScale(5.0);
-        }
+        if (active) setGpaScale(5.0);
       }
 
       const onboardingComplete = await getOnboardingComplete();
@@ -146,9 +50,7 @@ function App() {
         return;
       }
     })();
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [setLocation]);
 
   useEffect(() => {
@@ -168,9 +70,7 @@ function App() {
     const onBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setInstallPromptEvent(event as BeforeInstallPromptEvent);
-      if (canShowInstallBanner) {
-        setShowInstallBanner(true);
-      }
+      if (canShowInstallBanner) setShowInstallBanner(true);
     };
     const onSyncSuccess = () => {
       setCanShowInstallBanner(true);
@@ -190,11 +90,8 @@ function App() {
     const rawSettings = await getStoredValue(STORAGE_KEYS.settings);
     let existingSettings: Partial<AppSettings> = {};
     if (rawSettings) {
-      try {
-        existingSettings = JSON.parse(rawSettings) as Partial<AppSettings>;
-      } catch {
-        existingSettings = {};
-      }
+      try { existingSettings = JSON.parse(rawSettings) as Partial<AppSettings>; }
+      catch { existingSettings = {}; }
     }
     await setStoredValue(
       STORAGE_KEYS.settings,
@@ -212,8 +109,7 @@ function App() {
   if (onboardingStep === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="animated-bg" />
-        <Spinner className="size-6 text-primary" />
+        <Spinner className="size-5 text-primary" />
       </div>
     );
   }
@@ -223,25 +119,22 @@ function App() {
       <ThemeProvider>
         <GpaScaleProvider value={gpaScale}>
           <TooltipProvider>
-            <div className="animated-bg" />
             <Toaster />
-            {onboardingStep === "profile" ? (
-              <OnboardingProfileForm onContinue={handleProfileContinue} />
-            ) : null}
-            {onboardingStep === "university" ? (
-              <NigerianUniversities onboardingMode onUniversityApplied={handleUniversityApplied} />
-            ) : null}
-            {shouldShowFullApp(onboardingStep) ? (
-              <Layout
-                topContent={
-                  showInstallBanner && canShowInstallBanner ? (
-                    <PwaInstallBanner event={installPromptEvent} />
-                  ) : null
-                }
-              >
-                <Router />
-              </Layout>
-            ) : null}
+            <Layout
+              hideNavbar={onboardingStep === "profile"}
+              hideFooter={onboardingStep === "profile"}
+              topContent={
+                showInstallBanner && canShowInstallBanner
+                  ? <PwaInstallBanner event={installPromptEvent} />
+                  : null
+              }
+            >
+              <AppRoutes
+                onboardingStep={onboardingStep}
+                onProfileContinue={handleProfileContinue}
+                onUniversityApplied={handleUniversityApplied}
+              />
+            </Layout>
           </TooltipProvider>
         </GpaScaleProvider>
       </ThemeProvider>

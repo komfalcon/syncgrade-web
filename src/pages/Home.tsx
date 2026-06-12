@@ -1,9 +1,25 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { BarChart3, Plus } from "lucide-react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  BarChart3,
+  GraduationCap,
+  Plus,
+  Target,
+  TrendingUp,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useCGPA } from "@/hooks/useCGPA";
 import SemesterCard from "@/components/SemesterCard";
 import AddSemesterDialog from "@/components/AddSemesterDialog";
@@ -13,33 +29,57 @@ import { getClassification } from "@/utils/gpaLogic";
 import GradingGuide from "@/components/GradingGuide";
 import { extractCourseCode, type CourseHistory } from "@/utils/carryoverDetector";
 import { useUniversities } from "@/hooks/useUniversities";
+import TireSection from "@/components/TireSection";
 
 const CLASSIFICATION_STYLES: Record<string, string> = {
-  "First Class": "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  "Second Class Upper": "border-cyan-500/30 bg-cyan-500/10 text-primary dark:text-cyan-300",
-  "Second Class Lower": "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  "Third Class": "border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-300",
-  Pass: "border-border-strong bg-surface-elevated text-foreground-muted",
+  "First Class": "bg-success/10 text-success border-success/20",
+  "Second Class Upper": "bg-primary/10 text-primary-foreground border-primary/20",
+  "Second Class Lower": "bg-warning/10 text-warning border-warning/20",
+  "Third Class": "bg-orange-50 text-orange-600 border-orange-200",
+  Pass: "bg-zinc-100 text-zinc-600 border-zinc-200",
 };
 
 function getClassificationBadgeClass(label: string): string {
-  return CLASSIFICATION_STYLES[label] ?? "border-border bg-muted text-muted-foreground";
+  return CLASSIFICATION_STYLES[label] ?? "bg-muted text-muted-foreground border-border";
 }
 
-const staggerContainer = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
-
 const fadeUpItem = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 200, damping: 24 } },
 };
 
 const scaleInItem = {
-  hidden: { opacity: 0, scale: 0.92 },
+  hidden: { opacity: 0, scale: 0.95 },
   show: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 22 } },
 };
+
+interface StatCardProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  sub: string;
+}
+
+function StatCard({ icon, label, value, sub }: StatCardProps) {
+  return (
+    <div className="rounded-xl border border-border bg-surface p-4 shadow-soft transition-shadow hover:shadow-elevated md:p-5">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-foreground-muted">
+            {label}
+          </p>
+          <p className="mt-1.5 text-2xl font-bold tracking-tight text-foreground">
+            {value}
+          </p>
+          <p className="mt-0.5 text-xs text-foreground-subtle">{sub}</p>
+        </div>
+        <div className="rounded-lg bg-surface-elevated p-2.5 text-foreground-muted">
+          {icon}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const cgpa = useCGPA();
@@ -50,12 +90,12 @@ export default function Home() {
 
   const chartTheme = useMemo(
     () => ({
-      axis: "var(--foreground-muted)",
-      grid: "var(--border)",
-      tooltipBg: "var(--surface-elevated)",
-      tooltipText: "var(--foreground)",
-      line: "var(--primary)",
-      dot: "var(--primary)",
+      axis: "#a1a1aa",
+      grid: "#e4e4e7",
+      tooltipBg: "#ffffff",
+      tooltipText: "#18181b",
+      line: "#a3e635",
+      dot: "#a3e635",
     }),
     [],
   );
@@ -123,105 +163,219 @@ export default function Home() {
     return value.split(/\s+/)[0] ?? "";
   }, [cgpa.settings.studentName]);
 
+  const stats = useMemo(() => {
+    const gpas = Object.values(cgpa.semesterGPAs).filter((g) => g > 0);
+    const avg = gpas.length > 0 ? gpas.reduce((a, b) => a + b, 0) / gpas.length : 0;
+    const best = gpas.length > 0 ? Math.max(...gpas) : 0;
+    const bestSemester = best > 0 ? cgpa.semesters.find((s) => cgpa.semesterGPAs[s.id] === best) : null;
+    return { avg, best, bestSemester };
+  }, [cgpa.semesterGPAs, cgpa.semesters]);
+
+  const cgpaPercent = (cgpa.currentCGPA / scale) * 100;
+
   return (
     <motion.div
-      variants={staggerContainer}
       initial="hidden"
       animate="show"
-      className="space-y-10"
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+      className="space-y-6 pb-24 md:space-y-8 md:pb-8"
     >
-      <motion.div variants={scaleInItem}>
-        <Card className="group relative overflow-hidden rounded-xl border border-border bg-surface p-4 shadow-md transition-all duration-300 hover:shadow-[0_0_24px_-4px_var(--primary)/0.15] md:p-6">
-          {firstName ? <motion.p initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="mb-2 text-lg font-semibold text-foreground-muted">{firstName}, your CGPA is</motion.p> : null}
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15, type: "spring", stiffness: 200 }}>
-              <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Current CGPA</p>
-              <h1 className="mt-2 font-mono text-5xl font-bold text-foreground md:text-6xl">{cgpa.currentCGPA.toFixed(2)}</h1>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Scale {scale.toFixed(1)} • {cgpa.totalCredits} credits completed
-              </p>
-            </motion.div>
-            <motion.span
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.25, type: "spring", stiffness: 200 }}
-              className={`rounded-full border px-3 py-1 text-sm font-medium ${getClassificationBadgeClass(classification.label)}`}
-            >
-              {classification.label}
-            </motion.span>
+      {/* ── Sticky CGPA Hero ──────────────────────────────────── */}
+      <motion.div variants={scaleInItem} className="sticky top-0 z-10 -mx-4 px-4 pt-4 pb-2 md:static md:mx-0 md:px-0 md:pt-0">
+        <div className="rounded-xl border border-border bg-surface/95 shadow-soft backdrop-blur-md md:border-border md:bg-surface md:shadow-card md:backdrop-blur-none">
+          <div className="px-4 py-4 md:px-6 md:py-5">
+            {/* Top row */}
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                {firstName ? (
+                  <p className="flex items-center gap-1.5 text-xs font-medium text-foreground-muted">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" />
+                    Welcome back, {firstName}
+                  </p>
+                ) : (
+                  <p className="flex items-center gap-1.5 text-xs font-medium text-foreground-muted">
+                    <GraduationCap className="h-3.5 w-3.5" />
+                    Your Academic Progress
+                  </p>
+                )}
+              </div>
+              <Badge className={cn("px-2.5 py-1 text-[11px]", getClassificationBadgeClass(classification.label))}>
+                {classification.label}
+              </Badge>
+            </div>
+
+            {/* CGPA display */}
+            <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <h1 className="font-mono text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+                    {cgpa.currentCGPA.toFixed(2)}
+                  </h1>
+                  <span className="text-sm font-medium text-foreground-subtle">
+                    / {scale.toFixed(1)}
+                  </span>
+                </div>
+                <p className="mt-0.5 text-xs text-foreground-subtle">
+                  {cgpa.totalCredits} credits completed
+                </p>
+              </div>
+
+              {cgpa.semesters.length > 0 && (
+                <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
+              )}
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-4 space-y-1">
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-foreground-subtle">Progress toward {classification.label}</span>
+                <span className="font-mono font-medium text-foreground">
+                  {cgpaPercent.toFixed(0)}%
+                </span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-zinc-100">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${cgpaPercent}%` }}
+                  transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
+                />
+              </div>
+            </div>
           </div>
-          {cgpa.semesters.length > 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-5">
-              <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
-            </motion.div>
-          ) : null}
-        </Card>
+        </div>
       </motion.div>
 
-      <motion.section variants={fadeUpItem} className="mb-10 space-y-4">
-        <GradingGuide gradeRanges={cgpa.settings.gradeRanges} universityName={activeUniversityName} />
-        <div className="flex items-center justify-between gap-3">
-          <motion.h2 initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="text-2xl font-bold text-foreground">Your Semesters</motion.h2>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button onClick={() => setShowAddSemester(true)} className="min-h-12 gap-2">
+      {/* ── Stats Row ─────────────────────────────────────────── */}
+      {cgpa.semesters.length > 0 && (
+        <motion.div variants={fadeUpItem} className="grid gap-3 sm:grid-cols-3">
+          <StatCard
+            icon={<BarChart3 className="h-4 w-4" />}
+            label="Average GPA"
+            value={stats.avg > 0 ? stats.avg.toFixed(2) : "—"}
+            sub={`across ${cgpa.semesters.length} semester${cgpa.semesters.length !== 1 ? "s" : ""}`}
+          />
+          <StatCard
+            icon={<TrendingUp className="h-4 w-4" />}
+            label="Best Semester"
+            value={stats.best > 0 ? stats.best.toFixed(2) : "—"}
+            sub={stats.bestSemester ? stats.bestSemester.name : ""}
+          />
+          <StatCard
+            icon={<Target className="h-4 w-4" />}
+            label="Target Class"
+            value={classification.label === "First Class" ? "Maintain" : "First Class"}
+            sub={classification.label === "First Class" ? "On track to graduate with First Class" : `${(cgpa.currentCGPA + 0.5).toFixed(2)} to reach`}
+          />
+        </motion.div>
+      )}
+
+      {/* ── Grading Guide + Semesters (two-column) ────────────── */}
+      <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+        {/* Left — Grading Guide */}
+        <motion.div variants={fadeUpItem}>
+          <GradingGuide gradeRanges={cgpa.settings.gradeRanges} universityName={activeUniversityName} />
+        </motion.div>
+
+        {/* Right — Semesters */}
+        <motion.section variants={fadeUpItem} className="w-full space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold tracking-tight text-foreground">
+                Your Semesters
+              </h2>
+              <p className="text-xs text-foreground-subtle">
+                {cgpa.semesters.length} semester{cgpa.semesters.length !== 1 ? "s" : ""} ·{" "}
+                {cgpa.semesters.reduce((sum, s) => sum + s.courses.length, 0)} courses
+              </p>
+            </div>
+            <Button onClick={() => setShowAddSemester(true)} className="gap-1.5 shrink-0">
               <Plus className="h-4 w-4" />
-              Add Semester
+              <span className="hidden sm:inline">Add Semester</span>
             </Button>
-          </motion.div>
-        </div>
+          </div>
 
-        {cgpa.semesters.length === 0 ? (
-          <motion.div variants={scaleInItem}>
-            <Card className="rounded-xl border border-border bg-surface p-4 text-center shadow-md md:p-6">
-              <p className="text-muted-foreground">No semesters yet. Add your first semester to begin tracking your CGPA.</p>
+          {cgpa.semesters.length === 0 ? (
+            <Card className="p-8 text-center">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-elevated">
+                <GraduationCap className="h-6 w-6 text-foreground-muted" />
+              </div>
+              <p className="text-sm font-medium text-foreground">No semesters yet</p>
+              <p className="mt-0.5 text-xs text-foreground-subtle">
+                Add your first semester to begin tracking your CGPA.
+              </p>
+              <Button onClick={() => setShowAddSemester(true)} className="mt-4 gap-1.5">
+                <Plus className="h-4 w-4" />
+                Add Semester
+              </Button>
             </Card>
-          </motion.div>
-        ) : (
-          <motion.div variants={staggerContainer} initial="hidden" animate="show">
-            {groupedSemesters.map((group) => {
-              const groupAverage =
-                group.semesters.length > 0
-                  ? group.semesters.reduce((sum, semester) => sum + (cgpa.semesterGPAs[semester.id] || 0), 0) /
-                    group.semesters.length
-                  : 0;
+          ) : (
+            <motion.div
+              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+              initial="hidden"
+              animate="show"
+              className="space-y-5"
+            >
+              {groupedSemesters.map((group) => {
+                const groupAverage =
+                  group.semesters.length > 0
+                    ? group.semesters.reduce((sum, semester) => sum + (cgpa.semesterGPAs[semester.id] || 0), 0) /
+                      group.semesters.length
+                    : 0;
 
-              return (
-                <motion.div key={group.level} variants={fadeUpItem} className="mb-8">
-                  <div className="mb-3 flex w-full items-end justify-between border-b border-border pb-2">
-                    <h3 className="text-lg font-bold text-foreground">{group.level}L</h3>
-                    <p className="text-xs text-foreground-muted">Avg: {groupAverage.toFixed(2)}</p>
-                  </div>
+                return (
+                  <motion.div key={group.level} variants={fadeUpItem}>
+                    <div className="mb-2 flex items-center gap-2 px-0.5">
+                      <h3 className="text-sm font-semibold text-foreground">
+                        {group.level}L
+                      </h3>
+                      <span className="inline-flex items-center rounded-full bg-surface-elevated px-2 py-0.5 text-[10px] font-medium text-foreground-muted">
+                        Avg: {groupAverage.toFixed(2)}
+                      </span>
+                    </div>
 
-                  {group.semesters.map((semester) => (
-                    <motion.div key={semester.id} variants={fadeUpItem} className="mb-3">
-                      <SemesterCard
-                        semester={semester}
-                        gpa={cgpa.semesterGPAs[semester.id] || 0}
-                        isExpanded={expandedSemesterId === semester.id}
-                        onToggleExpand={() => setExpandedSemesterId(expandedSemesterId === semester.id ? null : semester.id)}
-                        onRemove={() => cgpa.removeSemester(semester.id)}
-                        onAddCourse={(course) => cgpa.addCourse(semester.id, course)}
-                        onUpdateCourse={(courseId, updates) => cgpa.updateCourse(semester.id, courseId, updates)}
-                        onRemoveCourse={(courseId) => cgpa.removeCourse(semester.id, courseId)}
-                        gpaScale={scale}
-                        semesterNames={semesterNames}
-                        previousCourses={previousCoursesBySemesterId[semester.id] ?? []}
-                        passThreshold={passThreshold}
-                      />
-                    </motion.div>
-                  ))}
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
-      </motion.section>
+                    <div className="space-y-2">
+                      {group.semesters.map((semester) => (
+                        <motion.div key={semester.id} variants={fadeUpItem}>
+                          <SemesterCard
+                            semester={semester}
+                            gpa={cgpa.semesterGPAs[semester.id] || 0}
+                            isExpanded={expandedSemesterId === semester.id}
+                            onToggleExpand={() =>
+                              setExpandedSemesterId(
+                                expandedSemesterId === semester.id ? null : semester.id,
+                              )
+                            }
+                            onRemove={() => cgpa.removeSemester(semester.id)}
+                            onAddCourse={(course) => cgpa.addCourse(semester.id, course)}
+                            onUpdateCourse={(courseId, updates) =>
+                              cgpa.updateCourse(semester.id, courseId, updates)
+                            }
+                            onRemoveCourse={(courseId) =>
+                              cgpa.removeCourse(semester.id, courseId)
+                            }
+                            gpaScale={scale}
+                            semesterNames={semesterNames}
+                            previousCourses={previousCoursesBySemesterId[semester.id] ?? []}
+                            passThreshold={passThreshold}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
+        </motion.section>
+      </div>
 
-      {chartData.length > 0 ? (
+      {/* ── Chart ─────────────────────────────────────────────── */}
+      {chartData.length > 0 && (
         <motion.div variants={scaleInItem}>
-          <Card className="group relative overflow-hidden rounded-xl border border-border bg-surface p-4 shadow-md transition-all duration-300 hover:shadow-[0_0_24px_-4px_var(--primary)/0.15]">
-            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
-              <BarChart3 className="h-4 w-4 text-primary" />
+          <Card className="p-5 md:p-6">
+            <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+              <BarChart3 className="h-4 w-4 text-foreground-muted" />
               CGPA Progression
             </h3>
             <ResponsiveContainer width="100%" height={220}>
@@ -229,39 +383,58 @@ export default function Home() {
                 <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: chartTheme.axis, fontSize: 12 }}
+                  tick={{ fill: chartTheme.axis, fontSize: 11 }}
                   axisLine={{ stroke: chartTheme.grid }}
-                  tickLine={{ stroke: chartTheme.grid }}
+                  tickLine={false}
                 />
                 <YAxis
                   domain={[0, scale]}
-                  tick={{ fill: chartTheme.axis, fontSize: 12 }}
-                  axisLine={{ stroke: chartTheme.grid }}
-                  tickLine={{ stroke: chartTheme.grid }}
+                  tick={{ fill: chartTheme.axis, fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
                 />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: chartTheme.tooltipBg,
                     color: chartTheme.tooltipText,
-                    border: `1px solid ${chartTheme.grid}`,
+                    border: "1px solid #e4e4e7",
                     borderRadius: "0.5rem",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+                    fontSize: "13px",
                   }}
-                  labelStyle={{ color: chartTheme.tooltipText, fontWeight: 600 }}
-                  itemStyle={{ color: chartTheme.dot }}
+                  labelStyle={{ fontWeight: 600 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="gpa"
                   stroke={chartTheme.line}
-                  strokeWidth={2}
-                  dot={{ fill: chartTheme.dot, strokeWidth: 0, r: 5 }}
-                  activeDot={{ r: 7, fill: chartTheme.line }}
+                  strokeWidth={2.5}
+                  dot={{ fill: chartTheme.dot, strokeWidth: 0, r: 4 }}
+                  activeDot={{ r: 6, fill: chartTheme.line }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </Card>
         </motion.div>
-      ) : null}
+      )}
+
+      {/* ── Featured: Tire Section ────────────────────────────── */}
+      <motion.section variants={fadeUpItem}>
+        <div className="overflow-hidden rounded-xl border border-border">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-2.5 md:px-5">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-surface-elevated">
+              <span className="h-2 w-2 rounded-full bg-primary" />
+            </div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-foreground-muted">
+              Featured
+            </span>
+            <div className="ml-auto h-px flex-1 bg-border" />
+          </div>
+          <TireSection />
+        </div>
+      </motion.section>
+
+      {/* ── Dialog ────────────────────────────────────────────── */}
       <AddSemesterDialog
         open={showAddSemester}
         onOpenChange={setShowAddSemester}

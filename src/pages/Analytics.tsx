@@ -210,12 +210,12 @@ export default function Analytics() {
               </Button>
             </motion.div>
             <div className="flex items-center gap-3">
-              <span className="text-3xl">📊</span>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold">
+              <span className="text-2xl sm:text-3xl">📊</span>
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold sm:text-3xl md:text-4xl">
                   Academic Analytics
                 </h1>
-                <p className="mt-1 text-foreground-muted">
+                <p className="mt-1 text-sm text-foreground-muted sm:text-base">
                   Deep insights into your academic performance
                 </p>
               </div>
@@ -562,29 +562,29 @@ export default function Analytics() {
                           show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 200, damping: 24 } },
                         }}
                         whileHover={{ x: 4, backgroundColor: 'var(--surface-elevated)' }}
-                        className="flex items-center justify-between rounded-lg border p-3 transition-colors"
+                        className="flex flex-col gap-2 rounded-lg border p-3 transition-colors sm:flex-row sm:items-center sm:justify-between"
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
                           {t.trend === 'improving' ? (
-                            <TrendingUp className="w-4 h-4 text-success" />
+                            <TrendingUp className="w-4 h-4 shrink-0 text-success" />
                           ) : t.trend === 'declining' ? (
-                            <TrendingDown className="w-4 h-4 text-destructive" />
+                            <TrendingDown className="w-4 h-4 shrink-0 text-destructive" />
                           ) : (
-                            <Minus className="w-4 h-4 text-foreground-subtle" />
+                            <Minus className="w-4 h-4 shrink-0 text-foreground-subtle" />
                           )}
-                          <span className="font-medium text-foreground">
+                          <span className="truncate font-medium text-foreground">
                             {t.semester}
                           </span>
                         </div>
-                        <div className="flex items-center gap-4 text-sm">
-                          <span className="text-foreground-muted">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                          <span className="whitespace-nowrap text-foreground-muted">
                             GPA: <strong>{t.gpa.toFixed(2)}</strong>
                           </span>
-                          <span className="text-foreground-muted">
+                          <span className="whitespace-nowrap text-foreground-muted">
                             CGPA: <strong>{t.cgpa.toFixed(2)}</strong>
                           </span>
                           {t.improvementMarker && (
-                             <span className="text-xs text-success">
+                             <span className="whitespace-nowrap text-xs text-success">
                                {t.improvementMarker}
                              </span>
                           )}

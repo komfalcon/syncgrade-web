@@ -227,43 +227,43 @@ export default function BackupRestore() {
         {/* Current Data Summary */}
         <Card className="p-6">
           <h2 className="mb-4 text-lg font-semibold">Current Data Summary</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="rounded-lg bg-blue-50 p-3 text-center">
-              <p className="text-2xl font-bold text-blue-700">
+              <p className="text-xl font-bold text-blue-700 sm:text-2xl">
                 {semesters.length}
               </p>
-              <p className="text-sm text-blue-600">Semesters</p>
+              <p className="text-xs text-blue-600 sm:text-sm">Semesters</p>
             </div>
             <div className="rounded-lg bg-green-50 p-3 text-center">
-              <p className="text-2xl font-bold text-green-700">
+              <p className="text-xl font-bold text-green-700 sm:text-2xl">
                 {totalCourses}
               </p>
-              <p className="text-sm text-green-600">Total Courses</p>
+              <p className="text-xs text-green-600 sm:text-sm">Total Courses</p>
             </div>
             <div className="rounded-lg bg-purple-50 p-3 text-center">
-              <p className="text-2xl font-bold text-purple-700">
+              <p className="text-xl font-bold text-purple-700 sm:text-2xl">
                 {currentCGPA.toFixed(2)}
               </p>
-              <p className="text-sm text-purple-600">Current CGPA</p>
+              <p className="text-xs text-purple-600 sm:text-sm">Current CGPA</p>
             </div>
             <div className="rounded-lg bg-amber-50 p-3 text-center">
-              <p className="text-2xl font-bold text-amber-700">
+              <p className="text-xl font-bold text-amber-700 sm:text-2xl">
                 {settings.activeUniversity ?? 'None'}
               </p>
-              <p className="text-sm text-amber-600">University</p>
+              <p className="text-xs text-amber-600 sm:text-sm">University</p>
             </div>
             <div className="rounded-lg bg-rose-50 p-3 text-center">
-              <p className="text-2xl font-bold text-rose-700">
+              <p className="text-xl font-bold text-rose-700 sm:text-2xl">
                 {totalCredits}
               </p>
-              <p className="text-sm text-rose-600">Total Credits</p>
+              <p className="text-xs text-rose-600 sm:text-sm">Total Credits</p>
             </div>
             {lastModified && (
               <div className="rounded-lg bg-surface-elevated p-3 text-center">
-                <p className="text-2xl font-bold text-foreground">
+                <p className="text-xl font-bold text-foreground sm:text-2xl">
                   {lastModified}
                 </p>
-                <p className="text-sm text-foreground-muted">Last Modified</p>
+                <p className="text-xs text-foreground-muted sm:text-sm">Last Modified</p>
               </div>
             )}
           </div>

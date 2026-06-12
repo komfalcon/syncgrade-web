@@ -160,7 +160,7 @@ export default function CarryoverSimulator() {
         {/* Current Status */}
         <Card className="p-6">
           <h2 className="mb-4 text-lg font-semibold">📊 Current Status</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
             <div className="rounded-lg bg-teal-50 p-4 text-center">
               <p className="text-sm text-foreground-muted">Current CGPA</p>
               <p className="text-2xl font-bold text-teal-700">
