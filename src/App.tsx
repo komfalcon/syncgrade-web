@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -33,38 +34,81 @@ import {
   shouldShowFullApp,
 } from "./lib/onboardingFlow";
 
+const pageTransition = {
+  type: "spring" as const,
+  stiffness: 260,
+  damping: 28,
+};
 
-function Router() {
+const pageVariants = {
+  initial: { opacity: 0, y: 16, scale: 0.98 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -12, scale: 0.98 },
+};
+
+function AnimatedPage({ children }: { children: React.ReactNode }) {
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/nigerian-universities"}>
-        <NigerianUniversities />
-      </Route>
-      <Route path={"/grade-predictor"} component={GradePredictor} />
-      <Route path={"/analytics"} component={Analytics} />
-      <Route path={"/tools"} component={Tools} />
-      <Route path={"/more"} component={More} />
-      <Route path={"/carryover-simulator"} component={CarryoverSimulator} />
-      <Route path={"/backup-restore"} component={BackupRestore} />
-      <Route path={"/custom-university"}>
-        <CustomUniversityForm />
-      </Route>
-      <Route path={"/grade-converter"} component={GradeConverter} />
-      <Route path={"/calculate/gp-in-:slug"}>
-        {(params) => <UniversityGpLanding slug={params.slug} />}
-      </Route>
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={pageTransition}
+    >
+      {children}
+    </motion.div>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
+function Router() {
+  const [location] = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Switch key={location}>
+        <Route path={"/"}>
+          <AnimatedPage><Home /></AnimatedPage>
+        </Route>
+        <Route path={"/nigerian-universities"}>
+          <AnimatedPage><NigerianUniversities /></AnimatedPage>
+        </Route>
+        <Route path={"/grade-predictor"}>
+          <AnimatedPage><GradePredictor /></AnimatedPage>
+        </Route>
+        <Route path={"/analytics"}>
+          <AnimatedPage><Analytics /></AnimatedPage>
+        </Route>
+        <Route path={"/tools"}>
+          <AnimatedPage><Tools /></AnimatedPage>
+        </Route>
+        <Route path={"/more"}>
+          <AnimatedPage><More /></AnimatedPage>
+        </Route>
+        <Route path={"/carryover-simulator"}>
+          <AnimatedPage><CarryoverSimulator /></AnimatedPage>
+        </Route>
+        <Route path={"/backup-restore"}>
+          <AnimatedPage><BackupRestore /></AnimatedPage>
+        </Route>
+        <Route path={"/custom-university"}>
+          <AnimatedPage><CustomUniversityForm /></AnimatedPage>
+        </Route>
+        <Route path={"/grade-converter"}>
+          <AnimatedPage><GradeConverter /></AnimatedPage>
+        </Route>
+        <Route path={"/calculate/gp-in-:slug"}>
+          {(params) => <AnimatedPage><UniversityGpLanding slug={params.slug} /></AnimatedPage>}
+        </Route>
+        <Route path={"/404"}>
+          <AnimatedPage><NotFound /></AnimatedPage>
+        </Route>
+        <Route>
+          <AnimatedPage><NotFound /></AnimatedPage>
+        </Route>
+      </Switch>
+    </AnimatePresence>
+  );
+}
 
 function App() {
   const [, setLocation] = useLocation();
@@ -140,14 +184,8 @@ function App() {
     };
   }, [canShowInstallBanner, installPromptEvent]);
 
-  const handleProfileContinue = async ({
-    studentName,
-    programme,
-    startingLevel,
-  }: {
-    studentName: string;
-    programme: string;
-    startingLevel: number;
+  const handleProfileContinue = async ({ studentName, programme, startingLevel }: {
+    studentName: string; programme: string; startingLevel: number;
   }) => {
     const rawSettings = await getStoredValue(STORAGE_KEYS.settings);
     let existingSettings: Partial<AppSettings> = {};
@@ -160,12 +198,7 @@ function App() {
     }
     await setStoredValue(
       STORAGE_KEYS.settings,
-      JSON.stringify({
-        ...existingSettings,
-        studentName,
-        programme,
-        startingLevel,
-      }),
+      JSON.stringify({ ...existingSettings, studentName, programme, startingLevel }),
     );
     setOnboardingStep(getOnboardingStepAfterProfile());
   };
@@ -179,6 +212,7 @@ function App() {
   if (onboardingStep === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="animated-bg" />
         <Spinner className="size-6 text-primary" />
       </div>
     );
@@ -189,6 +223,7 @@ function App() {
       <ThemeProvider>
         <GpaScaleProvider value={gpaScale}>
           <TooltipProvider>
+            <div className="animated-bg" />
             <Toaster />
             {onboardingStep === "profile" ? (
               <OnboardingProfileForm onContinue={handleProfileContinue} />

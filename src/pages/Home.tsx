@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { BarChart3, Plus } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,21 @@ function getClassificationBadgeClass(label: string): string {
   return CLASSIFICATION_STYLES[label] ?? "border-border bg-muted text-muted-foreground";
 }
 
+const staggerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 200, damping: 24 } },
+};
+
+const scaleInItem = {
+  hidden: { opacity: 0, scale: 0.92 },
+  show: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 22 } },
+};
+
 export default function Home() {
   const cgpa = useCGPA();
   const scale = useGpaScale();
@@ -38,8 +54,8 @@ export default function Home() {
       grid: "var(--border)",
       tooltipBg: "var(--surface-elevated)",
       tooltipText: "var(--foreground)",
-      line: "var(--accent)",
-      dot: "var(--accent)",
+      line: "var(--primary)",
+      dot: "var(--primary)",
     }),
     [],
   );
@@ -108,44 +124,60 @@ export default function Home() {
   }, [cgpa.settings.studentName]);
 
   return (
-    <div className="space-y-10">
-      <Card className="rounded-xl border border-border bg-surface p-4 shadow-md md:p-6">
-        {firstName ? <p className="mb-2 text-lg font-semibold text-foreground-muted">{firstName}, your CGPA is</p> : null}
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Current CGPA</p>
-            <h1 className="mt-2 font-mono text-5xl font-bold text-foreground md:text-6xl">{cgpa.currentCGPA.toFixed(2)}</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Scale {scale.toFixed(1)} • {cgpa.totalCredits} credits completed
-            </p>
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="show"
+      className="space-y-10"
+    >
+      <motion.div variants={scaleInItem}>
+        <Card className="group relative overflow-hidden rounded-xl border border-border bg-surface p-4 shadow-md transition-all duration-300 hover:shadow-[0_0_24px_-4px_var(--primary)/0.15] md:p-6">
+          {firstName ? <motion.p initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="mb-2 text-lg font-semibold text-foreground-muted">{firstName}, your CGPA is</motion.p> : null}
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15, type: "spring", stiffness: 200 }}>
+              <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Current CGPA</p>
+              <h1 className="mt-2 font-mono text-5xl font-bold text-foreground md:text-6xl">{cgpa.currentCGPA.toFixed(2)}</h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Scale {scale.toFixed(1)} • {cgpa.totalCredits} credits completed
+              </p>
+            </motion.div>
+            <motion.span
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.25, type: "spring", stiffness: 200 }}
+              className={`rounded-full border px-3 py-1 text-sm font-medium ${getClassificationBadgeClass(classification.label)}`}
+            >
+              {classification.label}
+            </motion.span>
           </div>
-          <span className={`rounded-full border px-3 py-1 text-sm font-medium ${getClassificationBadgeClass(classification.label)}`}>
-            {classification.label}
-          </span>
-        </div>
-        {cgpa.semesters.length > 0 ? (
-          <div className="mt-5">
-            <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
-          </div>
-        ) : null}
-      </Card>
+          {cgpa.semesters.length > 0 ? (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-5">
+              <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
+            </motion.div>
+          ) : null}
+        </Card>
+      </motion.div>
 
-      <section className="mb-10 space-y-4">
+      <motion.section variants={fadeUpItem} className="mb-10 space-y-4">
         <GradingGuide gradeRanges={cgpa.settings.gradeRanges} universityName={activeUniversityName} />
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-2xl font-bold text-foreground">Your Semesters</h2>
-          <Button onClick={() => setShowAddSemester(true)} className="min-h-12 gap-2">
-            <Plus className="h-4 w-4" />
-            Add Semester
-          </Button>
+          <motion.h2 initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="text-2xl font-bold text-foreground">Your Semesters</motion.h2>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button onClick={() => setShowAddSemester(true)} className="min-h-12 gap-2">
+              <Plus className="h-4 w-4" />
+              Add Semester
+            </Button>
+          </motion.div>
         </div>
 
         {cgpa.semesters.length === 0 ? (
-          <Card className="rounded-xl border border-border bg-surface p-4 text-center shadow-md md:p-6">
-            <p className="text-muted-foreground">No semesters yet. Add your first semester to begin tracking your CGPA.</p>
-          </Card>
+          <motion.div variants={scaleInItem}>
+            <Card className="rounded-xl border border-border bg-surface p-4 text-center shadow-md md:p-6">
+              <p className="text-muted-foreground">No semesters yet. Add your first semester to begin tracking your CGPA.</p>
+            </Card>
+          </motion.div>
         ) : (
-          <div>
+          <motion.div variants={staggerContainer} initial="hidden" animate="show">
             {groupedSemesters.map((group) => {
               const groupAverage =
                 group.semesters.length > 0
@@ -154,14 +186,14 @@ export default function Home() {
                   : 0;
 
               return (
-                <div key={group.level} className="mb-8">
+                <motion.div key={group.level} variants={fadeUpItem} className="mb-8">
                   <div className="mb-3 flex w-full items-end justify-between border-b border-border pb-2">
                     <h3 className="text-lg font-bold text-foreground">{group.level}L</h3>
                     <p className="text-xs text-foreground-muted">Avg: {groupAverage.toFixed(2)}</p>
                   </div>
 
                   {group.semesters.map((semester) => (
-                    <div key={semester.id} className="mb-3">
+                    <motion.div key={semester.id} variants={fadeUpItem} className="mb-3">
                       <SemesterCard
                         semester={semester}
                         gpa={cgpa.semesterGPAs[semester.id] || 0}
@@ -176,57 +208,59 @@ export default function Home() {
                         previousCourses={previousCoursesBySemesterId[semester.id] ?? []}
                         passThreshold={passThreshold}
                       />
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         )}
-      </section>
+      </motion.section>
 
       {chartData.length > 0 ? (
-        <Card className="rounded-xl border border-border bg-surface p-4 shadow-md">
-          <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
-            <BarChart3 className="h-4 w-4 text-accent" />
-            CGPA Progression
-          </h3>
-          <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-              <XAxis
-                dataKey="name"
-                tick={{ fill: chartTheme.axis, fontSize: 12 }}
-                axisLine={{ stroke: chartTheme.grid }}
-                tickLine={{ stroke: chartTheme.grid }}
-              />
-              <YAxis
-                domain={[0, scale]}
-                tick={{ fill: chartTheme.axis, fontSize: 12 }}
-                axisLine={{ stroke: chartTheme.grid }}
-                tickLine={{ stroke: chartTheme.grid }}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: chartTheme.tooltipBg,
-                  color: chartTheme.tooltipText,
-                  border: `1px solid ${chartTheme.grid}`,
-                  borderRadius: "0.5rem",
-                }}
-                labelStyle={{ color: chartTheme.tooltipText, fontWeight: 600 }}
-                itemStyle={{ color: chartTheme.dot }}
-              />
-              <Line
-                type="monotone"
-                dataKey="gpa"
-                stroke={chartTheme.line}
-                strokeWidth={2}
-                dot={{ fill: chartTheme.dot, strokeWidth: 0, r: 5 }}
-                activeDot={{ r: 7, fill: chartTheme.line }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </Card>
+        <motion.div variants={scaleInItem}>
+          <Card className="group relative overflow-hidden rounded-xl border border-border bg-surface p-4 shadow-md transition-all duration-300 hover:shadow-[0_0_24px_-4px_var(--primary)/0.15]">
+            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-foreground">
+              <BarChart3 className="h-4 w-4 text-primary" />
+              CGPA Progression
+            </h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: chartTheme.axis, fontSize: 12 }}
+                  axisLine={{ stroke: chartTheme.grid }}
+                  tickLine={{ stroke: chartTheme.grid }}
+                />
+                <YAxis
+                  domain={[0, scale]}
+                  tick={{ fill: chartTheme.axis, fontSize: 12 }}
+                  axisLine={{ stroke: chartTheme.grid }}
+                  tickLine={{ stroke: chartTheme.grid }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: chartTheme.tooltipBg,
+                    color: chartTheme.tooltipText,
+                    border: `1px solid ${chartTheme.grid}`,
+                    borderRadius: "0.5rem",
+                  }}
+                  labelStyle={{ color: chartTheme.tooltipText, fontWeight: 600 }}
+                  itemStyle={{ color: chartTheme.dot }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="gpa"
+                  stroke={chartTheme.line}
+                  strokeWidth={2}
+                  dot={{ fill: chartTheme.dot, strokeWidth: 0, r: 5 }}
+                  activeDot={{ r: 7, fill: chartTheme.line }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Card>
+        </motion.div>
       ) : null}
       <AddSemesterDialog
         open={showAddSemester}
@@ -238,6 +272,6 @@ export default function Home() {
           setShowAddSemester(false);
         }}
       />
-    </div>
+    </motion.div>
   );
 }

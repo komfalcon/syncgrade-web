@@ -1,4 +1,5 @@
 import { Link, useLocation } from "wouter";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -18,30 +19,55 @@ export default function Navbar() {
   };
 
   return (
-    <header className="hidden border-b border-border bg-surface md:block">
+    <motion.header
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 200, damping: 24 }}
+      className="hidden border-b border-border bg-surface/80 backdrop-blur-xl md:block"
+    >
       <nav className="mx-auto flex min-h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 text-sm md:px-6">
         <Link href="/">
-          <span className="text-base font-semibold text-foreground">SyncGrade</span>
+          <motion.span
+            whileHover={{ scale: 1.05 }}
+            className="text-base font-semibold text-foreground"
+          >
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              SyncGrade
+            </span>
+          </motion.span>
         </Link>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <span
-                className={cn(
-                  "inline-flex min-h-12 items-center rounded-md px-3 font-medium transition-colors",
-                  isActive(item.href)
-                    ? "bg-primary/10 text-primary"
-                    : "text-foreground-muted hover:bg-surface-elevated hover:text-foreground",
-                )}
-              >
-                {item.label}
-              </span>
-            </Link>
-          ))}
-          <ThemeToggle />
+        <div className="flex items-center gap-1">
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link key={item.href} href={item.href}>
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={cn(
+                    "relative inline-flex min-h-12 items-center rounded-md px-3 font-medium transition-colors",
+                    active
+                      ? "text-primary"
+                      : "text-foreground-muted hover:text-foreground",
+                  )}
+                >
+                  {item.label}
+                  {active && (
+                    <motion.span
+                      layoutId="nav-active"
+                      className="absolute bottom-1 left-2 right-2 h-0.5 rounded-full bg-primary"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </motion.span>
+              </Link>
+            );
+          })}
+          <div className="ml-2">
+            <ThemeToggle />
+          </div>
         </div>
       </nav>
-    </header>
+    </motion.header>
   );
 }

@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { motion } from "framer-motion";
 import {
   ArrowDownToLine,
   BarChart3,
@@ -62,63 +63,108 @@ const BACKUP_TOOLS: ToolRow[] = [
   },
 ];
 
+const staggerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+};
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 200, damping: 24 } },
+};
+
 export default function Tools() {
   const renderRows = (items: ToolRow[]) =>
     items.map(({ href, title, description, icon: Icon, iconBg }, index) => (
-      <Link key={href} href={href}>
-        <div
-          className={cn(
-            "flex items-center gap-4 bg-surface py-4 px-4 cursor-pointer transition-colors duration-150 hover:bg-surface-elevated",
-            index < items.length - 1 ? "border-b border-border" : "",
-          )}
-        >
-          <div
-            className="flex h-14 w-14 items-center justify-center rounded-2xl"
-            style={{ background: iconBg }}
+      <motion.div key={href} variants={fadeUpItem}>
+        <Link href={href}>
+          <motion.div
+            whileHover={{ x: 6, backgroundColor: "var(--surface-elevated)" }}
+            whileTap={{ scale: 0.98 }}
+            className={cn(
+              "flex items-center gap-4 bg-surface py-4 px-4 cursor-pointer transition-colors duration-150",
+              index < items.length - 1 ? "border-b border-border" : "",
+            )}
           >
-            <Icon className="h-6 w-6 text-white" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold text-foreground">{title}</h3>
-            <p className="mt-0.5 text-sm text-foreground-muted">{description}</p>
-          </div>
-        </div>
-      </Link>
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              className="flex h-14 w-14 items-center justify-center rounded-2xl"
+              style={{ background: iconBg }}
+            >
+              <Icon className="h-6 w-6 text-white" />
+            </motion.div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-base font-semibold text-foreground">{title}</h3>
+              <p className="mt-0.5 text-sm text-foreground-muted">{description}</p>
+            </div>
+          </motion.div>
+        </Link>
+      </motion.div>
     ));
 
   return (
-    <div className="space-y-10">
-      <header className="mb-10">
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="show"
+      className="space-y-10"
+    >
+      <motion.header variants={fadeUpItem} className="mb-10">
         <h1 className="text-2xl font-bold text-foreground">Tools &amp; Insights</h1>
-      </header>
+      </motion.header>
 
-      <section className="mb-10">
+      <motion.section variants={fadeUpItem} className="mb-10">
         <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Prediction Tools</h2>
-        <div className="rounded-xl border border-border bg-surface shadow-md">{renderRows(PREDICTION_TOOLS)}</div>
-      </section>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+          className="rounded-xl border border-border bg-surface shadow-md overflow-hidden"
+        >
+          {renderRows(PREDICTION_TOOLS)}
+        </motion.div>
+      </motion.section>
 
-      <section className="mb-10">
+      <motion.section variants={fadeUpItem} className="mb-10">
         <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Comparison Tools</h2>
-        <div className="rounded-xl border border-border bg-surface shadow-md">{renderRows(COMPARISON_TOOLS)}</div>
-      </section>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+          className="rounded-xl border border-border bg-surface shadow-md overflow-hidden"
+        >
+          {renderRows(COMPARISON_TOOLS)}
+        </motion.div>
+      </motion.section>
 
-      <section className="mb-10">
+      <motion.section variants={fadeUpItem} className="mb-10">
         <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Backup/Export</h2>
-        <div className="rounded-xl border border-border bg-surface shadow-md">{renderRows(BACKUP_TOOLS)}</div>
-      </section>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+          className="rounded-xl border border-border bg-surface shadow-md overflow-hidden"
+        >
+          {renderRows(BACKUP_TOOLS)}
+        </motion.div>
+      </motion.section>
 
-      <section className="mb-10">
+      <motion.section variants={fadeUpItem} className="mb-10">
         <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Secondary Graphs</h2>
         <Link href="/analytics">
-          <div className="cursor-pointer rounded-xl border border-border bg-surface py-4 px-4 transition-colors duration-150 hover:bg-surface-elevated shadow-md">
+          <motion.div
+            whileHover={{ scale: 1.01, x: 4 }}
+            whileTap={{ scale: 0.98 }}
+            className="cursor-pointer rounded-xl border border-border bg-surface py-4 px-4 transition-colors duration-150 hover:bg-surface-elevated shadow-md"
+          >
             <div className="flex items-center gap-2">
-              <ChartNoAxesColumn className="h-4 w-4 text-accent" />
+              <ChartNoAxesColumn className="h-4 w-4 text-primary" />
               <h3 className="font-semibold text-foreground">Performance Timeline</h3>
             </div>
             <p className="mt-2 text-sm text-foreground-muted">First semester&nbsp;&nbsp;3.63&nbsp;&nbsp;—</p>
-          </div>
+          </motion.div>
         </Link>
-      </section>
-    </div>
+      </motion.section>
+    </motion.div>
   );
 }

@@ -14,12 +14,11 @@ import {
   Plus,
 } from 'lucide-react';
 import { useLocation } from 'wouter';
-import { getUnifiedUniversities, resolveUniversityGradingSystem } from '@/universities/nigeria';
+import { resolveUniversityGradingSystem } from '@/universities/nigeria';
 import type { UniversityConfig } from '@/universities/types';
 import { useCGPA } from '@/hooks/useCGPA';
 import { Input } from '@/components/ui/input';
 import { useUniversities } from '@/hooks/useUniversities';
-import CustomUniversityForm from '@/pages/CustomUniversityForm';
 import {
   Dialog,
   DialogContent,
@@ -29,7 +28,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { appDb, type CustomUniversityEntry } from '@/storage/db';
+import { appDb } from '@/lib/db';
 
 const ADMISSION_SESSION_REGEX = /^(\d{4})\/(\d{4})$/;
 const PAGE_SIZE = 18;
@@ -79,17 +78,14 @@ export default function NigerianUniversities({
   const [selectedSession, setSelectedSession] = useState('');
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [showCustomForm, setShowCustomForm] = useState(false);
-  const [onboardingUniversities, setOnboardingUniversities] = useState<UniversityConfig[] | null>(null);
 
-  const universitiesForList = onboardingUniversities ?? universities;
   const normalizedQuery = query.trim().toLowerCase();
   const sortedUniversities = useMemo(
     () =>
-      [...universitiesForList].sort((a, b) =>
+      [...universities].sort((a, b) =>
         a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }),
       ),
-    [universitiesForList],
+    [universities],
   );
   const filteredUniversities = useMemo(() => {
     if (!normalizedQuery) return sortedUniversities;
@@ -194,37 +190,6 @@ export default function NigerianUniversities({
     }
   };
 
-  const handleCreateCustomSchool = () => {
-    if (onboardingMode) {
-      setSelectedUni(null);
-      setShowCustomForm(true);
-      return;
-    }
-    setLocation('/custom-university');
-  };
-
-  const handleOnboardingCustomSave = async (entry: CustomUniversityEntry) => {
-    const merged = await getUnifiedUniversities();
-    setOnboardingUniversities(merged);
-    setShowCustomForm(false);
-    const created = merged.find((uni) => uni.id === entry.id);
-    if (!created) {
-      toast.error('Custom school was saved but could not be loaded yet. Please search and select it.');
-      return;
-    }
-    setSelectedSession(entry.gradingSystem[0]?.session_start ?? '');
-    setSelectedUni(created);
-  };
-
-  if (onboardingMode && showCustomForm) {
-    return (
-      <CustomUniversityForm
-        onSave={handleOnboardingCustomSave}
-        onCancel={() => setShowCustomForm(false)}
-      />
-    );
-  }
-
   return (
     <div className="space-y-8">
       <div className="rounded-xl border border-border bg-surface-elevated p-6 shadow-md">
@@ -244,8 +209,8 @@ export default function NigerianUniversities({
             Select your university to apply its official grading system
           </p>
           <p className="mt-2 text-xs text-foreground-subtle">
-            Data Version: {meta.version} · Last updated:{' '}
-            {new Date(meta.lastUpdated).toLocaleDateString()}
+            {/* Data Version: {meta.version} · Last updated:{' '}
+            {new Date(meta.lastUpdated).toLocaleDateString()} */}
           </p>
           {cgpa.settings.activeUniversity && (
             <div className="mt-3 inline-flex items-center gap-2 bg-surface/20 rounded-full px-4 py-1.5 text-sm">
@@ -275,7 +240,7 @@ export default function NigerianUniversities({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card
             className="p-6 shadow-md border-2 border-dashed border-cyan-300 cursor-pointer hover:shadow-xl transition-all bg-cyan-50/40"
-            onClick={handleCreateCustomSchool}
+            onClick={() => setLocation('/custom-university')}
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl border-2 border-dashed border-cyan-400 bg-surface flex items-center justify-center text-primary shrink-0">
@@ -366,7 +331,7 @@ export default function NigerianUniversities({
             </p>
             <Button
               className="bg-primary text-foreground"
-              onClick={handleCreateCustomSchool}
+              onClick={() => setLocation('/custom-university')}
             >
               Open Custom School Form
             </Button>
@@ -585,7 +550,7 @@ export default function NigerianUniversities({
               className="bg-primary hover:bg-primary-hover text-foreground"
               onClick={handleApply}
             >
-              {onboardingMode ? 'Continue to App' : 'Apply'}
+              Apply
             </Button>
           </DialogFooter>
         </DialogContent>
