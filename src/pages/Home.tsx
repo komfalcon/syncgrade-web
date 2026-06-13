@@ -29,7 +29,6 @@ import { getClassification } from "@/utils/gpaLogic";
 import GradingGuide from "@/components/GradingGuide";
 import { extractCourseCode, type CourseHistory } from "@/utils/carryoverDetector";
 import { useUniversities } from "@/hooks/useUniversities";
-import TireSection from "@/components/TireSection";
 
 const CLASSIFICATION_STYLES: Record<string, string> = {
   "First Class": "bg-success/10 text-success border-success/20",
@@ -417,22 +416,6 @@ export default function Home() {
           </Card>
         </motion.div>
       )}
-
-      {/* ── Featured: Tire Section ────────────────────────────── */}
-      <motion.section variants={fadeUpItem}>
-        <div className="overflow-hidden rounded-xl border border-border">
-          <div className="flex items-center gap-2 border-b border-border px-4 py-2.5 md:px-5">
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-surface-elevated">
-              <span className="h-2 w-2 rounded-full bg-primary" />
-            </div>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-foreground-muted">
-              Featured
-            </span>
-            <div className="ml-auto h-px flex-1 bg-border" />
-          </div>
-          <TireSection />
-        </div>
-      </motion.section>
 
       {/* ── Dialog ────────────────────────────────────────────── */}
       <AddSemesterDialog

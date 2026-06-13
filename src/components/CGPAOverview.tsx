@@ -135,7 +135,11 @@ export default function CGPAOverview({ cgpa }: CGPAOverviewProps) {
           </Card>
           <Card className="p-4 shadow-md border border-emerald-200 bg-emerald-50">
             <div className="flex items-center gap-3">
-              <span className="text-lg">✅</span>
+              <span className="size-4 rounded-full bg-success/20 text-success flex items-center justify-center">
+                <svg className="h-2.5 w-2.5" viewBox="0 0 12 12" fill="none">
+                  <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
               <div>
                 <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Cleared Carryovers</p>
                 <p className="text-2xl font-bold text-emerald-600">{cgpa.carryoverStats.cleared}</p>
@@ -144,7 +148,13 @@ export default function CGPAOverview({ cgpa }: CGPAOverviewProps) {
           </Card>
           <Card className="p-4 shadow-md border border-red-200 bg-red-50">
             <div className="flex items-center gap-3">
-              <span className="text-lg">⚠️</span>
+              <span className="flex size-4 items-center justify-center">
+                <svg className="h-3 w-3 text-warning" viewBox="0 0 12 12" fill="none">
+                  <path d="M6 1L10.5 9.5H1.5L6 1Z" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" />
+                  <path d="M6 4.5V6.5" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+                  <circle cx="6" cy="8" r="0.4" fill="currentColor" />
+                </svg>
+              </span>
               <div>
                 <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Active Carryovers</p>
                 <p className="text-2xl font-bold text-red-600">{cgpa.carryoverStats.active}</p>

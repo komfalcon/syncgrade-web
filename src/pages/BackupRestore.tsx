@@ -215,7 +215,7 @@ export default function BackupRestore() {
             </Button>
             <div>
               <h1 className="text-2xl font-bold md:text-3xl">
-                💾 Backup &amp; Restore
+                Backup &amp; Restore
               </h1>
               <p className="mt-1 text-foreground-muted">
                 Export your data or restore from a previous backup

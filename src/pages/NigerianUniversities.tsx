@@ -184,7 +184,7 @@ export default function NigerianUniversities({
     });
 
     setSelectedUni(null);
-    toast.success(`✅ ${selectedUni.name} grading system applied!`);
+    toast.success(`${selectedUni.name} grading system applied!`);
     if (onUniversityApplied) {
       await onUniversityApplied();
     }
@@ -278,7 +278,7 @@ export default function NigerianUniversities({
                       </span>
                       {isActive && (
                         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 border border-green-200">
-                          ✅ Active
+                          Active
                         </span>
                       )}
                     </div>

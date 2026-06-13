@@ -143,8 +143,8 @@ function abbreviateSemesterName(name: string): string {
 
 function getAchievementText(classification: string, cgpa: number, scale: number): string {
   const isTopTier = (scale >= 5 && cgpa >= 4.5) || (scale <= 4 && cgpa >= 3.5);
-  if (isTopTier) return "Top 5% of your department 🎓";
-  return `${classification} 📊`;
+  if (isTopTier) return `Top 5% of your department — ${classification}`;
+  return classification;
 }
 
 function getAcademicSessionLabel(admissionSession: string | null | undefined): string {

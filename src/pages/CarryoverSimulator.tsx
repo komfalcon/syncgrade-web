@@ -149,7 +149,7 @@ export default function CarryoverSimulator() {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold md:text-3xl">🔄 Carryover Impact Simulator</h1>
+              <h1 className="text-2xl font-bold md:text-3xl">Carryover Impact Simulator</h1>
               <p className="mt-1 text-sm text-foreground-muted">
                 See how retaking failed courses affects your CGPA
               </p>
@@ -159,7 +159,7 @@ export default function CarryoverSimulator() {
 
         {/* Current Status */}
         <Card className="p-6">
-          <h2 className="mb-4 text-lg font-semibold">📊 Current Status</h2>
+          <h2 className="mb-4 text-lg font-semibold">Current Status</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
             <div className="rounded-lg bg-teal-50 p-4 text-center">
               <p className="text-sm text-foreground-muted">Current CGPA</p>
@@ -186,7 +186,7 @@ export default function CarryoverSimulator() {
         {/* Failed Courses Form */}
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">📝 Failed Courses to Retake</h2>
+            <h2 className="text-lg font-semibold">Failed Courses to Retake</h2>
             <Button variant="outline" size="sm" onClick={addCourse}>
               <Plus className="mr-1 h-4 w-4" /> Add Course
             </Button>
@@ -284,7 +284,7 @@ export default function CarryoverSimulator() {
         {/* Results */}
         {result && (
           <Card className="p-6">
-            <h2 className="mb-4 text-lg font-semibold">📈 Simulation Results</h2>
+            <h2 className="mb-4 text-lg font-semibold">Simulation Results</h2>
 
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-lg bg-surface-elevated p-4 text-center">

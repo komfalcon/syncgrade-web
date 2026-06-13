@@ -93,7 +93,7 @@ export default function AddCourseDialog({
               />
               {carryoverSuggestion && !isCarryover && (
                 <div className="bg-warning/10 border border-warning rounded-lg p-3 mt-2 text-sm">
-                  <p className="font-semibold text-warning text-sm">⚠️ Looks like a repeated course</p>
+                  <p className="font-semibold text-warning text-sm">Looks like a repeated course</p>
                   <p className="text-foreground-muted text-xs mt-1">{carryoverSuggestion.reason}</p>
                   <div className="mt-2 flex items-center gap-2">
                     <button
@@ -149,7 +149,7 @@ export default function AddCourseDialog({
             <div className="flex items-center justify-between rounded-lg border border-border p-3">
               <div>
                 <Label htmlFor="carryover-toggle" className="text-sm font-medium">
-                  🔄 Carryover Course
+                  Carryover Course
                 </Label>
                 <p className="text-xs text-foreground-subtle mt-0.5">Mark if this is a repeated course</p>
               </div>
