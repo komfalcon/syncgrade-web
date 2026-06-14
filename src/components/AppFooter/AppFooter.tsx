@@ -1,10 +1,12 @@
 import { Link } from "wouter";
 import { Twitter, Instagram, Linkedin, Mail } from "lucide-react";
+import { Tiktok } from "./Tiktok";
 
 const socialLinks = [
   { href: "https://x.com/aurikrex", label: "X (Twitter)", icon: Twitter },
   { href: "https://www.instagram.com/falcon.omotosho", label: "Instagram", icon: Instagram },
   { href: "https://linkedin.com/in/falcon-omotosho", label: "LinkedIn", icon: Linkedin },
+  { href: "https://www.tiktok.com/@aurikrexacademy", label: "TikTok", icon: Tiktok },
 ];
 
 const quickLinks = [
