@@ -46,7 +46,6 @@ function App() {
       const bootStep = getBootOnboardingStep(onboardingComplete);
       setOnboardingStep(bootStep);
       if (bootStep === "app") {
-        setLocation("/");
         return;
       }
     })();
