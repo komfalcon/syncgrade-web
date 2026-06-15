@@ -27,9 +27,9 @@ export default function AppFooter() {
   return (
     <footer className="border-t border-border bg-surface/50">
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
           {/* Brand */}
-          <div className="space-y-3 sm:col-span-2 lg:col-span-1">
+          <div className="space-y-3 col-span-2 lg:col-span-1">
             <Link href="/">
               <span className="text-base font-semibold text-foreground">
                 <span className="text-foreground">
