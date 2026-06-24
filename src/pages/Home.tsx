@@ -24,6 +24,8 @@ import { useCGPA } from "@/hooks/useCGPA";
 import SemesterCard from "@/components/SemesterCard";
 import AddSemesterDialog from "@/components/AddSemesterDialog";
 import ShareProgress from "@/components/ShareProgress";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ProfileForm from "@/components/ProfileForm";
 import { useGpaScale } from "@/contexts/GpaScaleContext";
 import { getClassification } from "@/utils/gpaLogic";
 import GradingGuide from "@/components/GradingGuide";
@@ -86,6 +88,9 @@ export default function Home() {
   const { universities } = useUniversities();
   const [showAddSemester, setShowAddSemester] = useState(false);
   const [expandedSemesterId, setExpandedSemesterId] = useState<string | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  const isProfileIncomplete = !cgpa.settings.studentName || !cgpa.settings.programme;
 
   const chartTheme = useMemo(
     () => ({
@@ -179,6 +184,18 @@ export default function Home() {
       variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
       className="space-y-6 pb-24 md:space-y-8 md:pb-8"
     >
+      {isProfileIncomplete && (
+        <motion.div variants={fadeUpItem} className="mb-4 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-foreground">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-semibold text-primary">Complete your profile</p>
+              <p className="text-foreground-subtle">Set your name and programme to securely save and export your data.</p>
+            </div>
+            <Button onClick={() => setShowProfileModal(true)} size="sm">Set Profile</Button>
+          </div>
+        </motion.div>
+      )}
+
       {/* ── Sticky CGPA Hero ──────────────────────────────────── */}
       <motion.div variants={scaleInItem} className="sticky top-0 z-10 -mx-4 px-4 pt-4 pb-2 md:static md:mx-0 md:px-0 md:pt-0">
         <div className="rounded-xl border border-border bg-surface/95 shadow-soft backdrop-blur-md md:border-border md:bg-surface md:shadow-card md:backdrop-blur-none">
@@ -428,6 +445,16 @@ export default function Home() {
           setShowAddSemester(false);
         }}
       />
+
+      <Dialog open={showProfileModal} onOpenChange={setShowProfileModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <ProfileForm 
+            settings={cgpa.settings}
+            onUpdateSettings={cgpa.updateSettings}
+            onSaved={() => setShowProfileModal(false)} 
+          />
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }

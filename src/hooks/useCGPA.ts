@@ -5,6 +5,7 @@ import { calculateCGPA as calculateEngineCGPA } from '@/engine/calculations';
 import { appDb, getStoredValue, removeStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
 import { useUniversities } from '@/hooks/useUniversities';
 import { normalizeToSupportedScale } from '@/utils/gpaLogic';
+import { useSetGpaScale } from '@/contexts/GpaScaleContext';
 import { incrementInteractionCount } from '@/hooks/useFeedbackTrigger';
 
 export interface Course {
@@ -49,7 +50,6 @@ interface CGPAData {
 
 const SETTINGS_KEY = 'cgpa-calculator-settings';
 const DATA_KEY = 'cgpa-calculator-data';
-export const GPA_SCALE_UPDATED_EVENT = 'syncgrade:gpa-scale-updated';
 
 export const getDefaultSettings = (): AppSettings => ({
   gpaScale: 5.0,
@@ -136,6 +136,7 @@ export function useCGPA() {
   const [data, setData] = useState<CGPAData>(getInitialData());
   const [hydrated, setHydrated] = useState(false);
   const { universities } = useUniversities();
+  const setGlobalGpaScale = useSetGpaScale();
 
   useEffect(() => {
     let active = true;
@@ -402,12 +403,8 @@ export function useCGPA() {
   const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
     setData(prevData => {
       const mergedSettings = sanitizeSettings({ ...prevData.settings, ...newSettings });
-      if (typeof window !== 'undefined' && typeof newSettings.gpaScale === 'number') {
-        window.dispatchEvent(
-          new CustomEvent(GPA_SCALE_UPDATED_EVENT, {
-            detail: { scale: normalizeToSupportedScale(newSettings.gpaScale) },
-          }),
-        );
+      if (typeof newSettings.gpaScale === 'number') {
+        setGlobalGpaScale(normalizeToSupportedScale(newSettings.gpaScale));
       }
       const { cgpa, totalCredits, totalGradePoints } = calculateProgramSummary(
         prevData.semesters,
@@ -421,7 +418,7 @@ export function useCGPA() {
         totalGradePoints,
       };
     });
-  }, [calculateProgramSummary]);
+  }, [calculateProgramSummary, setGlobalGpaScale]);
 
   // Carryover statistics
   const carryoverStats = {

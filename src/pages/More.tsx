@@ -8,7 +8,15 @@ import UniversitySelector from "@/components/UniversitySelector";
 import { useCGPA } from "@/hooks/useCGPA";
 import { useTheme } from "@/contexts/ThemeContext";
 
+import { User } from "lucide-react";
+
 const MORE_ITEMS = [
+  {
+    href: "/profile",
+    title: "Edit Profile",
+    description: "Update your name, programme, and starting level.",
+    icon: User,
+  },
   {
     href: "/backup-restore",
     title: "Backup & Restore",

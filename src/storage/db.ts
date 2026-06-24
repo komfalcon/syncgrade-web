@@ -134,28 +134,6 @@ export async function setOnboardingComplete(value: boolean): Promise<void> {
   }
 }
 
-export function getSyncgradeUserFromLocalStorage(): SyncgradeUserProfileEntry | null {
-  if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem(STORAGE_KEYS.syncgradeUser);
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw) as Partial<SyncgradeUserProfileEntry>;
-    if (!parsed.uuid || !parsed.name || !parsed.department || !parsed.university) {
-      return null;
-    }
-    return {
-      uuid: parsed.uuid,
-      name: parsed.name,
-      department: parsed.department,
-      university: parsed.university,
-      updatedAt: parsed.updatedAt ?? Date.now(),
-    };
-  } catch {
-    localStorage.removeItem(STORAGE_KEYS.syncgradeUser);
-    return null;
-  }
-}
-
 export async function saveSyncgradeUserProfile(
   profile: Omit<SyncgradeUserProfileEntry, "updatedAt">,
 ): Promise<SyncgradeUserProfileEntry> {
@@ -164,30 +142,18 @@ export async function saveSyncgradeUserProfile(
     updatedAt: Date.now(),
   };
   await appDb.user_profile.put(next);
-  if (typeof window !== "undefined") {
-    localStorage.setItem(STORAGE_KEYS.syncgradeUser, JSON.stringify(next));
-  }
   return next;
 }
 
 export async function getSyncgradeUserProfile(): Promise<SyncgradeUserProfileEntry | null> {
-  const local = getSyncgradeUserFromLocalStorage();
-  if (local) return local;
-
   const latest = await appDb.user_profile.orderBy("updatedAt").last();
   if (!latest) return null;
 
-  const identity: SyncgradeUserProfileEntry = {
+  return {
     uuid: latest.uuid,
     name: latest.name,
     department: latest.department,
     university: latest.university,
     updatedAt: latest.updatedAt,
   };
-
-  if (typeof window !== "undefined") {
-    localStorage.setItem(STORAGE_KEYS.syncgradeUser, JSON.stringify(identity));
-  }
-
-  return identity;
 }

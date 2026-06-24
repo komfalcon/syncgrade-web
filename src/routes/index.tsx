@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { Spinner } from "@/components/ui/spinner";
+import { useCGPA } from "@/hooks/useCGPA";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Analytics = lazy(() => import("@/pages/Analytics"));
@@ -15,7 +16,7 @@ const CustomUniversityForm = lazy(() => import("@/pages/CustomUniversityForm"));
 const GradeConverter = lazy(() => import("@/pages/GradeConverter"));
 const UniversityGpLanding = lazy(() => import("@/pages/UniversityGpLanding"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
-const OnboardingProfileForm = lazy(() => import("@/components/OnboardingProfileForm"));
+const ProfileForm = lazy(() => import("@/components/ProfileForm"));
 
 function PageLoader() {
   return (
@@ -37,6 +38,19 @@ const pageVariants = {
   exit: { opacity: 0, y: -12, scale: 0.98 },
 };
 
+function ProfileRoute() {
+  const cgpa = useCGPA();
+  return (
+    <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center p-4">
+      <ProfileForm 
+        settings={cgpa.settings}
+        onUpdateSettings={cgpa.updateSettings}
+        onSaved={() => window.location.href = "/"} 
+      />
+    </div>
+  );
+}
+
 function AnimatedPage({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
@@ -51,13 +65,7 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
   );
 }
 
-interface AppRoutesProps {
-  onboardingStep: "loading" | "profile" | "university" | "app";
-  onProfileContinue: (data: { studentName: string; programme: string; startingLevel: number }) => void;
-  onUniversityApplied: () => void;
-}
-
-export function AppRoutes({ onboardingStep, onProfileContinue, onUniversityApplied }: AppRoutesProps) {
+export function AppRoutes() {
   const [location] = useLocation();
 
   return (
@@ -65,13 +73,12 @@ export function AppRoutes({ onboardingStep, onProfileContinue, onUniversityAppli
       <Switch key={location}>
         <Route path={"/"}>
           <AnimatedPage>
-            {onboardingStep === "profile" && (
-              <OnboardingProfileForm onContinue={onProfileContinue} />
-            )}
-            {onboardingStep === "university" && (
-              <NigerianUniversities onboardingMode onUniversityApplied={onUniversityApplied} />
-            )}
-            {onboardingStep === "app" && <Home />}
+            <Home />
+          </AnimatedPage>
+        </Route>
+        <Route path={"/profile"}>
+          <AnimatedPage>
+            <ProfileRoute />
           </AnimatedPage>
         </Route>
         <Route path={"/nigerian-universities"}>

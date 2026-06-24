@@ -21,6 +21,19 @@ export function useGradePredictorHistory() {
         ...entry,
         savedAt: Date.now(),
       });
+      
+      const count = await appDb.predictorHistory.count();
+      if (count > 20) {
+        const excess = count - 20;
+        const oldestEntries = await appDb.predictorHistory
+          .orderBy('savedAt')
+          .limit(excess)
+          .primaryKeys();
+        if (oldestEntries.length > 0) {
+          await appDb.predictorHistory.bulkDelete(oldestEntries);
+        }
+      }
+
       await loadHistory();
       return id;
     },
