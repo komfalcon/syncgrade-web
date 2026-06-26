@@ -103,6 +103,13 @@
   --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+
+  /* Tool Icon Colors */
+  --tool-gradient-start: #a3e635;
+  --tool-gradient-end: #84cc16;
+  --tool-carryover: #f59e0b;
+  --tool-universities: #3b82f6;
+  --tool-analytics: #8b5cf6;
 }
 
 .dark {
@@ -142,6 +149,13 @@
   --chart-3: #facc15;
   --chart-4: #22d3ee;
   --chart-5: #f87171;
+
+  /* Tool Icon Colors */
+  --tool-gradient-start: #bef264;
+  --tool-gradient-end: #a3e635;
+  --tool-carryover: #fbbf24;
+  --tool-universities: #60a5fa;
+  --tool-analytics: #a78bfa;
 }
 
 /* ─── Custom Keyframe Animations ─── */
