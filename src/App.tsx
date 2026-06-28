@@ -10,6 +10,9 @@ import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/Pw
 import { STORAGE_KEYS } from "./lib/db";
 import { registerSW } from "virtual:pwa-register";
 import { toast } from "sonner";
+import { migrateD1DataToFirebaseUser } from "@/lib/cloudSync";
+import { auth, isConfigured } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const APP_SESSIONS_KEY = "syncgrade_session_count";
 
@@ -20,6 +23,16 @@ function App() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    // Listen for auth state changes to trigger D1 data migration
+    let unsubscribe = () => {};
+    if (isConfigured) {
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          void migrateD1DataToFirebaseUser(user);
+        }
+      });
+    }
 
     const updateSW = registerSW({
       onNeedRefresh() {
@@ -49,6 +62,8 @@ function App() {
 
     // Show after 3 successful visits
     setCanShowInstallBanner(sessionCount >= 3);
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {

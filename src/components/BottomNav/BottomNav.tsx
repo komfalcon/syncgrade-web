@@ -1,4 +1,4 @@
-import { BarChart3, Grid2x2, Home, MoreHorizontal } from "lucide-react";
+import { BarChart3, Grid2x2, Home, User } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 
@@ -6,7 +6,7 @@ const NAV_ITEMS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/tools", label: "Tools", icon: Grid2x2 },
-  { href: "/more", label: "More", icon: MoreHorizontal },
+  { href: "/more", label: "Profile", icon: User },
 ] as const;
 
 function isActive(pathname: string, href: string): boolean {

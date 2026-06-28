@@ -8,6 +8,7 @@ import { normalizeToSupportedScale } from '@/utils/gpaLogic';
 import { useSetGpaScale } from '@/contexts/GpaScaleContext';
 import { incrementInteractionCount } from '@/hooks/useFeedbackTrigger';
 import { syncAcademicSnapshot } from '@/lib/cloudSync';
+import { auth } from '@/lib/firebase';
 
 export interface Course {
   id: string;
@@ -204,10 +205,13 @@ export function useCGPA() {
   useEffect(() => {
     if (!hydrated) return;
     const triggerSync = async () => {
-      const identity = await getSyncgradeUserProfile();
-      const token = await getStoredValue("syncgrade_jwt_token");
-      if (identity && token) {
-        await syncAcademicSnapshot();
+      try {
+        await auth.authStateReady();
+        if (auth.currentUser) {
+          await syncAcademicSnapshot();
+        }
+      } catch (err) {
+        console.warn("Auto-sync deferred: Firebase Auth is not ready.", err);
       }
     };
     void triggerSync();

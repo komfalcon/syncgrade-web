@@ -1,8 +1,7 @@
 import { lazy, Suspense } from "react";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Switch, useLocation, Redirect } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { Spinner } from "@/components/ui/spinner";
-import { useCGPA } from "@/hooks/useCGPA";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Analytics = lazy(() => import("@/pages/Analytics"));
@@ -11,12 +10,10 @@ const GradePredictor = lazy(() => import("@/pages/GradePredictor"));
 const Tools = lazy(() => import("@/pages/Tools"));
 const More = lazy(() => import("@/pages/More"));
 const CarryoverSimulator = lazy(() => import("@/pages/CarryoverSimulator"));
-const BackupRestore = lazy(() => import("@/pages/BackupRestore"));
 const CustomUniversityForm = lazy(() => import("@/pages/CustomUniversityForm"));
 const GradeConverter = lazy(() => import("@/pages/GradeConverter"));
 const UniversityGpLanding = lazy(() => import("@/pages/UniversityGpLanding"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
-const ProfileForm = lazy(() => import("@/components/ProfileForm"));
 
 function PageLoader() {
   return (
@@ -37,19 +34,6 @@ const pageVariants = {
   animate: { opacity: 1, y: 0, scale: 1 },
   exit: { opacity: 0, y: -12, scale: 0.98 },
 };
-
-function ProfileRoute() {
-  const cgpa = useCGPA();
-  return (
-    <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center p-4">
-      <ProfileForm 
-        settings={cgpa.settings}
-        onUpdateSettings={cgpa.updateSettings}
-        onSaved={() => window.location.href = "/"} 
-      />
-    </div>
-  );
-}
 
 function AnimatedPage({ children }: { children: React.ReactNode }) {
   return (
@@ -77,9 +61,7 @@ export function AppRoutes() {
           </AnimatedPage>
         </Route>
         <Route path={"/profile"}>
-          <AnimatedPage>
-            <ProfileRoute />
-          </AnimatedPage>
+          <Redirect to="/more" />
         </Route>
         <Route path={"/nigerian-universities"}>
           <AnimatedPage><NigerianUniversities /></AnimatedPage>
@@ -100,7 +82,7 @@ export function AppRoutes() {
           <AnimatedPage><CarryoverSimulator /></AnimatedPage>
         </Route>
         <Route path={"/backup-restore"}>
-          <AnimatedPage><BackupRestore /></AnimatedPage>
+          <Redirect to="/more" />
         </Route>
         <Route path={"/custom-university"}>
           <AnimatedPage><CustomUniversityForm /></AnimatedPage>

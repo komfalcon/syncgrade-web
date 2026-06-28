@@ -4,5 +4,6 @@ CREATE TABLE students (
   department TEXT NOT NULL,
   university TEXT NOT NULL,
   last_sync DATETIME,
-  academic_data JSON
+  academic_data JSON,
+  password_hash TEXT
 );

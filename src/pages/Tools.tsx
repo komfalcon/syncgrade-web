@@ -1,65 +1,50 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
-  ArrowDownToLine,
-  BarChart3,
   Calculator,
-  ChartNoAxesColumn,
   GraduationCap,
   RefreshCw,
   Target,
+  ArrowRight,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 type ToolRow = {
   href: string;
   title: string;
   description: string;
-  icon: typeof Calculator;
-  iconBg?: string;
+  icon: any;
+  iconBg: string;
 };
 
-const PREDICTION_TOOLS: ToolRow[] = [
+const PLANNERS: ToolRow[] = [
   {
     href: "/grade-predictor",
     title: "Grade Predictor",
-    description: "Plan your target CGPA",
+    description: "Determine the exact grades needed in future courses to hit your target cumulative CGPA.",
     icon: Target,
-    iconBg: "linear-gradient(135deg, var(--tool-gradient-start), var(--tool-gradient-end))",
+    iconBg: "linear-gradient(135deg, #a3e635, #84cc16)",
   },
   {
     href: "/carryover-simulator",
     title: "Carryover Simulator",
-    description: "Retake impact analysis",
+    description: "Analyze the mathematical impact of retaking a failed course under various university policies.",
     icon: RefreshCw,
-    iconBg: "var(--tool-carryover)",
+    iconBg: "linear-gradient(135deg, #fbbf24, #d97706)",
   },
-];
-
-const COMPARISON_TOOLS: ToolRow[] = [
+  {
+    href: "/grade-converter",
+    title: "GPA Scale Converter",
+    description: "Convert your GPA or grade points instantly between 4.0, 5.0, and 7.0 academic scales.",
+    icon: Calculator,
+    iconBg: "linear-gradient(135deg, #ec4899, #be185d)",
+  },
   {
     href: "/nigerian-universities",
-    title: "🇳🇬 Universities",
-    description: "Apply grading systems",
+    title: "Nigerian Institutions",
+    description: "Search local tertiary institutions and review their default grading systems and repeat policies.",
     icon: GraduationCap,
-    iconBg: "var(--tool-universities)",
-  },
-  {
-    href: "/analytics",
-    title: "Analytics",
-    description: "Performance insights",
-    icon: BarChart3,
-    iconBg: "var(--tool-analytics)",
-  },
-];
-
-const BACKUP_TOOLS: ToolRow[] = [
-  {
-    href: "/backup-restore",
-    title: "Backup & Restore",
-    description: "Export/import data",
-    icon: ArrowDownToLine,
-    iconBg: "var(--border-strong)",
+    iconBg: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
   },
 ];
 
@@ -74,97 +59,54 @@ const fadeUpItem = {
 };
 
 export default function Tools() {
-  const renderRows = (items: ToolRow[]) =>
-    items.map(({ href, title, description, icon: Icon, iconBg }, index) => (
-      <motion.div key={href} variants={fadeUpItem}>
-        <Link href={href}>
-          <motion.div
-            whileHover={{ x: 6, backgroundColor: "var(--surface-elevated)" }}
-            whileTap={{ scale: 0.98 }}
-            className={cn(
-              "flex items-center gap-4 bg-surface py-4 px-4 cursor-pointer transition-colors duration-150",
-              index < items.length - 1 ? "border-b border-border" : "",
-            )}
-          >
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              className="flex h-14 w-14 items-center justify-center rounded-2xl"
-              style={{ background: iconBg }}
-            >
-              <Icon className="h-6 w-6 text-white" />
-            </motion.div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-base font-semibold text-foreground">{title}</h3>
-              <p className="mt-0.5 text-sm text-foreground-muted">{description}</p>
-            </div>
-          </motion.div>
-        </Link>
-      </motion.div>
-    ));
-
   return (
     <motion.div
       variants={staggerContainer}
       initial="hidden"
       animate="show"
-      className="space-y-10"
+      className="space-y-8 pb-20 md:pb-6"
     >
-      <motion.header variants={fadeUpItem} className="mb-10">
-        <h1 className="text-2xl font-bold text-foreground">Tools &amp; Insights</h1>
+      <motion.header variants={fadeUpItem} className="space-y-1.5 border-b border-border pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">Planners &amp; Simulators</h1>
+        <p className="text-sm text-foreground-muted">Explore mathematical modeling tools to forecast grades and plan your GPA goals.</p>
       </motion.header>
 
-      <motion.section variants={fadeUpItem} className="mb-10">
-        <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Prediction Tools</h2>
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
-          className="rounded-xl border border-border bg-surface shadow-md overflow-hidden"
-        >
-          {renderRows(PREDICTION_TOOLS)}
-        </motion.div>
-      </motion.section>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="grid gap-6 sm:grid-cols-2"
+      >
+        {PLANNERS.map(({ href, title, description, icon: Icon, iconBg }) => (
+          <motion.div key={href} variants={fadeUpItem}>
+            <Link href={href}>
+              <Card className="group h-full rounded-2xl border border-border bg-surface p-5 shadow-card hover:shadow-elevated transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1">
+                <div className="space-y-4">
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+                    style={{ background: iconBg }}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <h3 className="text-base font-bold text-foreground flex items-center gap-1.5">
+                      {title}
+                    </h3>
+                    <p className="text-xs text-foreground-muted leading-relaxed">
+                      {description}
+                    </p>
+                  </div>
+                </div>
 
-      <motion.section variants={fadeUpItem} className="mb-10">
-        <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Comparison Tools</h2>
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
-          className="rounded-xl border border-border bg-surface shadow-md overflow-hidden"
-        >
-          {renderRows(COMPARISON_TOOLS)}
-        </motion.div>
-      </motion.section>
-
-      <motion.section variants={fadeUpItem} className="mb-10">
-        <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Backup/Export</h2>
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
-          className="rounded-xl border border-border bg-surface shadow-md overflow-hidden"
-        >
-          {renderRows(BACKUP_TOOLS)}
-        </motion.div>
-      </motion.section>
-
-      <motion.section variants={fadeUpItem} className="mb-10">
-        <h2 className="mb-3 mt-6 text-lg font-semibold text-foreground">Secondary Graphs</h2>
-        <Link href="/analytics">
-          <motion.div
-            whileHover={{ scale: 1.01, x: 4 }}
-            whileTap={{ scale: 0.98 }}
-            className="cursor-pointer rounded-xl border border-border bg-surface py-4 px-4 transition-colors duration-150 hover:bg-surface-elevated shadow-md"
-          >
-            <div className="flex items-center gap-2">
-              <ChartNoAxesColumn className="h-4 w-4 text-primary" />
-              <h3 className="font-semibold text-foreground">Performance Timeline</h3>
-            </div>
-            <p className="mt-2 text-sm text-foreground-muted">First semester&nbsp;&nbsp;3.63&nbsp;&nbsp;—</p>
+                <div className="flex items-center gap-1.5 mt-5 pt-3 border-t border-border/40 text-xs font-semibold text-primary transition-colors group-hover:text-primary-hover">
+                  Open simulator
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                </div>
+              </Card>
+            </Link>
           </motion.div>
-        </Link>
-      </motion.section>
+        ))}
+      </motion.div>
     </motion.div>
   );
 }

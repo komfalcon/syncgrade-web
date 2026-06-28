@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS students (
   department TEXT,
   university TEXT,
   last_sync DATETIME,
-  academic_data JSON
+  academic_data JSON,
+  password_hash TEXT
 );
 
 CREATE TABLE IF NOT EXISTS feedback_messages (
