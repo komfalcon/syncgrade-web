@@ -151,12 +151,14 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const plugins = [
   react(),
   tailwindcss(),
   jsxLocPlugin(),
   vitePluginManusRuntime(),
-  vitePluginManusDebugCollector(),
+  !isProduction && vitePluginManusDebugCollector(),
   VitePWA({
     registerType: "autoUpdate",
     includeManifestIcons: false,
@@ -195,7 +197,7 @@ const plugins = [
         },
         {
           urlPattern: /\.(?:js|css|png|svg|woff2)$/,
-          handler: "CacheFirst",
+          handler: "StaleWhileRevalidate",
           options: {
             cacheName: "static-assets",
           },
@@ -203,7 +205,7 @@ const plugins = [
       ],
     },
   }),
-];
+].filter(Boolean) as Plugin[];
 
 export default defineConfig({
   plugins,
@@ -217,6 +219,25 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("node_modules/react/") ||
+              id.includes("node_modules/react-dom/") ||
+              id.includes("node_modules/scheduler/")
+            ) {
+              return "vendor-react";
+            }
+            if (id.includes("recharts") || id.includes("d3")) {
+              return "vendor-recharts";
+            }
+            return "vendor";
+          }
+        },
+      },
+    },
   },
   server: {
     port: 3000,

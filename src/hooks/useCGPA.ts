@@ -2,11 +2,12 @@ import { useState, useCallback, useEffect } from 'react';
 import type { GradeRange } from '@/universities/types';
 import { DEFAULT_NIGERIAN_GRADES } from '@/universities/types';
 import { calculateCGPA as calculateEngineCGPA } from '@/engine/calculations';
-import { appDb, getStoredValue, removeStoredValue, setStoredValue, STORAGE_KEYS } from '@/storage/db';
+import { appDb, getStoredValue, removeStoredValue, setStoredValue, STORAGE_KEYS, getSyncgradeUserProfile } from '@/storage/db';
 import { useUniversities } from '@/hooks/useUniversities';
 import { normalizeToSupportedScale } from '@/utils/gpaLogic';
 import { useSetGpaScale } from '@/contexts/GpaScaleContext';
 import { incrementInteractionCount } from '@/hooks/useFeedbackTrigger';
+import { syncAcademicSnapshot } from '@/lib/cloudSync';
 
 export interface Course {
   id: string;
@@ -198,6 +199,19 @@ export function useCGPA() {
     if (!hydrated) return;
     void setStoredValue(STORAGE_KEYS.settings, JSON.stringify(data.settings));
   }, [data.settings, hydrated]);
+
+  // Trigger background cloud sync when data or settings change and sync identity is active
+  useEffect(() => {
+    if (!hydrated) return;
+    const triggerSync = async () => {
+      const identity = await getSyncgradeUserProfile();
+      const token = await getStoredValue("syncgrade_jwt_token");
+      if (identity && token) {
+        await syncAcademicSnapshot();
+      }
+    };
+    void triggerSync();
+  }, [data, hydrated]);
 
   const calculateSemesterGPA = (courses: Course[]): number => {
     if (courses.length === 0) return 0;

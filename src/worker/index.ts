@@ -10,8 +10,8 @@ export default {
       return new Response(null, {
         headers: {
           "Access-Control-Allow-Origin": "https://syncgrade.aurikrex.tech", // BE SPECIFIC
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
           "Access-Control-Max-Age": "86400",
         },
       });
@@ -20,17 +20,21 @@ export default {
     // 2. Add CORS headers to ALL your actual responses
     const corsHeaders = {
       "Access-Control-Allow-Origin": "https://syncgrade.aurikrex.tech",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Content-Type": "application/json",
     };
 
+    const dbEnv = { ...env, DB: env.DB || env.syncgrade };
+
     if (pathname === "/api/feedback") {
-      const response = await feedbackWorker.fetch(request, env);
+      const response = await feedbackWorker.fetch(request, dbEnv);
       // Clone the response to add CORS headers if the worker doesn't have them
       return new Response(response.body, { ...response, headers: { ...response.headers, ...corsHeaders } });
     }
 
-    if (pathname === "/api/student-sync") {
-      const response = await studentSyncWorker.fetch(request, env);
+    if (pathname === "/api/student-sync" || pathname === "/api/student-sync/restore") {
+      const response = await studentSyncWorker.fetch(request, dbEnv);
       return new Response(response.body, { ...response, headers: { ...response.headers, ...corsHeaders } });
     }
 

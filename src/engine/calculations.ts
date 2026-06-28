@@ -17,9 +17,7 @@ import {
   StudyLoadRecommendation,
   PerformanceTrend,
 } from "./types";
-
-// How quickly the safety buffer decays as the student progresses (0 = no decay, 1 = full).
-const BUFFER_DECAY_RATE = 0.5;
+import { Decimal } from "decimal.js";
 
 // Minimum GPA delta between semesters to be considered a meaningful change.
 const TREND_THRESHOLD = 0.1;
@@ -29,9 +27,7 @@ const DEFAULT_COURSE_CREDITS = 3;
 
 /** Round a number to `dp` decimal places. */
 function round(value: number, dp = 2): number {
-  const factor = Math.pow(10, dp);
-  const epsilon = value >= 0 ? Number.EPSILON : -Number.EPSILON;
-  return Math.round((value + epsilon) * factor) / factor;
+  return new Decimal(value).toDecimalPlaces(dp).toNumber();
 }
 
 /**
@@ -75,7 +71,7 @@ export function calculateGPA(
       credits: c.credits,
       grade: c.grade,
       gradePoints,
-      qualityPoints: round(gradePoints * c.credits),
+      qualityPoints: new Decimal(gradePoints).mul(c.credits).toDecimalPlaces(2).toNumber(),
     };
   });
 
@@ -86,9 +82,9 @@ export function calculateGPA(
   );
 
   return {
-    gpa: totalCredits > 0 ? round(totalQualityPoints / totalCredits) : 0,
+    gpa: totalCredits > 0 ? new Decimal(totalQualityPoints).div(totalCredits).toDecimalPlaces(2).toNumber() : 0,
     totalCredits,
-    totalQualityPoints: round(totalQualityPoints),
+    totalQualityPoints: new Decimal(totalQualityPoints).toDecimalPlaces(2).toNumber(),
     courses: results,
   };
 }
@@ -153,24 +149,24 @@ export function calculateCGPA(
 
         case "average":
           // Average all attempts' quality points; credits stay constant.
-          existing.qualityPoints =
-            (existing.qualityPoints * existing.count + course.qualityPoints) /
-            (existing.count + 1);
+          const prevTotalQP = new Decimal(existing.qualityPoints).mul(existing.count);
+          existing.qualityPoints = prevTotalQP.add(course.qualityPoints)
+            .div(existing.count + 1)
+            .toDecimalPlaces(2)
+            .toNumber();
           existing.count += 1;
           break;
 
         case "both":
           // Both attempts count toward totals.
           existing.credits += course.credits;
-          existing.qualityPoints += course.qualityPoints;
+          existing.qualityPoints = new Decimal(existing.qualityPoints).add(course.qualityPoints).toNumber();
           existing.count += 1;
           break;
 
         case "highest":
           // Keep only the highest quality points; credits stay constant.
-          if (course.qualityPoints > existing.qualityPoints) {
-            existing.qualityPoints = course.qualityPoints;
-          }
+          existing.qualityPoints = Math.max(existing.qualityPoints, course.qualityPoints);
           existing.count += 1;
           break;
       }
@@ -181,17 +177,15 @@ export function calculateCGPA(
     (sum, c) => sum + c.credits,
     0
   );
-  const totalQualityPoints = round(
-    Array.from(courseMap.values()).reduce(
-      (sum, c) => sum + c.qualityPoints,
-      0
-    )
+  const totalQualityPoints = Array.from(courseMap.values()).reduce(
+    (sum, c) => sum + c.qualityPoints,
+    0
   );
 
   return {
-    cgpa: totalCredits > 0 ? round(totalQualityPoints / totalCredits) : 0,
+    cgpa: totalCredits > 0 ? new Decimal(totalQualityPoints).div(totalCredits).toDecimalPlaces(2).toNumber() : 0,
     totalCredits,
-    totalQualityPoints,
+    totalQualityPoints: new Decimal(totalQualityPoints).toDecimalPlaces(2).toNumber(),
     semesterResults,
   };
 }
@@ -222,13 +216,18 @@ export function projectCGPA(
   }
 
   const totalCredits = completedCredits + remainingCredits;
-  const currentQP = currentCGPA * completedCredits;
-  const requiredGPA = (targetCGPA * totalCredits - currentQP) / remainingCredits;
+  const currentQP = new Decimal(currentCGPA).mul(completedCredits);
+  const requiredGPA = new Decimal(targetCGPA)
+    .mul(totalCredits)
+    .sub(currentQP)
+    .div(remainingCredits)
+    .toDecimalPlaces(2)
+    .toNumber();
 
   return {
     currentCGPA: round(currentCGPA),
     targetCGPA: round(targetCGPA),
-    requiredGPA: round(requiredGPA),
+    requiredGPA,
     isAchievable: requiredGPA >= 0 && requiredGPA <= scale,
     remainingCredits,
     completedCredits,
@@ -247,17 +246,18 @@ export function simulateWhatIf(
   degreeClasses: DegreeClass[]
 ): WhatIfResult {
   const semGPA = calculateGPA(scenario.courses, grades);
-  const currentQP = currentCGPA * completedCredits;
+  const currentQP = new Decimal(currentCGPA).mul(completedCredits);
   const newTotalCredits = completedCredits + semGPA.totalCredits;
-  const newTotalQP = currentQP + semGPA.totalQualityPoints;
-  const projectedCGPA =
-    newTotalCredits > 0 ? round(newTotalQP / newTotalCredits) : 0;
+  const newTotalQP = currentQP.add(semGPA.totalQualityPoints);
+  const projectedCGPA = newTotalCredits > 0 
+    ? newTotalQP.div(newTotalCredits).toDecimalPlaces(2).toNumber() 
+    : 0;
 
   return {
     originalCGPA: round(currentCGPA),
     projectedCGPA,
     semesterGPA: semGPA.gpa,
-    change: round(projectedCGPA - currentCGPA),
+    change: new Decimal(projectedCGPA).sub(currentCGPA).toDecimalPlaces(2).toNumber(),
     newTotalCredits,
     degreeClass: getDegreeClass(projectedCGPA, degreeClasses),
     previousDegreeClass: getDegreeClass(currentCGPA, degreeClasses),
@@ -293,32 +293,31 @@ export function carryoverImpact(
     };
   }
 
-  let totalQP = currentCGPA * totalCredits;
-  let adjustedCredits = totalCredits;
+  let totalQP = new Decimal(currentCGPA).mul(totalCredits);
+  let adjustedCredits = new Decimal(totalCredits);
 
   const coursesAnalyzed = failedCourses.map((c) => {
     const originalPoints = getGradePoints(c.originalGrade, grades);
     const newPoints = getGradePoints(c.newGrade, grades);
-    const oldQP = originalPoints * c.credits;
-    const newQP = newPoints * c.credits;
+    const oldQP = new Decimal(originalPoints).mul(c.credits);
+    const newQP = new Decimal(newPoints).mul(c.credits);
 
     switch (repeatPolicy) {
       case "replace":
-        totalQP = totalQP - oldQP + newQP;
+        totalQP = totalQP.sub(oldQP).add(newQP);
         break;
       case "both":
-        totalQP += newQP;
-        adjustedCredits += c.credits;
+        totalQP = totalQP.add(newQP);
+        adjustedCredits = adjustedCredits.add(c.credits);
         break;
       case "average": {
-        const avgQP = (oldQP + newQP) / 2;
-        totalQP = totalQP - oldQP + avgQP;
+        const avgQP = oldQP.add(newQP).div(2);
+        totalQP = totalQP.sub(oldQP).add(avgQP);
         break;
       }
       case "highest": {
-        // Only use the higher of the two quality point values.
-        const highestQP = Math.max(oldQP, newQP);
-        totalQP = totalQP - oldQP + highestQP;
+        const highestQP = Decimal.max(oldQP, newQP);
+        totalQP = totalQP.sub(oldQP).add(highestQP);
         break;
       }
     }
@@ -330,17 +329,18 @@ export function carryoverImpact(
       originalPoints,
       newGrade: c.newGrade,
       newPoints,
-      creditImpact: round(newQP - oldQP),
+      creditImpact: newQP.sub(oldQP).toDecimalPlaces(2).toNumber(),
     };
   });
 
-  const projectedCGPA =
-    adjustedCredits > 0 ? round(totalQP / adjustedCredits) : 0;
+  const projectedCGPA = adjustedCredits.gt(0) 
+    ? totalQP.div(adjustedCredits).toDecimalPlaces(2).toNumber() 
+    : 0;
 
   return {
     currentCGPA: round(currentCGPA),
     projectedCGPA,
-    cgpaChange: round(projectedCGPA - currentCGPA),
+    cgpaChange: new Decimal(projectedCGPA).sub(currentCGPA).toDecimalPlaces(2).toNumber(),
     coursesAnalyzed,
   };
 }
@@ -362,7 +362,7 @@ export function getDegreeClass(
  * Assess degree risk based on current CGPA and class boundaries.
  *
  * Risk is determined by how close the CGPA is to the lower boundary of the
- * current degree class, expressed as a fraction of remaining academic capacity.
+ * current degree class.
  */
 export function assessDegreeRisk(
   cgpa: number,
@@ -383,32 +383,15 @@ export function assessDegreeRisk(
       : null;
   const nextClassUp = currentIdx > 0 ? sorted[currentIdx - 1] : null;
 
-  const distDown = round(cgpa - currentClass.minCGPA);
-  const distUp = nextClassUp ? round(nextClassUp.minCGPA - cgpa) : null;
+  const distDown = new Decimal(cgpa).sub(currentClass.minCGPA).toDecimalPlaces(2).toNumber();
+  const distUp = nextClassUp ? new Decimal(nextClassUp.minCGPA).sub(cgpa).toDecimalPlaces(2).toNumber() : null;
 
-  const progressRatio =
-    totalProgramCredits > 0 ? completedCredits / totalProgramCredits : 0;
-
-  // Buffer shrinks as the student progresses through the programme.
-  // Buffer shrinks proportionally to academic progress so risk is amplified later.
-  const effectiveBuffer = distDown * (1 - progressRatio * BUFFER_DECAY_RATE);
-
-  let level: DegreeRiskLevel["level"];
-  let message: string;
-
-  if (effectiveBuffer > 0.5) {
-    level = "safe";
-    message = `Comfortably within ${currentClass.name} (${distDown} above boundary).`;
-  } else if (effectiveBuffer > 0.25) {
+  let level: DegreeRiskLevel["level"] = "safe";
+  if (distDown < 0.2) {
     level = "warning";
-    message = `Getting close to the ${currentClass.name} lower boundary — only ${distDown} above.`;
-  } else if (effectiveBuffer > 0.1) {
-    level = "danger";
-    message = `At risk of dropping below ${currentClass.name} — ${distDown} above boundary with ${round((1 - progressRatio) * 100)}% of credits remaining.`;
-  } else {
-    level = "critical";
-    message = `Critically close to losing ${currentClass.name} — only ${distDown} above boundary.`;
   }
+
+  const message = `You are ${distDown.toFixed(2)} GPA points above the lower boundary for ${currentClass.name}.`;
 
   return {
     level,
@@ -430,21 +413,24 @@ export function projectBestWorstCase(
   scale: number,
   degreeClasses: DegreeClass[]
 ): BestWorstProjection {
-  const currentQP = currentCGPA * completedCredits;
+  const currentQP = new Decimal(currentCGPA).mul(completedCredits);
   const totalCredits = completedCredits + remainingCredits;
 
-  const bestQP = currentQP + scale * remainingCredits;
-  const bestCGPA = totalCredits > 0 ? round(bestQP / totalCredits) : 0;
+  const bestQP = currentQP.add(new Decimal(scale).mul(remainingCredits));
+  const bestCGPA = totalCredits > 0 ? bestQP.div(totalCredits).toDecimalPlaces(2).toNumber() : 0;
 
   const worstQP = currentQP; // worst case: 0 grade points for all remaining
-  const worstCGPA = totalCredits > 0 ? round(worstQP / totalCredits) : 0;
+  const worstCGPA = totalCredits > 0 ? worstQP.div(totalCredits).toDecimalPlaces(2).toNumber() : 0;
 
   // GPA needed in remaining credits to maintain current CGPA
   const gpaNeeded =
     remainingCredits > 0
-      ? round(
-          (currentCGPA * totalCredits - currentQP) / remainingCredits
-        )
+      ? new Decimal(currentCGPA)
+          .mul(totalCredits)
+          .sub(currentQP)
+          .div(remainingCredits)
+          .toDecimalPlaces(2)
+          .toNumber()
       : 0;
 
   return {
@@ -484,11 +470,11 @@ export function recommendStudyLoad(
   const maxCredits = creditRules.maximumPerSemester;
   const minCredits = creditRules.minimumPerSemester;
 
-  const currentQP = currentCGPA * completedCredits;
+  const currentQP = new Decimal(currentCGPA).mul(completedCredits);
   const totalWithMax = completedCredits + maxCredits;
   const requiredGPAMax =
     maxCredits > 0
-      ? (targetCGPA * totalWithMax - currentQP) / maxCredits
+      ? new Decimal(targetCGPA).mul(totalWithMax).sub(currentQP).div(maxCredits).toNumber()
       : 0;
 
   // If the target is reachable at max load, prefer max; otherwise fall back to min.
@@ -551,24 +537,26 @@ export function analyzePerformanceTrends(
   if (semesters.length === 0) return [];
 
   const results: PerformanceTrend[] = [];
-  let cumulativeQP = 0;
+  let cumulativeQP = new Decimal(0);
   let cumulativeCredits = 0;
 
   for (let i = 0; i < semesters.length; i++) {
     const sem = semesters[i];
-    cumulativeQP += sem.gpa * sem.credits;
+    cumulativeQP = cumulativeQP.add(new Decimal(sem.gpa).mul(sem.credits));
     cumulativeCredits += sem.credits;
-    const cgpa = cumulativeCredits > 0 ? round(cumulativeQP / cumulativeCredits) : 0;
+    const cgpa = cumulativeCredits > 0 
+      ? cumulativeQP.div(cumulativeCredits).toDecimalPlaces(2).toNumber() 
+      : 0;
 
     let trend: PerformanceTrend["trend"] = "stable";
     let improvementMarker: string | undefined;
 
     if (i > 0) {
       const prevGPA = semesters[i - 1].gpa;
-      const diff = sem.gpa - prevGPA;
+      const diff = new Decimal(sem.gpa).sub(prevGPA).toDecimalPlaces(2).toNumber();
       if (diff > TREND_THRESHOLD) {
         trend = "improving";
-        improvementMarker = `+${round(diff)} from previous semester`;
+        improvementMarker = `+${diff.toFixed(2)} from previous semester`;
       } else if (diff < -TREND_THRESHOLD) {
         trend = "declining";
       }

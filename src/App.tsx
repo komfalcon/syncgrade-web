@@ -8,6 +8,8 @@ import { AppRoutes } from "@/routes";
 import { GpaScaleProvider } from "./contexts/GpaScaleContext";
 import PwaInstallBanner, { type BeforeInstallPromptEvent } from "./components/PwaInstallBanner";
 import { STORAGE_KEYS } from "./lib/db";
+import { registerSW } from "virtual:pwa-register";
+import { toast } from "sonner";
 
 const APP_SESSIONS_KEY = "syncgrade_session_count";
 
@@ -18,6 +20,23 @@ function App() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const updateSW = registerSW({
+      onNeedRefresh() {
+        toast.info("A new version of SyncGrade is available!", {
+          action: {
+            label: "Reload",
+            onClick: () => {
+              updateSW(true);
+            },
+          },
+          duration: Infinity,
+        });
+      },
+      onOfflineReady() {
+        toast.success("SyncGrade is ready to work offline!");
+      },
+    });
 
     // Track sessions to delay PWA install prompt
     let sessionCount = 0;

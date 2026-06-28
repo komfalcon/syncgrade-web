@@ -11,6 +11,13 @@ import {
   FileJson,
   FileSpreadsheet,
   AlertCircle,
+  Cloud,
+  Lock,
+  RefreshCw,
+  Copy,
+  Check,
+  Trash2,
+  Key,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getDefaultSettings, type AppSettings, useCGPA } from '@/hooks/useCGPA';
@@ -20,7 +27,11 @@ import {
   setOnboardingComplete,
   setStoredValue,
   STORAGE_KEYS,
+  getSyncgradeUserProfile,
+  saveSyncgradeUserProfile,
+  appDb,
 } from '@/storage/db';
+import { syncAcademicSnapshot, restoreFromCloud } from '@/lib/cloudSync';
 import DataManagement from '@/components/DataManagement';
 
 export default function BackupRestore() {
@@ -33,6 +44,169 @@ export default function BackupRestore() {
     courses: number;
     cgpa: number;
   } | null>(null);
+
+  // Cloud Sync state variables
+  const [syncProfile, setSyncProfile] = useState<any | null>(null);
+  const [syncPassword, setSyncPassword] = useState("");
+  const [restoreUuid, setRestoreUuid] = useState("");
+  const [restorePassword, setRestorePassword] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
+  const [syncBusy, setSyncBusy] = useState<"enable" | "restore" | "sync" | "disable" | null>(null);
+
+  const isProfileComplete = useMemo(() => {
+    return settings.studentName?.trim().length > 0 && settings.programme?.trim().length > 0 && settings.activeUniversity;
+  }, [settings]);
+
+  const loadSyncProfile = async () => {
+    const profile = await getSyncgradeUserProfile();
+    const token = await getStoredValue("syncgrade_jwt_token");
+    const lastSync = await getStoredValue("syncgrade_last_sync_time");
+    if (profile && token) {
+      setSyncProfile({ ...profile, lastSync });
+    } else {
+      setSyncProfile(null);
+    }
+  };
+
+  useEffect(() => {
+    void loadSyncProfile();
+  }, []);
+
+  const handleEnableSync = async () => {
+    if (!isProfileComplete) {
+      toast.error("Please complete your profile details on the dashboard first!");
+      return;
+    }
+    if (syncPassword.trim().length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return;
+    }
+
+    setSyncBusy("enable");
+    try {
+      const uuid = crypto.randomUUID();
+      await saveSyncgradeUserProfile({
+        uuid,
+        name: settings.studentName,
+        department: settings.programme,
+        university: settings.activeUniversity || "Custom",
+      });
+      await setStoredValue("syncgrade_sync_password", syncPassword);
+
+      const result = await syncAcademicSnapshot();
+      if (result.success) {
+        toast.success("Cloud Sync successfully enabled!");
+        setSyncPassword("");
+        await loadSyncProfile();
+      } else if (result.code === "OVERWRITE_PREVENTED") {
+        toast.error("Cloud conflict. Sync identity creation aborted.");
+        await appDb.user_profile.clear();
+      } else {
+        toast.error(result.error || "Sync setup failed.");
+        await appDb.user_profile.clear();
+      }
+    } catch {
+      toast.error("An error occurred during sync setup.");
+    } finally {
+      setSyncBusy(null);
+    }
+  };
+
+  const handleManualSync = async () => {
+    setSyncBusy("sync");
+    try {
+      const result = await syncAcademicSnapshot(true);
+      if (result.success) {
+        toast.success("Sync completed successfully!");
+        await loadSyncProfile();
+      } else if (result.code === "OVERWRITE_PREVENTED") {
+        if (confirm("Warning: Cloud backup contains more semesters. Overwrite cloud data anyway?")) {
+          const forceResult = await syncAcademicSnapshot(true);
+          if (forceResult.success) {
+            toast.success("Sync forced successfully!");
+            await loadSyncProfile();
+          } else {
+            toast.error(forceResult.error || "Forced sync failed.");
+          }
+        }
+      } else {
+        toast.error(result.error || "Sync failed.");
+      }
+    } catch {
+      toast.error("Sync error occurred.");
+    } finally {
+      setSyncBusy(null);
+    }
+  };
+
+  const handleDisableSync = async () => {
+    if (!confirm("Are you sure you want to disable Cloud Sync? This will remove sync credentials locally, but won't delete backup data from the cloud.")) return;
+    setSyncBusy("disable");
+    try {
+      await appDb.user_profile.clear();
+      await appDb.kv.delete("syncgrade_jwt_token");
+      await appDb.kv.delete("syncgrade_last_sync_time");
+      await appDb.kv.delete("syncgrade_sync_password");
+      setSyncProfile(null);
+      toast.success("Cloud Sync disabled.");
+    } catch {
+      toast.error("Failed to disable sync.");
+    } finally {
+      setSyncBusy(null);
+    }
+  };
+
+  const handleRestoreSync = async () => {
+    if (!restoreUuid.trim() || !restorePassword.trim()) {
+      toast.error("Please enter both your Sync ID and password.");
+      return;
+    }
+    if (confirm("Restore will overwrite all local settings, semesters, and courses. Proceed?")) {
+      setSyncBusy("restore");
+      try {
+        const result = await restoreFromCloud(restoreUuid.trim(), restorePassword.trim());
+        if (result.success && result.student) {
+          const { student, token } = result;
+          
+          await saveSyncgradeUserProfile({
+            uuid: student.uuid,
+            name: student.name,
+            department: student.department,
+            university: student.university,
+          });
+          await setStoredValue("syncgrade_jwt_token", token || "");
+          await setStoredValue("syncgrade_sync_password", restorePassword.trim());
+          if (student.last_sync) {
+            await setStoredValue("syncgrade_last_sync_time", student.last_sync);
+          }
+
+          if (student.academic_data) {
+            await setStoredValue(STORAGE_KEYS.cgpaData, JSON.stringify(student.academic_data));
+            if (student.academic_data.settings) {
+              await setStoredValue(STORAGE_KEYS.settings, JSON.stringify(student.academic_data.settings));
+            }
+          }
+          await setOnboardingComplete(true);
+
+          toast.success("Academic records restored successfully! Reloading...");
+          setTimeout(() => window.location.reload(), 800);
+        } else {
+          toast.error(result.error || "Restoration failed.");
+        }
+      } catch {
+        toast.error("Restoration error occurred.");
+      } finally {
+        setSyncBusy(null);
+      }
+    }
+  };
+
+  const handleCopyId = () => {
+    if (!syncProfile?.uuid) return;
+    navigator.clipboard.writeText(syncProfile.uuid);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   const totalCourses = useMemo(
     () => semesters.reduce((sum, sem) => sum + sem.courses.length, 0),
@@ -359,6 +533,163 @@ export default function BackupRestore() {
               Import Backup
             </Button>
           </div>
+        </Card>
+
+        {/* Cloud Sync Section */}
+        <Card className="p-6">
+          <h2 className="mb-2 text-lg font-semibold flex items-center gap-2">
+            <Cloud className="h-5 w-5 text-primary" />
+            Cloud Synchronization
+          </h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Securely back up your GPA records to the cloud and sync them across multiple devices.
+          </p>
+
+          {syncProfile ? (
+            <div className="space-y-4">
+              <div className="rounded-lg border border-success/40 bg-success/5 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-success flex items-center gap-1.5">
+                      <span className="inline-block h-2 w-2 rounded-full bg-success animate-pulse" />
+                      Cloud Sync Active
+                    </p>
+                    <p className="text-xs text-foreground-muted mt-0.5">
+                      {syncProfile.lastSync
+                        ? `Last synced: ${new Date(syncProfile.lastSync).toLocaleString()}`
+                        : "Never synced"}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      onClick={handleManualSync}
+                      disabled={syncBusy !== null}
+                      className="gap-1.5 h-9"
+                    >
+                      <RefreshCw className={`h-3.5 w-3.5 ${syncBusy === "sync" ? "animate-spin" : ""}`} />
+                      Sync Now
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={handleDisableSync}
+                      disabled={syncBusy !== null}
+                      className="gap-1.5 h-9"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Disable Sync
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-success/20 flex flex-col gap-2">
+                  <Label className="text-xs font-semibold text-foreground-muted">Your Unique Sync ID</Label>
+                  <div className="flex gap-2 max-w-md">
+                    <Input
+                      readOnly
+                      value={syncProfile.uuid}
+                      className="h-9 font-mono text-xs select-all bg-surface-elevated"
+                    />
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={handleCopyId}
+                      className="h-9 w-9 shrink-0"
+                    >
+                      {isCopied ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  <p className="text-[10px] text-foreground-subtle">
+                    Save this Sync ID and your password to restore your records on another device.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {/* Enable Card */}
+              <div className="space-y-4 rounded-lg border border-border p-4">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                  <Lock className="h-4 w-4 text-primary" />
+                  Enable Cloud Sync
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Create a cloud profile to automatically save your GPA data in real-time.
+                </p>
+
+                {!isProfileComplete ? (
+                  <div className="rounded-lg border border-warning/30 bg-warning/5 p-3 text-xs text-warning">
+                    Please set your name, programme, and university on the dashboard first to enable sync.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="sync-password">Set Sync Password</Label>
+                      <Input
+                        id="sync-password"
+                        type="password"
+                        placeholder="Min 6 characters"
+                        value={syncPassword}
+                        onChange={(e) => setSyncPassword(e.target.value)}
+                        className="h-9"
+                      />
+                    </div>
+                    <Button
+                      onClick={handleEnableSync}
+                      disabled={syncBusy !== null}
+                      className="w-full h-9"
+                    >
+                      {syncBusy === "enable" ? "Enabling..." : "Enable Backup"}
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Restore Card */}
+              <div className="space-y-4 rounded-lg border border-border p-4">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                  <Key className="h-4 w-4 text-primary" />
+                  Restore Sync Identity
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Restore your existing GPA profile and data using your Sync ID and password.
+                </p>
+
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <Label htmlFor="restore-uuid">Sync ID (UUID)</Label>
+                    <Input
+                      id="restore-uuid"
+                      placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
+                      value={restoreUuid}
+                      onChange={(e) => setRestoreUuid(e.target.value)}
+                      className="h-9 font-mono text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="restore-password">Sync Password</Label>
+                    <Input
+                      id="restore-password"
+                      type="password"
+                      placeholder="Enter password"
+                      value={restorePassword}
+                      onChange={(e) => setRestorePassword(e.target.value)}
+                      className="h-9"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleRestoreSync}
+                    variant="outline"
+                    disabled={syncBusy !== null}
+                    className="w-full h-9"
+                  >
+                    {syncBusy === "restore" ? "Restoring..." : "Restore Data"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </Card>
 
         <DataManagement />

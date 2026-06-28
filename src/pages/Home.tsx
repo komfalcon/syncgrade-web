@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -6,6 +6,7 @@ import {
   Plus,
   Target,
   TrendingUp,
+  Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -20,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useCGPA } from "@/hooks/useCGPA";
+import { useCGPA, getDefaultSettings } from "@/hooks/useCGPA";
 import SemesterCard from "@/components/SemesterCard";
 import AddSemesterDialog from "@/components/AddSemesterDialog";
 import ShareProgress from "@/components/ShareProgress";
@@ -31,6 +32,10 @@ import { getClassification } from "@/utils/gpaLogic";
 import GradingGuide from "@/components/GradingGuide";
 import { extractCourseCode, type CourseHistory } from "@/utils/carryoverDetector";
 import { useUniversities } from "@/hooks/useUniversities";
+import { getStoredValue, getSyncgradeUserProfile } from "@/storage/db";
+import { FIRST_SYNC_SUCCESS_EVENT } from "@/lib/cloudSync";
+import { generateCSV } from "@/engine/backup";
+import { toast } from "sonner";
 
 const CLASSIFICATION_STYLES: Record<string, string> = {
   "First Class": "bg-success/10 text-success border-success/20",
@@ -89,6 +94,57 @@ export default function Home() {
   const [showAddSemester, setShowAddSemester] = useState(false);
   const [expandedSemesterId, setExpandedSemesterId] = useState<string | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
+
+  const [syncStatus, setSyncStatus] = useState<"local" | "synced" | "syncing">("local");
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkSyncStatus = async () => {
+      const identity = await getSyncgradeUserProfile();
+      const token = await getStoredValue("syncgrade_jwt_token");
+      const lastSync = await getStoredValue("syncgrade_last_sync_time");
+      if (identity && token) {
+        setSyncStatus("synced");
+        setLastSyncTime(lastSync);
+      } else {
+        setSyncStatus("local");
+        setLastSyncTime(null);
+      }
+    };
+    void checkSyncStatus();
+    
+    window.addEventListener(FIRST_SYNC_SUCCESS_EVENT, checkSyncStatus);
+    return () => {
+      window.removeEventListener(FIRST_SYNC_SUCCESS_EVENT, checkSyncStatus);
+    };
+  }, []);
+
+  const handleExportCSV = () => {
+    const gradeRanges = cgpa.settings.gradeRanges ?? getDefaultSettings().gradeRanges;
+    const csvSemesters = cgpa.semesters.map((sem) => ({
+      name: sem.name,
+      courses: sem.courses.map((c) => {
+        const match = gradeRanges.find((r) => r.points === c.gradePoint);
+        return {
+          name: c.name,
+          credits: c.credits,
+          grade: match?.grade ?? String(c.gradePoint),
+          gradePoint: c.gradePoint,
+        };
+      }),
+    }));
+    const csv = generateCSV(csvSemesters, cgpa.currentCGPA);
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cgpa-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success('CSV exported successfully!');
+  };
 
   const isProfileIncomplete = !cgpa.settings.studentName || !cgpa.settings.programme;
 
@@ -231,13 +287,45 @@ export default function Home() {
                     / {scale.toFixed(1)}
                   </span>
                 </div>
-                <p className="mt-0.5 text-xs text-foreground-subtle">
-                  {cgpa.totalCredits} credits completed
-                </p>
+                <div className="flex items-center gap-x-2 gap-y-0.5 flex-wrap">
+                  <p className="text-xs text-foreground-subtle">
+                    {cgpa.totalCredits} credits completed
+                  </p>
+                  <span className="text-foreground-muted text-[10px]">•</span>
+                  <div className="flex items-center gap-1 text-[11px] font-medium">
+                    {syncStatus === "synced" ? (
+                      <>
+                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" />
+                        <span className="text-success font-semibold">Cloud Synced</span>
+                        {lastSyncTime && (
+                          <span className="text-foreground-subtle text-[10px]">
+                            ({new Date(lastSyncTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-foreground-subtle" />
+                        <span className="text-foreground-subtle">Local Mode</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {cgpa.semesters.length > 0 && (
-                <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExportCSV}
+                    className="h-8 gap-1.5 border-border bg-surface px-2.5 text-xs shadow-soft hover:bg-surface-elevated"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Export CSV
+                  </Button>
+                  <ShareProgress cgpa={cgpa.currentCGPA} totalCredits={cgpa.totalCredits} />
+                </div>
               )}
             </div>
 
